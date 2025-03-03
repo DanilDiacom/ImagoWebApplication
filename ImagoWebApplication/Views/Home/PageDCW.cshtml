@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Okénko členů DCW z.s.– zkušenosti";
+}
+
+<section id="content">
+    <div class="inner-content">
+        <div class="container">
+            <header class="page-header">
+                <h1 class="page-title text-center" data-key="DiacomClub_DCW_Title">@ViewBag.Entries["DiacomClub_DCW_Title"]</h1>
+            </header>
+
+            <article class="experience-block">
+
+                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_First">@ViewBag.Entries["DiacomClub_DCW_Content_First"]</h2>
+                <p data-key="DiacomClub_DCW_Content_First_Name">@Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_First_Name"])</p>
+
+            </article>
+
+            <article class="experience-block">
+                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Second">@ViewBag.Entries["DiacomClub_DCW_Content_Second"]</h2>
+                <p data-key="DiacomClub_DCW_Content_Second_Name">
+                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Second_Name"])
+                </p>
+            </article>
+
+            <article class="experience-block">
+                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Third">
+                    @ViewBag.Entries["DiacomClub_DCW_Content_Third"]
+                </h2>
+                <p data-key="DiacomClub_DCW_Content_Third_Text">
+                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Third_Text"])
+                </p>
+            </article>
+
+            <article class="experience-block">
+                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Fourth">
+                    @ViewBag.Entries["DiacomClub_DCW_Content_Fourth"]
+                </h2>
+                <p data-key="DiacomClub_DCW_Content_Fourth_Text">
+                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fourth_Text"])
+                </p>
+            </article>
+
+            <article class="experience-block">
+                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Fifth">
+                    @ViewBag.Entries["DiacomClub_DCW_Content_Fifth"]
+                </h2>
+                <p data-key="DiacomClub_DCW_Content_Fifth_Text">
+                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fifth_Text"])
+                </p>
+            </article>
+
+            <article class="experience-block">
+                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Sixth">
+                    @ViewBag.Entries["DiacomClub_DCW_Content_Sixth"]
+                </h2>
+                <p data-key="DiacomClub_DCW_Content_Sixth_Text">
+                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Sixth_Text"])
+                </p>
+            </article>
+
+            <article class="experience-block">
+                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Seventh">
+                    @ViewBag.Entries["DiacomClub_DCW_Content_Seventh"]
+                </h2>
+                <p data-key="DiacomClub_DCW_Content_Seventh_Text">
+                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Seventh_Text"])
+                </p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .experience-block {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .experience-title {
+        color: #007bff;
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .inner-content {
+        max-width: 1150px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .page-title {
+        font-size: 28px;
+        margin-bottom: 30px;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>

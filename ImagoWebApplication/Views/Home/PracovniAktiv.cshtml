@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Pracovní aktiv";
+}
+
+<link rel="stylesheet" href="~/css/aktiv.css asp-append-version="true" />
+
+<section>
+    <div class="container-gen">
+
+        <h1 class="page-title" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Title">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Title"]
+        </h1>
+
+        <h2 class="section-title" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Subtitle">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Subtitle"]
+        </h2>
+
+        <p class="text" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Desc1">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc1"]
+        </p>
+
+        <p class="quote" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Quote">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Quote"]
+        </p>
+
+        <div class="komentar-block">
+            <h3 class="section-title" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_CommentTitle">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentTitle"]
+            </h3>
+            <p class="text">
+                <span data-key="DiacomClub_PracovniAktiv_CommentDesc">
+                    @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentDesc"]
+                </span>
+                <a href="http://www.semes.sk/urmium-2017/" class="styled-link" target="_blank">
+                    http://www.semes.sk/urmium-2017/
+                </a>
+            </p>
+        </div>
+
+        <p class="text" data-key="DiacomClub_PracovniAktiv_Desc2">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc2"]
+        </p>
+
+        <p class="text" data-key="DiacomClub_PracovniAktiv_Desc3">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc3"]
+        </p>
+
+        <p class="signature" data-key="DiacomClub_PracovniAktiv_Signature">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Signature"]
+        </p>
+
+        <p class="author" data-key="DiacomClub_PracovniAktiv_Author">
+            @ViewBag.Entries["DiacomClub_PracovniAktiv_Author"]
+        </p>
+
+    </div>
+
+</section>

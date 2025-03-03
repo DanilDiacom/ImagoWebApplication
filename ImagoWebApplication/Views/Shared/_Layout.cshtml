@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ImagoDT - @ViewData["Title"]</title>
+    <link rel="shortcut icon" href="/img/favicon.ico" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ImagoWebApplication.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="main-content">
+        <header class="header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <!-- Логотип -->
+                    <div class="col-md-3 col-6 logo-container">
+                        <a href="#">
+                            <img src="~/img/logo.png" alt="Логотип" class="logo">
+                        </a>
+                    </div>
+
+                    <!-- Контактная информация -->
+                    <div class="col-md-8 col-12 contact-info">
+                        <div class="box-in-logo-container">
+                            <div class="contact-items">
+                                <div class="contact-item phone">
+                                    <label>+420 602 411 872</label>
+                                </div>
+                                <div class="contact-item email">
+                                    <label>
+                                        <a href="mailto:imagodt@imagodt.cz" title="imagodt@imagodt.cz">imagodt@imagodt.cz</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Навигация -->
+        <nav class="navbar navbar-expand-sm navbar-custom">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Úvod</a>
+                        </li>
+
+                        <!-- 2-я кнопка с dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                O nás
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Home" asp-action="GDPR">GDPR</a>
+                                </li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Marketing">Marketing a cíle společnosti</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Mitink">Mítink společnosti IMAGO D&T ve spolupráci s DIACOM TECHNOLOGY</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- 3-я кнопка с dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Přístroje Diacom
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Enerscan">DIACOM ENERSCAN</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="LiteFreq">DIACOM FREQ LITE</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Plasmotronic">PLASMOTRONIC</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Medio">DIACOM MEDIO</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="FreqPc">DIACOM-SOLO-FREQ-PC</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Ioniser">DIACOM-SOLO-Ionizer</a></li>
+                                @* <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="ProductPrice">CENY PRISTROJU DIACOM</a></li>*@
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Navody">Navody k pristrojum</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- 4-я кнопка с dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Provozovna
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Prozovna">Školení a doškolování</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- 5-я кнопка с dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="guidesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Diacom club
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="guidesDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Školení">Školení</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Vyhody">Výhody pro členy DIACOM CLUB WORD</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="AKTUALNE">AKTUÁLNĚ ZE SPOLKU</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="PracovniAktiv">Pracovní aktiv</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="PageDCW">Okénko členů DCW z.s.– zkušenosti</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Новинки -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Novinky">Novinky</a>
+                        </li>
+
+                        <!-- Контакты -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Příslušenství">Příslušenství</a>
+                        </li>
+
+                        <!-- Контакты -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Kontakty">Kontakty</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <div id="box-bottom-container" class="box-bottom" style="background-color: #1d4f99; color: #fff;">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Логотип -->
+                <div class="col-md-3 col-6 logo-container">
+                    <a href="#">
+                        <img src="~/img/logo_f.png" alt="Логотип" style="max-width: 250px; width: 100%;" />
+                    </a>
+                </div>
+
+                <!-- Контактная информация -->
+                <div class="col-md-8 col-12 contact-info">
+                    <div class="contact-info-header">
+                        <div class="phone-info">
+                            <label>+420 602 411 872</label>
+                        </div>
+                        <div class="email-info">
+                            <label>
+                                <a href="mailto:imagodt@imagodt.cz" title="imagodt@imagodt.cz">imagodt@imagodt.cz</a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border-color: #fff; margin-bottom: 8px;">
+
+            <!-- Меню футера -->
+            <div class="footer-menu">
+                <ul>
+                    <li><a href="#">Úvod</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="AboutUs">O nás</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="pristrojeDiacom">Přístroje Diacom</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Prozovna">Provozovna</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="diacomClub">Diacom club</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Novinky">Novinky</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Příslušenství">Příslušenství</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Kontakty">Kontakty</a></li>
+                </ul>
+            </div>
+
+            <hr style="border-color: #fff; margin-top: 5px;">
+        </div>
+    </div>
+
+    <footer id="box-footer" style="background-color: #1d4f99; color: #fff;">
+        <div class="container">
+            <p class="copyright text-center">
+                © 2025 IMAGO D&T, s.r.o. Všechna práva vyhrazena.
+            </p>
+        </div>
+    </footer>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

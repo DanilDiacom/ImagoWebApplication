@@ -1,0 +1,135 @@
+﻿using ImagoLib.Models;
+using ImagoWebApplication.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+
+public class HomeController : Controller {
+    private readonly ILogger<HomeController> _logger;
+
+    public HomeController(ILogger<HomeController> logger) {
+        _logger = logger;
+    }
+
+    private void SetViewHomeBagEntries() {
+        var entries = DictionaryEntryForText.GetAllEntries();
+        ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
+    }
+    private void SetViewHomeBagStyles() {
+        var styles = TextStyle.GetAllStyles();
+        ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
+    }
+
+    private void SetViewHomeBagImages() {
+        var images = DictionaryEntryForImages.GetAllEntries()
+            .Select(img => new Dictionary<string, string> {
+            { "EntryKey", img.EntryKey },
+            { "Base64", Convert.ToBase64String(img.ImageData) }
+            })
+            .ToList();
+
+        ViewBag.Images = images;
+    }
+
+
+    public IActionResult Index() {
+        SetViewHomeBagEntries();
+        SetViewHomeBagImages();
+        SetViewHomeBagStyles();
+        return View();
+    }
+
+
+    public IActionResult Mitink() {
+        var meetings = Meeting.GetMeetings().OrderByDescending(m => m.Id).ToList();
+
+        foreach (var meeting in meetings) {
+            meeting.Photos = MeetingPhoto.GetPhotosForMeeting(meeting.Id);
+        }
+
+        SetViewHomeBagEntries();
+        ViewBag.Meetings = meetings;
+        return View();
+    }
+
+
+    public IActionResult Privacy() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult GDPR() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult Marketing() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult Příslušenství() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult Školení() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult Vyhody() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult PracovniAktiv() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult PageDCW() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult AKTUALNE() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult diacomClub() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult pristrojeDiacom() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult AboutUs() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult Prozovna() {
+        SetViewHomeBagEntries();
+        SetViewHomeBagImages();
+        return View();
+    }
+
+    public IActionResult Novinky() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    public IActionResult Kontakty() {
+        SetViewHomeBagEntries();
+        return View();
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error() {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+}

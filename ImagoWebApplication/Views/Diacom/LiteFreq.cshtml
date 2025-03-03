@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "DIACOM FREQ LITE";
+}
+
+@{
+    var images = ViewBag.Images as List<Dictionary<string, string>>;
+    var filteredImages = images?.Where(img => img["EntryKey"].Contains("FREQ")).ToList() ?? new List<Dictionary<string, string>>();
+}
+
+<link rel="stylesheet" href="~/css/freqLite.css" asp-append-version="true" />
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-start" style="margin-top: 20px; margin-bottom:20px;">
+        <!-- Image Carousel -->
+        <div class="col-md-6 carousel-container">
+
+            @if (filteredImages.Count > 0) { 
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < filteredImages.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="data:image/png;base64,@filteredImages[i]["Base64"]" class="d-block w-100">
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+            }
+            else{
+                <p style="text-align:center;">Omlouvám se, došlo k chybě při načítání obrázků.</p>
+            }
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6 d-flex align-items-center">
+            <div>
+                <h1 class="text-center" style="margin-bottom: 20px; margin-top: -15px;" data-key="Device_Title">
+                    @ViewBag.Entries["Device_Title"]
+                </h1>
+                <ul class="list-group">
+                    <li class="list-group-item" data-key="OperatingTemp_Label" data-value="OperatingTemp_Value">
+                        <strong data-key="OperatingTemp_Label">@ViewBag.Entries["OperatingTemp_Label"]</strong>
+                        <span data-value="OperatingTemp_Value">@ViewBag.Entries["OperatingTemp_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="Humidity_Label" data-value="Humidity_Value">
+                        <strong data-key="Humidity_Label">@ViewBag.Entries["Humidity_Label"]</strong>
+                        <span data-value="Humidity_Value">@ViewBag.Entries["Humidity_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="Pressure_Label" data-value="Pressure_Value">
+                        <strong data-key="Pressure_Label">@ViewBag.Entries["Pressure_Label"]</strong>
+                        <span data-value="Pressure_Value">@ViewBag.Entries["Pressure_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="PowerSupply_Label" data-value="PowerSupply_Value">
+                        <strong data-key="PowerSupply_Label">@ViewBag.Entries["PowerSupply_Label"]</strong>
+                        <span data-value="PowerSupply_Value">@ViewBag.Entries["PowerSupply_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="OperatingVoltage_Label" data-value="OperatingVoltage_Value">
+                        <strong data-key="OperatingVoltage_Label">@ViewBag.Entries["OperatingVoltage_Label"]</strong>
+                        <span data-value="OperatingVoltage_Value">@ViewBag.Entries["OperatingVoltage_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="CurrentConsumption_Label" data-value="CurrentConsumption_Value">
+                        <strong data-key="CurrentConsumption_Label">@ViewBag.Entries["CurrentConsumption_Label"]</strong>
+                        <span data-value="CurrentConsumption_Value">@ViewBag.Entries["CurrentConsumption_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="MeasuredFreqRange_Label" data-value="MeasuredFreqRange_Value">
+                        <strong data-key="MeasuredFreqRange_Label">@ViewBag.Entries["MeasuredFreqRange_Label"]</strong>
+                        <span data-value="MeasuredFreqRange_Value">@ViewBag.Entries["MeasuredFreqRange_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="OverlayFreq_Label" data-value="OverlayFreq_Value">
+                        <strong data-key="OverlayFreq_Label">@ViewBag.Entries["OverlayFreq_Label"]</strong>
+                        <span data-value="OverlayFreq_Value">@ViewBag.Entries["OverlayFreq_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="GeneratedFreqRange_Label" data-value="GeneratedFreqRange_Value">
+                        <strong data-key="GeneratedFreqRange_Label">@ViewBag.Entries["GeneratedFreqRange_Label"]</strong>
+                        <span data-value="GeneratedFreqRange_Value">@ViewBag.Entries["GeneratedFreqRange_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="ConnectionSpeed_Label" data-value="ConnectionSpeed_Value">
+                        <strong data-key="ConnectionSpeed_Label">@ViewBag.Entries["ConnectionSpeed_Label"]</strong>
+                        <span data-value="ConnectionSpeed_Value">@ViewBag.Entries["ConnectionSpeed_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="Bioinductors_Label" data-value="Bioinductors_Value">
+                        <strong data-key="Bioinductors_Label">@ViewBag.Entries["Bioinductors_Label"]</strong>
+                        <span data-value="Bioinductors_Value">@ViewBag.Entries["Bioinductors_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="ElectromagneticReprinter_Label" data-value="ElectromagneticReprinter_Value">
+                        <strong data-key="ElectromagneticReprinter_Label">@ViewBag.Entries["ElectromagneticReprinter_Label"]</strong>
+                        <span data-value="ElectromagneticReprinter_Value">@ViewBag.Entries["ElectromagneticReprinter_Value"]</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Description -->
+    <div class="home-body-container">
+        <div class="container">
+            @if (ViewBag.Entries.ContainsKey("FreqPopisHeader"))
+            {
+                <h2 data-key="FreqPopisHeader" style="margin-top: 20px; text-align:center">
+                    @ViewBag.Entries["FreqPopisHeader"]
+                </h2>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisText"))
+            {
+                <div class="text-container" data-key="FreqPopisText">
+                    <p>
+                        @ViewBag.Entries["FreqPopisText"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisTextFirst"))
+            {
+                <div class="text-container" data-key="FreqPopisTextFirst">
+                    <p>
+                        @ViewBag.Entries["FreqPopisTextFirst"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisTextSecond"))
+            {
+                <div class="text-container" data-key="FreqPopisTextSecond">
+                    <p>
+                        @ViewBag.Entries["FreqPopisTextSecond"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisTextTird"))
+            {
+                <div class="text-container" data-key="FreqPopisTextTird">
+                    <p>
+                        @ViewBag.Entries["FreqPopisTextTird"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisTextFourth"))
+            {
+                <div class="text-container" data-key="FreqPopisTextFourth">
+                    <p>
+                        @ViewBag.Entries["FreqPopisTextFourth"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisTextFifth"))
+            {
+                <div class="text-container" data-key="FreqPopisTextFifth">
+                    <p>
+                        @ViewBag.Entries["FreqPopisTextFifth"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisTextSixth"))
+            {
+                <div class="text-container" data-key="FreqPopisTextSixth">
+                    <p>
+                        @ViewBag.Entries["FreqPopisTextSixth"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("FreqPopisTextSeventh"))
+            {
+                <div class="text-container" data-key="FreqPopisTextSeventh">
+                    <p>
+                        @ViewBag.Entries["FreqPopisTextSeventh"]
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

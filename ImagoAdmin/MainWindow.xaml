@@ -1,0 +1,154 @@
+﻿<Window x:Class="ImagoAdmin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" xmlns:models="clr-namespace:ImagoLib.Models;assembly=ImagoLib" d:DataContext="{d:DesignInstance Type=models:Pages}"
+        mc:Ignorable="d"
+        Title="IMAGO Admin" Height="900" Width="1200"
+        WindowState="Maximized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="275"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="350"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая панель -->
+        <StackPanel Grid.Column="0" Background="#f5f5f5" Margin="10">
+            <TextBlock Text="Stránky" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TreeView Name="tvPageList" ItemsSource="{Binding PagesList}" Height="250" SelectedItemChanged="TreeView_SelectionChanged">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding SubPages}">
+                        <TextBlock Text="{Binding Title}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <Button Name="AddDeviceButton" Content="Přidat přístroj" Click="AddDeviceButton_Click" Margin="0,15,0,5"/>
+
+            <ListView Name="lv_Meeting" ItemsSource="{Binding MeetingList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Button Name="AddMeetingButton" Content="Přidat mítink" Click="AddMeetingButton_Click" Visibility="Collapsed" Margin="0,5,0,5"/>
+            <Button Name="EditMeetingButton" Content="Opravit mítink" Click="EditMeetingButton_Click" Visibility="Collapsed" Margin="0,5,0,5"/>
+            <Button Name="DeleteMeetingButton" Content="Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed" Margin="0,5,0,5"/>
+        </StackPanel>
+
+        <!-- Центральная панель (WebView2) -->
+        <wv2:WebView2 Name="webView" Grid.Column="1" Source="https://localhost:7090/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+
+        <!-- Правая панель -->
+        <TabControl Grid.Column="2" Background="#eeeeee" Margin="10">
+            <!-- Вкладка с текстовым контентом -->
+            <TabItem Header="Text">
+                <StackPanel>
+                    <Button Name="EditButton" Content="Редактировать" Click="EditButton_Click" Margin="0,0,0,10"/>
+                    <TextBlock Text="Úprava obsahu" FontWeight="Bold" Margin="0,0,0,5"/>
+
+                    <ListBox Name="EntryList" Height="200" Margin="0,0,0,10" SelectionChanged="EntryList_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding EntryKey}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding ContentText}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <TextBox Name="TextEditor" Height="350" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,5">
+                        <!-- Первый ряд -->
+                        <ComboBox Name="FontFamilyComboBox" Width="120" SelectionChanged="FontFamilyComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Arial"/>
+                            <ComboBoxItem Content="Times New Roman"/>
+                            <ComboBoxItem Content="Courier New"/>
+                            <ComboBoxItem Content="Verdana"/>
+                            <ComboBoxItem Content="Georgia"/>
+                            <ComboBoxItem Content="Tahoma"/>
+                            <ComboBoxItem Content="Calibri"/>
+                            <ComboBoxItem Content="Comic Sans MS"/>
+                            <ComboBoxItem Content="Impact"/>
+                            <ComboBoxItem Content="Lucida Console"/>
+                        </ComboBox>
+
+                        <ComboBox Name="FontSizeComboBox" Width="90" SelectionChanged="FontSizeComboBox_SelectionChanged">
+                            <ComboBoxItem Content="8"/>
+                            <ComboBoxItem Content="10"/>
+                            <ComboBoxItem Content="12"/>
+                            <ComboBoxItem Content="14"/>
+                            <ComboBoxItem Content="16"/>
+                            <ComboBoxItem Content="18"/>
+                            <ComboBoxItem Content="20"/>
+                            <ComboBoxItem Content="24"/>
+                            <ComboBoxItem Content="28"/>
+                            <ComboBoxItem Content="32"/>
+                            <ComboBoxItem Content="36"/>
+                        </ComboBox>
+
+                        <Button Content="B" FontWeight="Bold" Width="50" Click="BoldButton_Click"/>
+                        <Button Content="I" FontStyle="Italic" Width="40" Click="ItalicButton_Click"/>
+                        <Button Click="UnderlineButton_Click" Width="39">
+                            <TextBlock Text="U" TextDecorations="Underline"/>
+                        </Button>
+
+                        <!-- Вставляем пустой элемент, чтобы создать отступ -->
+                        <TextBlock Width="10"/>
+                        <!-- Пустой элемент с шириной для отступа -->
+
+                        <!-- Второй ряд -->
+                        <ComboBox Name="TextColorComboBox" Width="100" SelectionChanged="TextColorComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Black"/>
+                            <ComboBoxItem Content="Red"/>
+                            <ComboBoxItem Content="Green"/>
+                            <ComboBoxItem Content="Blue"/>
+                            <ComboBoxItem Content="Yellow"/>
+                            <ComboBoxItem Content="Orange"/>
+                            <ComboBoxItem Content="Purple"/>
+                            <ComboBoxItem Content="Gray"/>
+                        </ComboBox>
+
+                        <ComboBox Name="TextAlignmentComboBox" Width="120" SelectionChanged="TextAlignmentComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Left"/>
+                            <ComboBoxItem Content="Center"/>
+                            <ComboBoxItem Content="Right"/>
+                            <ComboBoxItem Content="Justify"/>
+                        </ComboBox>
+                    </WrapPanel>
+
+
+                    <Button Name="SaveButton" Content="Uložit změny" Click="SaveButton_Click" Margin="5,10,5,5"/>
+                    <Button Name="PublishButton" Content="Publikovat" Click="PublishButton_Click" Margin="5"/>
+                </StackPanel>
+            </TabItem>
+
+            <!-- Вкладка с фотографиями -->
+            <TabItem Header="Foto">
+                <StackPanel>
+                    <ListBox Name="PhotoList" Height="400" Margin="0,0,0,10">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding ImageName}" />
+                                    <Image Source="{Binding ImageData}" Height="100" Width="100" Margin="5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Button Name="AddPhotoButton" Content="Přidat fotografii" Click="AddPhotoButton_Click" Margin="5"/>
+                    <Button Name="UpdatePhotosButton" Content="Upravit fotografii" Margin="5" Click="UpdatePhotosButton_Click_1"/>
+                    <Button Name="DeletePhotosButton" Content="Odstranit fotografii" Margin="5,5,5,30" Click="DeletePhotosButton_Click"/>
+
+                    <Button Name="SavePhotosButton" Content="Uložit fotografii na web" Margin="5" Click="SavePhotosButton_Click"/>
+
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

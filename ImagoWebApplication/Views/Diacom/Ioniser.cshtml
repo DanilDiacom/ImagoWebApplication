@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Diacom-SOLO-IOniser";
+}
+
+@{
+    var images = ViewBag.Images as List<Dictionary<string, string>>;
+    var filteredImages = images?.Where(img => img["EntryKey"].Contains("Ionizer")).ToList() ?? new List<Dictionary<string, string>>();
+}
+
+<link rel="stylesheet" href="~/css/ioniser.css" asp-append-version="true" />
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-start" style="margin-top: 20px; margin-bottom:20px;">
+        <!-- Image Carousel -->
+        <div class="col-md-6 carousel-container">
+            @if (filteredImages.Count > 0) {
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < filteredImages.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="data:image/png;base64,@filteredImages[i]["Base64"]" class="d-block w-100">
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+            }
+            else{
+                <p style="text-align:center;">Omlouvám se, došlo k chybě při načítání obrázků.</p>
+            }
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6 d-flex align-items-center" style="margin-bottom: 130px;">
+            <div>
+                <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;" data-key="DiacomSoloIoniser_Title">@ViewBag.Entries["DiacomSoloIoniser_Title"]</h1>
+                <ul class="list-group">
+                    <li class="list-group-item" data-key="DiacomSoloIoniser_Power_Label" data-value="DiacomSoloIoniser_Power_Value">
+                        <strong data-key="DiacomSoloIoniser_Power_Label">@ViewBag.Entries["DiacomSoloIoniser_Power_Label"]</strong>
+                        <span data-value="DiacomSoloIoniser_Power_Value">@ViewBag.Entries["DiacomSoloIoniser_Power_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="DiacomSoloIoniser_Voltage_Label" data-value="DiacomSoloIoniser_Voltage_Value">
+                        <strong data-key="DiacomSoloIoniser_Voltage_Label">@ViewBag.Entries["DiacomSoloIoniser_Voltage_Label"]</strong>
+                        <span data-value="DiacomSoloIoniser_Voltage_Value">@ViewBag.Entries["DiacomSoloIoniser_Voltage_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="DiacomSoloIoniser_PowerConsumption_Label" data-value="DiacomSoloIoniser_PowerConsumption_Value">
+                        <strong data-key="DiacomSoloIoniser_PowerConsumption_Label">@ViewBag.Entries["DiacomSoloIoniser_PowerConsumption_Label"]</strong>
+                        <span data-value="DiacomSoloIoniser_PowerConsumption_Value">@ViewBag.Entries["DiacomSoloIoniser_PowerConsumption_Value"]</span>
+                    </li>
+                    <li class="list-group-item" data-key="DiacomSoloIoniser_Price_Label" data-value="DiacomSoloIoniser_Price_Value">
+                        <strong data-key="DiacomSoloIoniser_Price_Label">@ViewBag.Entries["DiacomSoloIoniser_Price_Label"]</strong>
+                        <span data-value="DiacomSoloIoniser_Price_Value">@ViewBag.Entries["DiacomSoloIoniser_Price_Value"]</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Description -->
+    <div class="home-body-container">
+        <div class="container">
+            @if (ViewBag.Entries.ContainsKey("IoniserPopisHeader"))
+            {
+                <h2 data-key="IoniserPopisHeader" style="margin-top: 20px; text-align:center">
+                    @ViewBag.Entries["IoniserPopisHeader"]
+                </h2>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("IoniserPopisText"))
+            {
+                <div class="text-container" data-key="IoniserPopisText">
+                    <p>
+                        @ViewBag.Entries["IoniserPopisText"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("IoniserPopisTextFirst"))
+            {
+                <div class="text-container" data-key="IoniserPopisTextFirst">
+                    <p>
+                        @ViewBag.Entries["IoniserPopisTextFirst"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("IoniserPopisTextSecond"))
+            {
+                <div class="text-container" data-key="IoniserPopisTextSecond">
+                    <p>
+                        @ViewBag.Entries["IoniserPopisTextSecond"]
+                    </p>
+                </div>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("IoniserPopisTextThird"))
+            {
+                <div class="text-container" data-key="IoniserPopisTextThird">
+                    <p>
+                        @ViewBag.Entries["IoniserPopisTextThird"]
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

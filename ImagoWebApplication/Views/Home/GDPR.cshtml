@@ -1,0 +1,245 @@
+﻿@{
+    ViewData["Title"] = "GDPR";
+}
+
+<style>
+    /* Центрирование контента */
+    .inner-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Заголовки */
+    h1.page-title {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        color: #7f8c8d;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    /* Применяем стили к таблице с классом .styled-table */
+    .styled-table {
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+    }
+
+        .styled-table th, .styled-table td {
+            padding: 15px;
+            border: 3px solid #ecf0f1;
+            text-align: left;
+        }
+
+        .styled-table th {
+            background-color: #34495e;
+            color: #fff;
+            text-align: center;
+        }
+
+        .styled-table td {
+            background-color: #f9f9f9;
+        }
+
+
+    /* Общие стили */
+    .content-text {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #34495e;
+        text-align: justify;
+        margin-bottom: 20px;
+    }
+
+        .content-text b {
+            color: #e74c3c;
+        }
+
+        .content-text ul {
+            margin-top: 10px;
+        }
+
+            .content-text ul li {
+                padding-left: 20px;
+            }
+
+    /* Ссылки */
+    a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<section id="content">
+    <div class="inner-content">
+        <!-- Заголовок страницы -->
+        @if (ViewBag.Entries.ContainsKey("GDPR_Title"))
+        {
+            <h1 class="page-title" data-key="GDPR_Title">
+                @ViewBag.Entries["GDPR_Title"]
+            </h1>
+        }
+
+        @if (ViewBag.Entries.ContainsKey("GDPR_Header"))
+        {
+            <h3 data-key="GDPR_Header">
+                @ViewBag.Entries["GDPR_Header"]
+            </h3>
+        }
+
+        <div class="content-text">
+            <!-- Секция "Správce osobních údajů" -->
+            @if (ViewBag.Entries.ContainsKey("GDPR_DataController"))
+            {
+                <p><b data-key="GDPR_DataController">@ViewBag.Entries["GDPR_DataController"]</b></p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_DataController_Details"))
+            {
+                <table class="styled-table">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" data-key="GDPR_DataController_Details">
+                                @Html.Raw(ViewBag.Entries["GDPR_DataController_Details"])
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+
+            <!-- Секция "Právní základ pro zpracování" -->
+            @if (ViewBag.Entries.ContainsKey("GDPR_LegalBasis"))
+            {
+                <p><b data-key="GDPR_LegalBasis">@ViewBag.Entries["GDPR_LegalBasis"]</b></p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_LegalBasis_Details"))
+            {
+                <ul>
+                    <li data-key="GDPR_LegalBasis_Details">
+                        @ViewBag.Entries["GDPR_LegalBasis_Details"]
+                    </li>
+                </ul>
+            }
+
+            <!-- Секция "Účel zpracování" -->
+            @if (ViewBag.Entries.ContainsKey("GDPR_Purpose"))
+            {
+                <p><b data-key="GDPR_Purpose">@ViewBag.Entries["GDPR_Purpose"]</b></p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_Purpose_Details"))
+            {
+                <ul>
+                    <li data-key="GDPR_Purpose_Details">
+                        @ViewBag.Entries["GDPR_Purpose_Details"]
+                    </li>
+                </ul>
+            }
+
+            <!-- Секция "Příjemci osobních údajů" -->
+            @if (ViewBag.Entries.ContainsKey("GDPR_Recipients"))
+            {
+                <p><b data-key="GDPR_Recipients">@ViewBag.Entries["GDPR_Recipients"]</b></p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_Recipients_Details"))
+            {
+                <ul>
+                    <li data-key="GDPR_Recipients_Details">
+                        @ViewBag.Entries["GDPR_Recipients_Details"]
+                    </li>
+                </ul>
+            }
+
+            <!-- Секция "Doba zpracování osobních údajů" -->
+            @if (ViewBag.Entries.ContainsKey("GDPR_ProcessingTime"))
+            {
+                <p><b data-key="GDPR_ProcessingTime">@ViewBag.Entries["GDPR_ProcessingTime"]</b></p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_ProcessingTime_Details"))
+            {
+                <p data-key="GDPR_ProcessingTime_Details">
+                    @ViewBag.Entries["GDPR_ProcessingTime_Details"]
+                </p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_AccessRight"))
+            {
+                <p><b data-key="GDPR_AccessRight">@ViewBag.Entries["GDPR_AccessRight"]</b></p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_AccessRight_Details"))
+            {
+                <p data-key="GDPR_AccessRight_Details">
+                    @ViewBag.Entries["GDPR_AccessRight_Details"]
+                </p>
+            }
+
+           
+            @if (ViewBag.Entries.ContainsKey("GDPR_DeletionRight_Details"))
+            {
+                <p data-key="GDPR_DeletionRight_Details">
+                    @ViewBag.Entries["GDPR_DeletionRight_Details"]
+                </p>
+            }
+
+           
+            @if (ViewBag.Entries.ContainsKey("GDPR_ProcessingRestriction_Details"))
+            {
+                <p data-key="GDPR_ProcessingRestriction_Details">
+                    @ViewBag.Entries["GDPR_ProcessingRestriction_Details"]
+                </p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_DataPortability"))
+            {
+                <p><b data-key="GDPR_DataPortability">@ViewBag.Entries["GDPR_DataPortability"]</b></p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("GDPR_DataPortability_Details"))
+            {
+                <p data-key="GDPR_DataPortability_Details">
+                    @ViewBag.Entries["GDPR_DataPortability_Details"]
+                </p>
+            }
+
+           
+            @if (ViewBag.Entries.ContainsKey("GDPR_ConsentWithdrawal_Details"))
+            {
+                <p data-key="GDPR_ConsentWithdrawal_Details">
+                    @ViewBag.Entries["GDPR_ConsentWithdrawal_Details"]
+                </p>
+            }
+
+            
+            @if (ViewBag.Entries.ContainsKey("GDPR_Complaint_Details"))
+            {
+                <p data-key="GDPR_Complaint_Details">
+                    @ViewBag.Entries["GDPR_Complaint_Details"]
+                </p>
+            }
+
+           
+            @if (ViewBag.Entries.ContainsKey("GDPR_MoreInfo_Details"))
+            {
+                <p data-key="GDPR_MoreInfo_Details">
+                    @Html.Raw(ViewBag.Entries["GDPR_MoreInfo_Details"])
+                </p>
+            }
+        </div>
+    </div>
+</section>

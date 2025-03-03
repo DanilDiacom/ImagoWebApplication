@@ -1,0 +1,141 @@
+﻿.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%);
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    padding-left: 90px;
+}
+
+#productCarousel {
+    width: 100%;
+    max-width: 550px;
+    height: 550px;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 550px;
+    object-fit: cover;
+}
+
+.list-group {
+    width: 500px;
+    margin-left: 50px;
+}
+
+.home-body-container {
+    margin-top: 20px;
+}
+
+.text-container {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: justify;
+    padding: 0 15px;
+    max-width: 1150px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+    .carousel-container {
+        padding-left: 50px;
+    }
+
+    #productCarousel {
+        height: 450px;
+        margin-bottom: 30px;
+    }
+
+    .carousel-inner img {
+        height: 450px;
+    }
+
+    .list-group {
+        width: 100%;
+        margin-left: 10px;
+        margin-bottom: -10px;
+        margin-top: 20px;
+    }
+
+    .text-container {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 992px) {
+    .carousel-container {
+        padding-left: 0;
+        justify-content: center;
+    }
+
+    #productCarousel {
+        height: 400px;
+        margin-bottom: 30px;
+    }
+
+    .carousel-inner img {
+        height: 400px;
+    }
+
+    .list-group {
+        width: 100%;
+        margin-left: 10px;
+        margin-bottom: -10px;
+        margin-top: 20px;
+    }
+
+    .text-container {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 768px) {
+    #productCarousel {
+        height: 350px;
+        margin-bottom: 30px;
+    }
+
+    .carousel-inner img {
+        height: 350px;
+    }
+
+    .list-group {
+        width: 100%;
+        margin-left: 10px;
+        margin-bottom: -10px;
+        margin-top: 20px;
+    }
+
+    .text-container {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    #productCarousel {
+        height: 300px;
+        margin-bottom: 30px;
+    }
+
+    .carousel-inner img {
+        height: 300px;
+    }
+
+    .list-group {
+        width: 100%;
+        margin-left: 10px;
+        margin-bottom: -10px;
+        margin-top: 20px;
+    }
+
+    .text-container {
+        font-size: 16px;
+    }
+}

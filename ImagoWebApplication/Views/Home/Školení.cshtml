@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Školení";
+}
+
+<section id="content">
+    <div class="inner-content">
+        <div class="container">
+            <h1 class="page-title" style="text-align:center;margin-top: 20px;" data-key="DiacomClub_Skoleni_Title">@ViewBag.Entries["DiacomClub_Skoleni_Title"]</h1>
+
+            <div class="steps-container">
+                <h2 class="steps-title" data-key="DiacomClub_Skoleni_Header">@ViewBag.Entries["DiacomClub_Skoleni_Header"]</h2>
+
+                <div class="step">
+                    <div class="step-icon">📄</div>
+                    <div class="step-text">
+                        <strong data-key="DiacomClub_Step1_Title">@ViewBag.Entries["DiacomClub_Step1_Title"]</strong><br>
+                        <span data-key="DiacomClub_Step1_Desc">@ViewBag.Entries["DiacomClub_Step1_Desc"]</span>
+                    </div>
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="step">
+                    <div class="step-icon">💰</div>
+                    <div class="step-text">
+                        <strong data-key="DiacomClub_Step2_Title">@ViewBag.Entries["DiacomClub_Step2_Title"]</strong><br>
+                        <span data-key="DiacomClub_Step2_Desc">@ViewBag.Entries["DiacomClub_Step2_Desc"]</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .steps-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .steps-title {
+        font-size: 1.7rem;
+        margin-bottom: 40px;
+        color: #2c3e50;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: #e0e0e0;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-icon {
+        font-size: 2rem;
+    }
+
+    .step-text {
+        text-align: left;
+        font-size: 1.1rem;
+        color: #34495e;
+    }
+
+    .arrow {
+        font-size: 4rem;
+        color: #1d4f99;
+        margin-bottom: 15px;
+    }
+</style>

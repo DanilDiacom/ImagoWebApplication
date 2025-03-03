@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Přístroje Diacom";
+}
+
+<section id="content">
+    <div class="inner-content">
+        <div class="container text-center">
+            <h1 class="page-title">Přístroje Diacom</h1>
+
+            <div class="top-pages">
+                <a class="btn" asp-area="" asp-controller="Diacom" asp-action="Enerscan">DIACOM ENERSCAN</a>
+                <a class="btn" asp-area="" asp-controller="Diacom" asp-action="LiteFreq">DIACOM FREQ LITE</a>
+                <a class="btn" asp-area="" asp-controller="Diacom" asp-action="Plasmotronic">PLASMOTRONIC</a>
+                <a class="btn" asp-area="" asp-controller="Diacom" asp-action="Medio">DIACOM MEDIO</a>
+                <a class="btn" asp-area="" asp-controller="Diacom" asp-action="FreqPc">DIACOM-SOLO-FREQ-PC</a>
+                <a class="btn" asp-area="" asp-controller="Diacom" asp-action="Ioniser">DIACOM-SOLO-Ionizer</a>
+@*                 <a class="btn" asp-area="" asp-controller="Diacom" asp-action="ProductPrice">CENY PRISTROJU DIACOM</a>
+ *@                <a class="btn" asp-area="" asp-controller="Diacom" asp-action="Navody">Navody k pristrojum</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Основной контейнер */
+    .inner-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 20px;
+        text-align: center;
+    }
+
+    /* Заголовок */
+    .page-title {
+        font-size: 36px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Контейнер кнопок */
+    .top-pages {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    /* Кнопки */
+    .btn {
+        padding: 16px 32px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #333;
+        background-color: #f0f0f0;
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+        /* Эффект при наведении */
+        .btn:hover {
+            background-color: #1d4f99;
+            color: #fff;
+            border-color: #1d4f99;
+        }
+
+        /* Эффект при фокусе */
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+</style>
+
+

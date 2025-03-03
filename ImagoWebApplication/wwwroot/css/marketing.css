@@ -1,0 +1,120 @@
+﻿#content {
+    padding: 20px 0;
+}
+
+.inner-content {
+    text-align: center;
+    padding: 0 15px; /* Добавляем отступы по бокам для мобильных устройств */
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #34495e;
+}
+
+.intro-text {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.sub-heading {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #34495e;
+}
+
+.priority-list {
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 1.1rem;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+    .priority-list li {
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+        .priority-list li strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    .priority-list ul {
+        padding-left: 20px;
+        margin-top: 10px;
+    }
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+    .page-title {
+        font-size: 2rem; /* Уменьшаем размер заголовка */
+    }
+
+    .intro-text {
+        font-size: 1rem; /* Уменьшаем размер текста */
+    }
+
+    .sub-heading {
+        font-size: 1.1rem; /* Уменьшаем размер подзаголовка */
+    }
+
+    .priority-list {
+        max-width: 90%; /* Уменьшаем максимальную ширину списка */
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.8rem; /* Еще меньше размер заголовка */
+    }
+
+    .intro-text {
+        font-size: 0.95rem; /* Еще меньше размер текста */
+    }
+
+    .sub-heading {
+        font-size: 1rem; /* Еще меньше размер подзаголовка */
+    }
+
+    .priority-list {
+        font-size: 1rem; /* Уменьшаем размер текста списка */
+    }
+
+        .priority-list ul {
+            padding-left: 15px; /* Уменьшаем отступ для вложенных списков */
+        }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.5rem; /* Минимальный размер заголовка */
+    }
+
+    .intro-text {
+        font-size: 0.9rem; /* Минимальный размер текста */
+    }
+
+    .sub-heading {
+        font-size: 0.95rem; /* Минимальный размер подзаголовка */
+    }
+
+    .priority-list {
+        font-size: 0.95rem; /* Минимальный размер текста списка */
+    }
+
+        .priority-list li {
+            margin-bottom: 15px; /* Уменьшаем отступ между элементами списка */
+        }
+
+        .priority-list ul {
+            padding-left: 10px; /* Минимальный отступ для вложенных списков */
+        }
+}

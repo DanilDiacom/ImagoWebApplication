@@ -1,0 +1,117 @@
+﻿.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%);
+}
+
+/* Адаптивные стили для карусели */
+.custom-carousel {
+    max-width: 100%;
+    max-height: 400px;
+    margin: 20px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+    .custom-carousel img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        object-fit: cover;
+    }
+
+/* Стили блока отчета */
+.conference-report {
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #e9ecef;
+}
+
+/* Заголовок конференции */
+.conference-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+    .conference-header h2 {
+        color: #2c3e50;
+        margin: 0;
+    }
+
+/* Медиа-запросы для адаптации под мобильные устройства */
+@media (max-width: 992px) {
+    .container {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        filter: invert(100%);
+    }
+
+    .conference-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .conference-header h2,
+        .conference-location {
+            text-align: left;
+            width: 100%;
+        }
+
+    .custom-carousel {
+        max-width: 100%;
+        max-height: 300px;
+    }
+
+        .custom-carousel img {
+            height: 300px;
+        }
+
+    .conference-report {
+        padding: 15px;
+    }
+
+        .conference-report p {
+            font-size: 18px;
+        }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 0 5px;
+    }
+
+    .custom-carousel {
+        max-height: 250px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        filter: invert(100%);
+    }
+
+        .custom-carousel img {
+            height: 250px;
+        }
+
+    .conference-report {
+        padding: 10px;
+    }
+
+    .conference-header h2 {
+        font-size: 18px;
+    }
+
+    .conference-report p {
+        font-size: 16px;
+    }
+}

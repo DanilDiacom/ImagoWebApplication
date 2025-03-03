@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Marketing a cíle společnosti";
+}
+
+<link rel="stylesheet" href="~/css/marketing.css" asp-append-version="true" />
+
+<section id="content">
+    <div class="inner-content">
+        <div class="container">
+            <!-- Заголовок страницы -->
+            @if (ViewBag.Entries.ContainsKey("Marketing_Title"))
+            {
+                <h1 class="page-title" data-key="Marketing_Title">@ViewBag.Entries["Marketing_Title"]</h1>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("Marketing_Header"))
+            {
+                <p class="intro-text" data-key="Marketing_Header">@ViewBag.Entries["Marketing_Header"]</p>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("Marketing_SubHead"))
+            {
+                <p class="sub-heading" data-key="Marketing_SubHead">@ViewBag.Entries["Marketing_SubHead"]</p>
+            }
+
+            <ul class="priority-list">
+                <li>
+                    <p data-key="Marketing_Prioriti_First"><strong>@ViewBag.Entries["Marketing_Prioriti_First"]</strong></p>
+                    <ul>
+                        <li data-key="Marketing_SubPrioriti_First">@ViewBag.Entries["Marketing_SubPrioriti_First"]</li>
+                        <li data-key="Marketing_SubPrioriti_Second">@ViewBag.Entries["Marketing_SubPrioriti_Second"]</li>
+                    </ul>
+                </li>
+                <li>
+                    <p data-key="Marketing_Prioriti_Second"><strong>@ViewBag.Entries["Marketing_Prioriti_Second"]</strong></p>
+                    <ul>
+                        <li data-key="Marketing_SubPrioriti_Second_First">@ViewBag.Entries["Marketing_SubPrioriti_Second_First"]</li>
+                    </ul>
+                </li>
+                <li>
+                    <p data-key="Marketing_Prioriti_Third"><strong>@ViewBag.Entries["Marketing_Prioriti_Third"]</strong></p>
+                    <ul>
+                        <li data-key="Marketing_SubPrioriti_Third_First">@ViewBag.Entries["Marketing_SubPrioriti_Third_First"]</li>
+                    </ul>
+                </li>
+                <li>
+                    <p data-key="Marketing_Prioriti_Four"><strong>@ViewBag.Entries["Marketing_Prioriti_Four"]</strong></p>
+                    <ul>
+                        <li data-key="Marketing_Prioriti_Four_First">@ViewBag.Entries["Marketing_Prioriti_Four_First"]</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>

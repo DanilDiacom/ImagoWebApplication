@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="9.0.30" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImagoLib\ImagoLib.csproj" />
+  </ItemGroup>
+
+</Project>

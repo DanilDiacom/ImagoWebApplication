@@ -1,0 +1,114 @@
+﻿.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%);
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    padding-left: 90px;
+}
+
+#productCarousel {
+    width: 100%;
+    max-width: 550px;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.list-group {
+    width: 550px; /* Уменьшаем ширину списка */
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+    .carousel-container {
+        padding-left: 50px; /* Уменьшаем отступ слева */
+    }
+
+    #productCarousel {
+        max-width: 450px; /* Уменьшаем максимальную ширину карусели */
+        height: 350px; /* Уменьшаем высоту карусели */
+    }
+
+    .carousel-inner img {
+        height: 350px; /* Соответственно уменьшаем высоту изображений */
+    }
+
+    .list-group {
+        width: 400px; /* Уменьшаем ширину списка */
+    }
+}
+
+@media (max-width: 992px) {
+    .carousel-container {
+        padding-left: 0; /* Убираем отступ слева */
+        justify-content: center; /* Центрируем карусель */
+    }
+
+    #productCarousel {
+        max-width: 100%; /* Карусель занимает всю доступную ширину */
+        height: 300px; /* Уменьшаем высоту карусели */
+    }
+
+    .carousel-inner img {
+        height: 300px; /* Соответственно уменьшаем высоту изображений */
+    }
+
+    .list-group {
+        width: 100%; /* Список занимает всю ширину */
+        margin-left: 0; /* Убираем отступ слева */
+    }
+
+    .col-md-6 {
+        width: 100%; /* Каждая колонка занимает всю ширину */
+        margin-bottom: 20px; /* Добавляем отступ между каруселью и списком */
+    }
+
+    .text-container {
+        padding: 0 10px; /* Уменьшаем отступы текста */
+    }
+}
+
+@media (max-width: 768px) {
+    #productCarousel {
+        height: 250px; /* Уменьшаем высоту карусели */
+    }
+
+    .carousel-inner img {
+        height: 250px; /* Соответственно уменьшаем высоту изображений */
+    }
+
+    .list-group {
+        width: 100%; /* Список занимает всю ширину */
+    }
+
+    .text-container {
+        font-size: 18px; /* Уменьшаем размер текста */
+    }
+}
+
+@media (max-width: 576px) {
+    #productCarousel {
+        height: 300px; /* Уменьшаем высоту карусели */
+    }
+
+    .carousel-inner img {
+        height: 300px; /* Соответственно уменьшаем высоту изображений */
+    }
+
+    .list-group {
+        width: 100%; /* Список занимает всю ширину */
+    }
+
+    .text-container {
+        font-size: 16px; /* Уменьшаем размер текста */
+    }
+}

@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Novinky";
+}
+
+<style>
+    .news-list img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .news-list a {
+        background-color: #1d4f99;
+        font-size:16px;
+    }
+</style>
+
+<section id="content" class="py-5">
+    <div class="container" style="width:1100px;">
+        <h1 class="page-title" style="margin-bottom:30px; text-align:center;">Novinky</h1>
+
+        <form action="/cs/news/" method="post" id="frm-periodForm" class="d-none">
+            <input type="hidden" name="period" id="frm-periodForm-period" value="">
+            <input type="hidden" name="do" value="periodForm-submit">
+        </form>
+
+        <div class="row">
+            <!-- Левый блок с новостями -->
+            <div class="col-lg-9">
+                <div class="news-list">
+                    <div class="news-item d-flex align-items-start mb-4">
+                        <a href="/cs/news/view/3" class="me-3">
+                            <img src="~/img/65c348caced39_60x60_ffffff.jpg" class="rounded" alt="News Image">
+                        </a>
+                        <div>
+                            <span class="badge bg-secondary">2024-02-07 10:09:35</span>
+                            <h5 class="mt-2">HEALTHYCOM - ZÁPŮJČKA ENERSCAN PRO VŠECHNY</h5>
+                            <p>Nově od 1.2. zápůjčka přístroje ENERSCAN pro všechny aktivní členy již od 1. úrovně.</p>
+                            <a href="/cs/news/view/3" class="btn btn-info btn-sm">Číst více »</a>
+                        </div>
+                    </div>
+
+                    <div class="news-item d-flex align-items-start mb-4">
+                        <a href="/cs/news/view/2" class="me-3">
+                            <img src="~/img/634eacbfd132f_60x60_ffffff.png" class="rounded" alt="News Image">
+                        </a>
+                        <div>
+                            <span class="badge bg-secondary">2022-10-18 15:39:58</span>
+                            <h5 class="mt-2">NOVÝ PŘÍSTROJ DIACOM MEDIO</h5>
+                            <p>Pro své klienty jsme v počátku tohoto roku připravili face-lift přístroje Medio v praktickém kufříku.</p>
+                            <a href="/cs/news/view/2" class="btn btn-info btn-sm">Číst více »</a>
+                        </div>
+                    </div>
+
+                    <div class="news-item d-flex align-items-start mb-4">
+                        <a href="/cs/news/view/1" class="me-3">
+                            <img src="~/img/634eac4fc5bd9_60x60_ffffff.jpg" class="rounded" alt="News Image">
+                        </a>
+                        <div>
+                            <span class="badge bg-secondary">2022-10-18 15:37:17</span>
+                            <h5 class="mt-2">NOVÝ PŘÍSTROJ ANIMAL</h5>
+                            <p>Scanner-Animal bude koncipován jako nový přístroj, který bude složen ze dvou částí. První část nového přístroje bude tvořit základní modul, druhá část přístroje bude jeho příslušenství.</p>
+                            <a href="/cs/news/view/1" class="btn btn-info btn-sm">Číst více »</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правый блок с календарем -->
+            <div class="col-lg-3">
+                <div class="card p-3" style="width:340px;">
+                    <h5 class="text-center">Vyberte období</h5>
+                    <input type="text" id="news-calendar" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Подключаем Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        flatpickr("#news-calendar", {
+            inline: true,  // Календарь всегда открыт
+            dateFormat: "Y-m-d",
+            onChange: function (selectedDates, dateStr) {
+                document.getElementById("frm-periodForm-period").value = dateStr;
+                document.getElementById("frm-periodForm").submit();
+            }
+        });
+    });
+</script>

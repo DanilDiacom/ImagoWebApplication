@@ -1,0 +1,166 @@
+﻿/* Основной контейнер */
+.container-gen {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Заголовок страницы */
+.page-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Заголовок секции */
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #222;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Стиль для блока комментариев */
+.komentar-block .section-title {
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #222;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Текстовые параграфы */
+.text {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* Картинки с адаптивностью */
+.responsive-img {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+/* Цитаты */
+.quote {
+    font-size: 20px;
+    font-style: italic;
+    margin: 20px 0;
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* Стили для ссылок */
+.styled-link {
+    font-weight: bold;
+    color: #a22170;
+    text-decoration: none;
+}
+
+    .styled-link:hover {
+        text-decoration: underline;
+    }
+
+/* Подпись */
+.signature {
+    font-style: italic;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* Автор */
+.author {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+/* Медиазапросы для адаптивности */
+
+/* На экранах меньше 1200px */
+@media (max-width: 1200px) {
+    .container-gen {
+        padding: 10px;
+    }
+
+    .page-title {
+        font-size: 28px;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    .text {
+        font-size: 16px;
+    }
+
+    .quote {
+        font-size: 18px;
+    }
+
+    .signature,
+    .author {
+        font-size: 16px;
+    }
+}
+
+/* На экранах меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 24px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .text {
+        font-size: 14px;
+    }
+
+    .quote {
+        font-size: 16px;
+    }
+
+    .signature,
+    .author {
+        font-size: 14px;
+    }
+}
+
+/* На экранах меньше 480px */
+@media (max-width: 480px) {
+    .container-gen {
+        padding: 10px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+
+    .text {
+        font-size: 14px;
+    }
+
+    .quote {
+        font-size: 14px;
+    }
+
+    .signature,
+    .author {
+        font-size: 14px;
+    }
+}

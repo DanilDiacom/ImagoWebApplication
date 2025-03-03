@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "O nás";
+}
+
+<section id="content">
+    <div class="inner-content">
+        <div class="container text-center">
+            <h1 class="page-title">O nás</h1>
+
+            <div class="top-pages">
+                <a class="btn" asp-area="" asp-controller="Home" asp-action="GDPR">GDPR</a>
+                <a class="btn" asp-area="" asp-controller="Home" asp-action="Marketing">Marketing a cíle společnosti</a>
+                <a class="btn" asp-area="" asp-controller="Home" asp-action="Mitink">Mítink společnosti IMAGO D&T ve spolupráci s DIACOM TECHNOLOGY</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Основной контейнер */
+    .inner-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 20px;
+        text-align: center;
+    }
+
+    /* Заголовок */
+    .page-title {
+        font-size: 36px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Контейнер кнопок */
+    .top-pages {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    /* Кнопки */
+    .btn {
+        padding: 16px 32px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #333;
+        background-color: #f0f0f0;
+        border: 2px solid #ccc;
+        border-radius: 15px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+        /* Эффект при наведении */
+        .btn:hover {
+            background-color: #1d4f99;
+            color: #fff;
+            border-color: #1d4f99;
+        }
+
+        /* Эффект при фокусе */
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+</style>
+

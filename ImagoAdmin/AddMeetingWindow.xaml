@@ -1,0 +1,57 @@
+﻿<Window x:Class="ImagoAdmin.AddMeetingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Přidat mítink" Height="810" Width="700" WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Název:" FontWeight="Bold" VerticalAlignment="Center"/>
+        <TextBox Name="TitleTextBox" Grid.Row="1" Margin="0,5,0,10"/>
+
+        <TextBlock Text="Místo konání:" FontWeight="Bold" VerticalAlignment="Center" Grid.Row="2"/>
+
+        <!-- Новый TextBlock с примером города -->
+        <TextBlock Text="Například: Praha, Czech Republic" Foreground="Gray" FontStyle="Italic" Grid.Row="3" Margin="0,2,0,10"/>
+
+        <TextBox Name="LocationTextBox" Grid.Row="4" Margin="0,5,0,10"/>
+
+        <TextBlock Text="Popis:" FontWeight="Bold" VerticalAlignment="Center" Grid.Row="5" Margin="0,0,0,10"/>
+        <TextBox Name="DescriptionTextBox" Grid.Row="6" Height="80" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Hodnocení setkání:" FontWeight="Bold" VerticalAlignment="Center" Grid.Row="7"/>
+        <TextBox Name="FeedbackTextBox" Grid.Row="8" Height="80" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,5,0,10"/>
+
+        <TextBlock Text="Fotografie:" FontWeight="Bold" VerticalAlignment="Center" Grid.Row="9"/>
+        <ListBox Name="PhotoList" Grid.Row="10" Height="300" Margin="0,5,0,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding}" Height="150" Width="150" Margin="5"/>
+                        <Button Content="Odebrat" Margin="50,0,0,0" Width="100px" Height="40px" Tag="{Binding}" Click="RemovePhoto_Click"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button Name="AddPhotoButton" Content="Přidat fotografii" Click="AddPhotoButton_Click" Grid.Row="11" Margin="0,5,0,10"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="12">
+            <Button Name="SaveButton" Content="Uložit" Click="SaveButton_Click" Width="80" Margin="5"/>
+            <Button Name="CancelButton" Content="Zrušit" Click="CancelButton_Click" Width="80" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>

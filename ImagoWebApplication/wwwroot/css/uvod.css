@@ -1,0 +1,415 @@
+﻿/* Контейнер формы */
+.container-contact {
+    max-width: 1150px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Arial', sans-serif;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: auto; /* Фиксированная высота */
+    object-fit: cover; /* Сохраняем пропорции изображения */
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* Стили для карусели */
+#carouselExampleIndicators {
+    margin-top: 20px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 1150px;
+    height: auto;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    top: 50%; /* Позиционируем по центру по вертикали */
+    transform: translateY(-50%); /* Смещаем на половину своей высоты вверх */
+    width: 50px; /* Размер кнопок навигации */
+    height: 50px;
+    border-radius: 50%; /* Скругление углов */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: invert(100%);
+}
+
+.carousel-control-prev {
+    left: 20px; /* Отступ слева */
+}
+
+.carousel-control-next {
+    right: 20px; /* Отступ справа */
+}
+
+
+.section-1 {
+    padding: 30px 0;
+}
+
+.section-1 .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.section-1 h2 {
+    font-size: 2em;
+    text-align: center;
+    color: #1d4f99;
+    margin-bottom: 20px;
+}
+
+/* Cards styling */
+.section-1 .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.section-1 .col {
+    flex: 1 1 calc(33.333% - 30px); /* Adjusts cards width */
+    max-width: calc(33.333% - 30px);
+    box-sizing: border-box;
+    margin-bottom: 30px; /* Adds spacing below each card */
+}
+
+.section-1 .card {
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .section-1 .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 15px 15px 0 0;
+    }
+
+.section-1 .card-body {
+    padding: 20px;
+    background-color: #1d4f99;
+    color: white;
+    text-align: center;
+}
+
+.section-1 .card-title {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.section-1 .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #f1f1f1;
+    color: #1d4f99;
+    border-radius: 5px;
+    border: none;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+    .section-1 .btn:hover {
+        background-color: #2980b9;
+        color: white;
+    }
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .container-contact {
+        max-width: 100%;
+        padding: 10px;
+    }
+    .carousel-indicators button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .carousel-indicators .active {
+        background-color: rgba(255, 255, 255, 1);
+    }
+
+    #carouselExampleIndicators {
+        width: 110%;
+        height: auto;/* Ширина на всю ширину экрана */
+        border-radius: 10px; /* Уменьшаем скругление углов */
+    }
+
+    .carousel-item img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px; /* Уменьшаем скругление углов для изображений */
+    }
+
+    .carousel-indicators {
+        bottom: 10px; /* Позиционируем индикаторы ближе к изображению */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 30px; /* Уменьшаем размер кнопок навигации */
+        height: 30px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 20px; /* Уменьшаем размер иконок */
+        height: 20px;
+    }
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    label {
+        font-size: 16px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .form-submit {
+        justify-content: center;
+    }
+
+    .btn-contact {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .map-container {
+        width: 100%;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    .text-container {
+        font-size: 18px;
+    }
+
+
+    .section-1 .col {
+        flex: 1 1 100%; /* Cards will take full width on small screens */
+        max-width: 100%;
+    }
+
+    .section-1 .card img {
+        height: 180px; /* Adjust image height for mobile */
+    }
+
+    .section-1 h2 {
+        font-size: 1.5em;
+    }
+
+    .section-1 .btn {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+}
+
+@media (min-width: 768px) {
+    .section-1 .col {
+        flex: 1 1 100%; /* Cards will take full width on small screens */
+        max-width: 100%;
+    }
+
+    .section-1 .card img {
+        height: 180px; /* Adjust image height for mobile */
+    }
+
+    .section-1 h2 {
+        font-size: 1.5em;
+    }
+
+    .section-1 .btn {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+}
+
+/* Для экранов среднего размера (планшеты) */
+@media (max-width: 1024px) {
+    .container-contact {
+        max-width: 95%;
+    }
+
+    #carouselExampleIndicators {
+        width: 100%; /* Ширина 90% от ширины экрана */
+        border-radius: 15px; /* Умеренное скругление углов */
+    }
+
+    .carousel-item img {
+        border-radius: 15px; /* Умеренное скругление углов для изображений */
+    }
+
+    .carousel-indicators {
+        bottom: 15px; /* Позиционируем индикаторы ближе к изображению */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 40px; /* Увеличиваем размер кнопок навигации */
+        height: 40px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 25px; /* Увеличиваем размер иконок */
+        height: 25px;
+    }
+
+    .section-1 .col {
+        flex: 1 1 calc(50% - 30px); /* Cards take 50% width on medium-sized screens */
+        max-width: calc(50% - 30px);
+    }
+
+    .section-1 .card img {
+        height: 250px; /* Adjust image height for tablets */
+    }
+
+    .section-1 .btn {
+        font-size: 1em;
+    }
+}
+
+/* Для больших экранов */
+@media (min-width: 1200px) {
+    .container-contact {
+        max-width: 1150px;
+    }
+
+    #carouselExampleIndicators {
+        width: 1150px; /* Фиксированная ширина карусели */
+        border-radius: 20px; /* Скругление углов */
+    }
+
+    .carousel-item img {
+        border-radius: 20px; /* Скругление углов для изображений */
+    }
+
+    .carousel-indicators {
+        bottom: 20px; /* Позиционируем индикаторы */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px; /* Размер кнопок навигации */
+        height: 50px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 30px; /* Размер иконок */
+        height: 30px;
+    }
+
+    .section-1 .col {
+        flex: 1 1 calc(33.333% - 30px); /* Cards take 33% width on large screens */
+        max-width: calc(33.333% - 30px);
+    }
+
+    .section-1 .card img {
+        height: 300px; /* Adjust image height for large screens */
+    }
+
+    .section-1 .btn {
+        font-size: 1.1em;
+        padding: 12px;
+    }
+}
+
+.contact-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+
+.form-title {
+    font-size: 1.6em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.alert {
+    background-color: #f9f9f9;
+    color: #f39c12;
+    padding: 10px;
+    font-size: 17px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.star {
+    color: red;
+}
+
+/* Поля и метки в одной строке */
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 14px;
+    color: #333;
+    min-width: 150px;
+    font-weight: bold;
+}
+
+.form-control {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+textarea.form-control {
+    height: 80px;
+    resize: none;
+}
+
+
+.form-submit {
+    display: flex;
+    justify-content: flex-end;
+}
+/* Кнопка */
+.btn-contact {
+    width: 100px;
+    padding: 8px 16px;
+    background-color: #1d4f99;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-contact:hover {
+        background-color: #2980b9;
+    }
