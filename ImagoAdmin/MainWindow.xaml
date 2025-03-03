@@ -9,7 +9,7 @@
         WindowState="Maximized">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="275"/>
+            <ColumnDefinition Width="215"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
