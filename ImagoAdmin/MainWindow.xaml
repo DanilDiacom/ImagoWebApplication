@@ -3,10 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" xmlns:models="clr-namespace:ImagoLib.Models;assembly=ImagoLib" d:DataContext="{d:DesignInstance Type=models:Pages}"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:models="clr-namespace:ImagoLib.Models;assembly=ImagoLib"
+        d:DataContext="{d:DesignInstance Type=models:Pages}"
         mc:Ignorable="d"
-        Title="IMAGO Admin" Height="900" Width="1200"
-        WindowState="Maximized">
+        Icon="favicon.ico"
+        Title="IMAGO Admin" Height="1000" Width="1200"
+        WindowState="Maximized" Background="#f0f0f0">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="#1d4f99"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="275"/>
@@ -16,7 +32,7 @@
 
         <!-- Левая панель -->
         <StackPanel Grid.Column="0" Background="#f5f5f5" Margin="10">
-            <TextBlock Text="Stránky" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBlock Text="Stránky" FontWeight="Bold" Margin="0,0,0,5" FontSize="16"/>
             <TreeView Name="tvPageList" ItemsSource="{Binding PagesList}" Height="250" SelectedItemChanged="TreeView_SelectionChanged">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding SubPages}">
@@ -24,7 +40,7 @@
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
-            <Button Name="AddDeviceButton" Content="Přidat přístroj" Click="AddDeviceButton_Click" Margin="0,15,0,5"/>
+            <Button Name="AddDeviceButton" Content="➕ Přidat přístroj" Click="AddDeviceButton_Click"/>
 
             <ListView Name="lv_Meeting" ItemsSource="{Binding MeetingList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
                 <ListView.View>
@@ -34,21 +50,20 @@
                 </ListView.View>
             </ListView>
 
-            <Button Name="AddMeetingButton" Content="Přidat mítink" Click="AddMeetingButton_Click" Visibility="Collapsed" Margin="0,5,0,5"/>
-            <Button Name="EditMeetingButton" Content="Opravit mítink" Click="EditMeetingButton_Click" Visibility="Collapsed" Margin="0,5,0,5"/>
-            <Button Name="DeleteMeetingButton" Content="Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed" Margin="0,5,0,5"/>
+            <Button Name="AddMeetingButton" Content="➕ Přidat mítink" Click="AddMeetingButton_Click" Visibility="Collapsed"/>
+            <Button Name="EditMeetingButton" Content="✏ Opravit mítink" Click="EditMeetingButton_Click" Visibility="Collapsed"/>
+            <Button Name="DeleteMeetingButton" Content="🗑 Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed"/>
         </StackPanel>
 
         <!-- Центральная панель (WebView2) -->
         <wv2:WebView2 Name="webView" Grid.Column="1" Source="https://localhost:7090/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
 
         <!-- Правая панель -->
-        <TabControl Grid.Column="2" Background="#eeeeee" Margin="10">
-            <!-- Вкладка с текстовым контентом -->
-            <TabItem Header="Text">
+        <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <TabControl Grid.Column="2" Background="#eeeeee" Margin="10">
+            <TabItem Header="📝 Text">
                 <StackPanel>
-                    <Button Name="EditButton" Content="Редактировать" Click="EditButton_Click" Margin="0,0,0,10"/>
-                    <TextBlock Text="Úprava obsahu" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Úprava obsahu" FontWeight="Bold" Margin="0,10,0,5" FontSize="16"/>
 
                     <ListBox Name="EntryList" Height="200" Margin="0,0,0,10" SelectionChanged="EntryList_SelectionChanged">
                         <ListBox.ItemTemplate>
@@ -62,9 +77,11 @@
                     </ListBox>
 
                     <TextBox Name="TextEditor" Height="350" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,10"/>
-                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,5">
-                        <!-- Первый ряд -->
-                        <ComboBox Name="FontFamilyComboBox" Width="120" SelectionChanged="FontFamilyComboBox_SelectionChanged">
+
+                    <!-- Шрифт -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Písmo:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                        <ComboBox Name="FontFamilyComboBox" Width="200" SelectionChanged="FontFamilyComboBox_SelectionChanged">
                             <ComboBoxItem Content="Arial"/>
                             <ComboBoxItem Content="Times New Roman"/>
                             <ComboBoxItem Content="Courier New"/>
@@ -76,8 +93,12 @@
                             <ComboBoxItem Content="Impact"/>
                             <ComboBoxItem Content="Lucida Console"/>
                         </ComboBox>
+                    </StackPanel>
 
-                        <ComboBox Name="FontSizeComboBox" Width="90" SelectionChanged="FontSizeComboBox_SelectionChanged">
+                    <!-- Размер шрифта -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Velikost:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                        <ComboBox Name="FontSizeComboBox" Width="200" SelectionChanged="FontSizeComboBox_SelectionChanged">
                             <ComboBoxItem Content="8"/>
                             <ComboBoxItem Content="10"/>
                             <ComboBoxItem Content="12"/>
@@ -90,45 +111,42 @@
                             <ComboBoxItem Content="32"/>
                             <ComboBoxItem Content="36"/>
                         </ComboBox>
+                    </StackPanel>
 
-                        <Button Content="B" FontWeight="Bold" Width="50" Click="BoldButton_Click"/>
-                        <Button Content="I" FontStyle="Italic" Width="40" Click="ItalicButton_Click"/>
-                        <Button Click="UnderlineButton_Click" Width="39">
-                            <TextBlock Text="U" TextDecorations="Underline"/>
-                        </Button>
+                    <!-- Форматирование -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Formátování:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="BoldButton" Content="B" FontWeight="Bold" Width="40" Click="BoldButton_Click" Margin="0,0,5,0"/>
+                            <Button x:Name="ItalicButton" Content="I" FontStyle="Italic" Width="40" Click="ItalicButton_Click" Margin="0,0,5,0"/>
+                            <Button x:Name="UnderlineButton" Click="UnderlineButton_Click" Width="40"  Margin="0,0,5,0">
+                                <TextBlock Text="U" TextDecorations="Underline"/>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
 
-                        <!-- Вставляем пустой элемент, чтобы создать отступ -->
-                        <TextBlock Width="10"/>
-                        <!-- Пустой элемент с шириной для отступа -->
-
-                        <!-- Второй ряд -->
-                        <ComboBox Name="TextColorComboBox" Width="100" SelectionChanged="TextColorComboBox_SelectionChanged">
-                            <ComboBoxItem Content="Black"/>
-                            <ComboBoxItem Content="Red"/>
-                            <ComboBoxItem Content="Green"/>
-                            <ComboBoxItem Content="Blue"/>
-                            <ComboBoxItem Content="Yellow"/>
-                            <ComboBoxItem Content="Orange"/>
-                            <ComboBoxItem Content="Purple"/>
-                            <ComboBoxItem Content="Gray"/>
+                    <!-- Цвет текста -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Barva textu:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                        <ComboBox Name="TextColorComboBox" Width="200" SelectionChanged="TextColorComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Černá"/>
+                            <ComboBoxItem Content="Červená"/>
+                            <ComboBoxItem Content="Zelená"/>
+                            <ComboBoxItem Content="Modrá"/>
+                            <ComboBoxItem Content="Žlutá"/>
+                            <ComboBoxItem Content="Oranžová"/>
+                            <ComboBoxItem Content="Fialová"/>
+                            <ComboBoxItem Content="Šedá"/>
                         </ComboBox>
+                    </StackPanel>
 
-                        <ComboBox Name="TextAlignmentComboBox" Width="120" SelectionChanged="TextAlignmentComboBox_SelectionChanged">
-                            <ComboBoxItem Content="Left"/>
-                            <ComboBoxItem Content="Center"/>
-                            <ComboBoxItem Content="Right"/>
-                            <ComboBoxItem Content="Justify"/>
-                        </ComboBox>
-                    </WrapPanel>
-
-
-                    <Button Name="SaveButton" Content="Uložit změny" Click="SaveButton_Click" Margin="5,10,5,5"/>
-                    <Button Name="PublishButton" Content="Publikovat" Click="PublishButton_Click" Margin="5"/>
+                    <!-- Кнопки сохранения и публикации -->
+                    <Button Name="SaveButton" Content="💾 Uložit změny" Click="SaveButton_Click" Margin="0,10,0,5"/>
+                    <Button Name="PublishButton" Content="📤 Publikovat" Click="PublishButton_Click" Margin="0,5,0,10"/>
                 </StackPanel>
             </TabItem>
 
-            <!-- Вкладка с фотографиями -->
-            <TabItem Header="Foto">
+            <TabItem Header="🖼 Foto">
                 <StackPanel>
                     <ListBox Name="PhotoList" Height="400" Margin="0,0,0,10">
                         <ListBox.ItemTemplate>
@@ -141,14 +159,13 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <Button Name="AddPhotoButton" Content="Přidat fotografii" Click="AddPhotoButton_Click" Margin="5"/>
-                    <Button Name="UpdatePhotosButton" Content="Upravit fotografii" Margin="5" Click="UpdatePhotosButton_Click_1"/>
-                    <Button Name="DeletePhotosButton" Content="Odstranit fotografii" Margin="5,5,5,30" Click="DeletePhotosButton_Click"/>
-
-                    <Button Name="SavePhotosButton" Content="Uložit fotografii na web" Margin="5" Click="SavePhotosButton_Click"/>
-
+                    <Button Name="AddPhotoButton" Content="➕ Přidat fotografii" Click="AddPhotoButton_Click"/>
+                    <Button Name="UpdatePhotosButton" Content="✏ Upravit fotografii" Click="UpdatePhotosButton_Click_1"/>
+                    <Button Name="DeletePhotosButton" Content="🗑 Odstranit fotografii" Click="DeletePhotosButton_Click"/>
+                    <Button Name="SavePhotosButton" Content="💾 Uložit fotografii na web" Click="SavePhotosButton_Click"/>
                 </StackPanel>
             </TabItem>
         </TabControl>
+        </ScrollViewer>
     </Grid>
 </Window>

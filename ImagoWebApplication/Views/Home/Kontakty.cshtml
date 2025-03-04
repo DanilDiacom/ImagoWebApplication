@@ -253,6 +253,54 @@
                     </form>
                 </div>
             </div>
+
+            <script>
+                document.getElementById('contactForm').addEventListener('submit', function(event) {
+                    let isValid = true;
+
+                    // Очистить предыдущие ошибки
+                    document.getElementById('name-error').textContent = '';
+                    document.getElementById('email-error').textContent = '';
+                    document.getElementById('text-error').textContent = '';
+
+                    // Проверка полей на пустоту
+                    let nameField = document.getElementById('frm-contactForm-name');
+                    let emailField = document.getElementById('frm-contactForm-email');
+                    let textField = document.getElementById('frm-contactForm-text');
+
+                    // Проверка имени
+                    if (!nameField.value.trim()) {
+                        document.getElementById('name-error').textContent = 'Kontaktní osoba je povinná.';
+                        nameField.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        nameField.classList.remove('is-invalid');
+                    }
+
+                    // Проверка email
+                    if (!emailField.value.trim()) {
+                            document.getElementById('email-error').textContent = 'E-mailová adresa je povinná.';
+                            emailField.classList.add('is-invalid');
+                            isValid = false;
+                    } else {
+                            emailField.classList.remove('is-invalid');
+                    }
+
+                    // Проверка сообщения
+                    if (!textField.value.trim()) {
+                        document.getElementById('text-error').textContent = 'Zpráva je povinná.';
+                        textField.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        textField.classList.remove('is-invalid');
+                    }
+
+                    // Если форма невалидна, не отправляем
+                    if (!isValid) {
+                        event.preventDefault();
+                    }
+                });
+            </script>
         </div>
     </div>
 </section>

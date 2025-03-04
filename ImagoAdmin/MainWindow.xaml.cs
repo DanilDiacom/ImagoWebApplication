@@ -65,7 +65,7 @@ namespace ImagoAdmin {
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e) {
             if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
-                
+
                 if (selectedAttribute == "data-key") {
                     selectedEntry.ContentText = TextEditor.Text;
                 }
@@ -80,36 +80,10 @@ namespace ImagoAdmin {
 
                 EntryList.Items.Refresh();
 
-                MessageBox.Show("Изменения сохранены в базе данных.");
+                MessageBox.Show("Změny byly uloženy do databáze.");
             }
         }
 
-        private async Task SaveChanched(DictionaryEntryForText entry) {
-            if (entry == null || string.IsNullOrEmpty(TextEditor.Text)) {
-                return; // Если текст пуст или объект не выбран, ничего не делаем
-            }
-
-            if (selectedAttribute == "data-key") {
-                entry.ContentText = TextEditor.Text;
-            }
-            else if (selectedAttribute == "data-value") {
-                entry.ContentText = TextEditor.Text;
-            }
-
-            // Сохраняем текст
-            DictionaryEntryForText.SaveEntryForEditing(entry);
-
-            // Сохраняем стили
-            SaveCurrentStyles(entry.EntryKey);
-
-            // Обновляем HTML
-            string updatedHtml = await GetWebViewHtmlAsync();
-            ContentForPage.SaveContent(entry.PageId, updatedHtml);
-
-            // Обновляем список записей
-            EntryList.Items.Refresh();
-            isContentModified = false;
-        }
 
         private async Task<string> GetWebViewHtmlAsync() {
             string script = $"document.documentElement.innerHTML";
@@ -122,9 +96,6 @@ namespace ImagoAdmin {
             return unescapedHtml;
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e) {
-        }
-
         private void PublishButton_Click(object sender, RoutedEventArgs e) {
             var entriesToPublish = DictionaryEntryForText.GetAllEntriesForEditing();
 
@@ -133,7 +104,7 @@ namespace ImagoAdmin {
             }
 
             isContentModified = false;
-            MessageBox.Show("Изменения успешно опубликованы.");
+            MessageBox.Show("Změny byly úspěšně publikovány.");
         }
 
         private async void TreeView_SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
@@ -148,9 +119,9 @@ namespace ImagoAdmin {
 
             try {
                 if (isContentModified) {
-                    var result = MessageBox.Show("Máte neuložené změny na této stránce. Pokud se rozhodnete přejít na jinou stránku, vaše změny nebudou uloženy. Chcete pokračovat?","Varování", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    var result = MessageBox.Show("Máte neuložené změny na této stránce. Pokud se rozhodnete přejít na jinou stránku, vaše změny nebudou uloženy. Chcete pokračovat?", "Varování", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-                    if (result == MessageBoxResult.No) {_isTransitionCancelled = true; return;}
+                    if (result == MessageBoxResult.No) { _isTransitionCancelled = true; return; }
                 }
 
                 if (e.NewValue is Pages selectedPage && selectedPage.Url != "#") {
@@ -187,14 +158,13 @@ namespace ImagoAdmin {
 
         private async void EntryList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (previousEntry != null && isContentModified) {
-                await SaveChanched(previousEntry); // Сохраняем изменения для предыдущего текста
+                await SaveChanched(previousEntry);
+                await SaveCurrentStyles(previousEntry.EntryKey);
             }
 
             if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
-                // Загружаем текст
                 TextEditor.Text = selectedEntry.ContentText;
 
-                // Загружаем стили из базы данных
                 var style = TextStyle.GetTextStyle(selectedEntry.EntryKey);
                 if (style != null) {
                     TextEditor.FontFamily = new FontFamily(style.FontFamily);
@@ -204,10 +174,48 @@ namespace ImagoAdmin {
                     TextEditor.TextDecorations = style.TextDecoration == "Underline" ? TextDecorations.Underline : null;
                 }
 
-                // Обновляем текущий ключ и предыдущий текст
                 currentEntryKey = selectedEntry.EntryKey;
                 previousEntry = selectedEntry;
             }
+        }
+
+
+        private async Task SaveChanched(DictionaryEntryForText entry) {
+            if (entry == null || string.IsNullOrEmpty(TextEditor.Text)) {
+                return;
+            }
+
+            if (selectedAttribute == "data-key") {
+                entry.ContentText = TextEditor.Text;
+            }
+            else if (selectedAttribute == "data-value") {
+                entry.ContentText = TextEditor.Text;
+            }
+
+            DictionaryEntryForText.SaveEntryForEditing(entry);
+
+            SaveCurrentStyles(entry.EntryKey);
+
+            string updatedHtml = await GetWebViewHtmlAsync();
+            ContentForPage.SaveContent(entry.PageId, updatedHtml);
+
+            EntryList.Items.Refresh();
+            isContentModified = false;
+        }
+
+        private async Task<TextStyle> SaveCurrentStyles(string entryKey) {
+            var style = new TextStyle {
+                EntryKey = entryKey,
+                FontFamily = TextEditor.FontFamily.Source,
+                FontSize = TextEditor.FontSize.ToString(),
+                FontWeight = TextEditor.FontWeight.ToString(),
+                FontStyle = TextEditor.FontStyle.ToString(),
+                TextDecoration = TextEditor.TextDecorations == TextDecorations.Underline ? "Underline" : "None",
+            };
+
+            await TextStyle.SaveTextStyleAsync(style); 
+
+            return style;
         }
 
         private async Task UpdateWebViewContent(string key, string newText) {
@@ -244,10 +252,73 @@ namespace ImagoAdmin {
             await webView.CoreWebView2.ExecuteScriptAsync(script);
         }
 
+        private async Task UpdateWebViewStyles(string key, TextStyle style) {
+            string script = $@"
+                var element = document.querySelector('[data-key=""{key}""]');
+                if (element) {{
+                    element.style.fontFamily = '{style.FontFamily}';
+                    element.style.fontSize = '{style.FontSize}px';
+                    element.style.fontWeight = '{style.FontWeight}';
+                    element.style.fontStyle = '{style.FontStyle}';
+                    element.style.textDecoration = '{style.TextDecoration}';
+                }}
+            ";
+
+            await webView.CoreWebView2.ExecuteScriptAsync(script);
+        }
+
+        private async void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (FontFamilyComboBox.SelectedItem is ComboBoxItem selectedItem) {
+                TextEditor.FontFamily = new FontFamily(selectedItem.Content.ToString());
+
+                var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+
+                await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+            }
+        }
+
+        private async void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (FontSizeComboBox.SelectedItem is ComboBoxItem selectedItem && double.TryParse(selectedItem.Content.ToString(), out double newSize)) {
+                TextEditor.FontSize = newSize;
+
+                var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+
+                await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+            }
+        }
+
+        private async void BoldButton_Click(object sender, RoutedEventArgs e) {
+            TextEditor.FontWeight = TextEditor.FontWeight == FontWeights.Bold ? FontWeights.Normal : FontWeights.Bold;
+
+            var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+
+            await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+        }
+
+        private async void ItalicButton_Click(object sender, RoutedEventArgs e) {
+            TextEditor.FontStyle = TextEditor.FontStyle == FontStyles.Italic ? FontStyles.Normal : FontStyles.Italic;
+
+            var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+
+            await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+        }
+
+        private async void UnderlineButton_Click(object sender, RoutedEventArgs e) {
+            TextEditor.TextDecorations = TextEditor.TextDecorations == TextDecorations.Underline ? null : TextDecorations.Underline;
+
+            var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+
+            await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+        }
+
+        private void TextColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+
+        }
+
         private void AddPhotoButton_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog {
                 Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif",
-                Multiselect = false // Оставляем выбор одного файла
+                Multiselect = false
             };
 
             if (openFileDialog.ShowDialog() == true) {
@@ -269,8 +340,8 @@ namespace ImagoAdmin {
                 DictionaryEntryForImages.SaveEntryForEditing(entry);
 
                 var updatedEntries = DictionaryEntryForImages.GetEntriesForEditing(pageId);
-                PhotoList.ItemsSource = null;  // Очищаем источник данных
-                PhotoList.ItemsSource = updatedEntries; // Устанавливаем новый список
+                PhotoList.ItemsSource = null;
+                PhotoList.ItemsSource = updatedEntries;
 
                 isContentModified = true;
                 MessageBox.Show("Fotografie byla úspěšně uložena!", "Úspěch!", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -289,7 +360,7 @@ namespace ImagoAdmin {
                     string filePath = openFileDialog.FileName;
                     byte[] imageData = File.ReadAllBytes(filePath);
 
-                    if(pageId == 3) {
+                    if (pageId == 3) {
                         imageData = ResizeImage(imageData, 1200, 350);
                     }
 
@@ -320,8 +391,6 @@ namespace ImagoAdmin {
             }
         }
 
-
-
         private void AddMeetingButton_Click(object sender, RoutedEventArgs e) {
             AddMeetingWindow meetingWindow = new AddMeetingWindow();
             meetingWindow.ShowDialog();
@@ -335,78 +404,6 @@ namespace ImagoAdmin {
             meetingWindow.ShowDialog();
             lv_Meeting.Items.Refresh();
         }
-
-        private void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (FontFamilyComboBox.SelectedItem is ComboBoxItem selectedItem) {
-                TextEditor.FontFamily = new FontFamily(selectedItem.Content.ToString());
-                SaveCurrentStyles(currentEntryKey); // Сохраняем стили
-            }
-        }
-
-        private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (FontSizeComboBox.SelectedItem is ComboBoxItem selectedItem && double.TryParse(selectedItem.Content.ToString(), out double newSize)) {
-                TextEditor.FontSize = newSize;
-                SaveCurrentStyles(currentEntryKey); // Сохраняем стили
-            }
-        }
-
-        private void BoldButton_Click(object sender, RoutedEventArgs e) {
-            TextEditor.FontWeight = TextEditor.FontWeight == FontWeights.Bold ? FontWeights.Normal : FontWeights.Bold;
-            SaveCurrentStyles(currentEntryKey); // Сохраняем стили
-        }
-
-        private void ItalicButton_Click(object sender, RoutedEventArgs e) {
-            TextEditor.FontStyle = TextEditor.FontStyle == FontStyles.Italic ? FontStyles.Normal : FontStyles.Italic;
-            SaveCurrentStyles(currentEntryKey); // Сохраняем стили
-        }
-
-        private void UnderlineButton_Click(object sender, RoutedEventArgs e) {
-            TextEditor.TextDecorations = TextEditor.TextDecorations == TextDecorations.Underline ? null : TextDecorations.Underline;
-            SaveCurrentStyles(currentEntryKey); // Сохраняем стили
-        }
-        private void TextColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (TextColorComboBox.SelectedItem is ComboBoxItem selectedItem) {
-                TextEditor.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(selectedItem.Content.ToString()));
-                SaveCurrentStyles(currentEntryKey); // Сохраняем стили
-            }
-        }
-
-        private void TextAlignmentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (TextAlignmentComboBox.SelectedItem is ComboBoxItem selectedItem) {
-                switch (selectedItem.Content.ToString()) {
-                    case "Left":
-                        TextEditor.TextAlignment = TextAlignment.Left;
-                        break;
-                    case "Center":
-                        TextEditor.TextAlignment = TextAlignment.Center;
-                        break;
-                    case "Right":
-                        TextEditor.TextAlignment = TextAlignment.Right;
-                        break;
-                    case "Justify":
-                        TextEditor.TextAlignment = TextAlignment.Justify;
-                        break;
-                }
-                SaveCurrentStyles(currentEntryKey); // Сохраняем стили
-            }
-        }
-
-
-        private void SaveCurrentStyles(string entryKey) {
-            var style = new TextStyle {
-                EntryKey = entryKey,
-                FontFamily = TextEditor.FontFamily.Source,
-                FontSize = TextEditor.FontSize.ToString(),
-                FontWeight = TextEditor.FontWeight.ToString(),
-                FontStyle = TextEditor.FontStyle.ToString(),
-                TextDecoration = TextEditor.TextDecorations == TextDecorations.Underline ? "Underline" : "None",
-                TextColor = ((SolidColorBrush)TextEditor.Foreground).Color.ToString(),
-                TextAlignment = TextEditor.TextAlignment.ToString()
-            };
-
-            TextStyle.SaveTextStyle(style); // Сохраняем стили в базу данных
-        }
-
 
         private void DeleteMeetingButton_Click(object sender, RoutedEventArgs e) {
             if (lv_Meeting.SelectedItem == null) return;

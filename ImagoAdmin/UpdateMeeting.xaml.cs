@@ -49,7 +49,7 @@ namespace ImagoAdmin {
                 using (var ms = new System.IO.MemoryStream(photoData)) {
                     var image = new BitmapImage();
                     image.BeginInit();
-                    image.CacheOption = BitmapCacheOption.OnLoad;  // Важная опция
+                    image.CacheOption = BitmapCacheOption.OnLoad;
                     image.StreamSource = ms;
                     image.EndInit();
                     image.Freeze();  // Разрешает использование в многопоточной среде

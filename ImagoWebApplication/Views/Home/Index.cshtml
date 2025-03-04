@@ -57,13 +57,12 @@
                 {
                     var headerStyle = ViewBag.TextStyles.ContainsKey("uvod_header") ? ViewBag.TextStyles["uvod_header"] : null;
                     <h2 data-key="uvod_header"
-                        style="margin-top: 20px; text-align:@(headerStyle?.TextAlignment ?? "center");
-      font-family: @(headerStyle?.FontFamily ?? "inherit");
-      font-size: @(headerStyle?.FontSize ?? "inherit")px;
-      font-weight: @(headerStyle?.FontWeight ?? "normal");
-      font-style: @(headerStyle?.FontStyle ?? "normal");
-      text-decoration: @(headerStyle?.TextDecoration ?? "none");
-      background-color: @(headerStyle?.TextColor ?? "inherit");">
+                        style="margin-top: 20px; text-align:center;
+           font-family: @(headerStyle?.FontFamily ?? "inherit");
+           font-size: @(headerStyle?.FontSize ?? "inherit")px;
+           font-weight: @(headerStyle?.FontWeight ?? "normal");
+           font-style: @(headerStyle?.FontStyle ?? "normal");
+           text-decoration: @(headerStyle?.TextDecoration ?? "none");">
                         @ViewBag.Entries["uvod_header"]
                     </h2>
                 }
@@ -72,13 +71,12 @@
                 {
                     var textStyle = ViewBag.TextStyles.ContainsKey("uvod_text") ? ViewBag.TextStyles["uvod_text"] : null;
                     <div class="text-container" data-key="uvod_text"
-                         style="margin-top: 20px; font-size: 20px; text-align: @(textStyle?.TextAlignment ?? "justify"); padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
+                         style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
         font-family: @(textStyle?.FontFamily ?? "inherit");
         font-size: @(textStyle?.FontSize ?? "inherit")px;
         font-weight: @(textStyle?.FontWeight ?? "normal");
         font-style: @(textStyle?.FontStyle ?? "normal");
-        text-decoration: @(textStyle?.TextDecoration ?? "none");
-         background-color: @(textStyle?.TextColor ?? "inherit");">
+        text-decoration: @(textStyle?.TextDecoration ?? "none");">
                         <p>
                             @ViewBag.Entries["uvod_text"]
                         </p>
@@ -128,7 +126,12 @@
         <div class="section-2">
             @if (ViewBag.Entries.ContainsKey("uvod_secondText"))
             {
-                <div class="text-container" data-key="uvod_secondText" style="margin-top: 15px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;">
+                var textStyle = ViewBag.TextStyles.ContainsKey("uvod_secondText") ? ViewBag.TextStyles["uvod_secondText"] : null;
+                <div class="text-container" data-key="uvod_secondText" style="margin-top: 15px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto; font-family: @(textStyle?.FontFamily ?? "inherit");
+        font-size: @(textStyle?.FontSize ?? "inherit")px;
+        font-weight: @(textStyle?.FontWeight ?? "normal");
+        font-style: @(textStyle?.FontStyle ?? "normal");
+        text-decoration: @(textStyle?.TextDecoration ?? "none");">
                     <p>
                         @ViewBag.Entries["uvod_secondText"]
                     </p>
