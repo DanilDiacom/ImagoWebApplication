@@ -58,7 +58,7 @@
                     var headerStyle = ViewBag.TextStyles.ContainsKey("uvod_header") ? ViewBag.TextStyles["uvod_header"] : null;
                     <h2 data-key="uvod_header"
                         style="margin-top: 20px; text-align:center;
-           font-family: @(headerStyle?.FontFamily ?? "inherit");
+           font-family: @(headerStyle?.FontFamily ?? "Arial");
            font-size: @(headerStyle?.FontSize ?? "inherit")px;
            font-weight: @(headerStyle?.FontWeight ?? "normal");
            font-style: @(headerStyle?.FontStyle ?? "normal");
@@ -72,7 +72,7 @@
                     var textStyle = ViewBag.TextStyles.ContainsKey("uvod_text") ? ViewBag.TextStyles["uvod_text"] : null;
                     <div class="text-container" data-key="uvod_text"
                          style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
-        font-family: @(textStyle?.FontFamily ?? "inherit");
+        font-family: @(textStyle?.FontFamily ?? "Arial");
         font-size: @(textStyle?.FontSize ?? "inherit")px;
         font-weight: @(textStyle?.FontWeight ?? "normal");
         font-style: @(textStyle?.FontStyle ?? "normal");
@@ -127,7 +127,7 @@
             @if (ViewBag.Entries.ContainsKey("uvod_secondText"))
             {
                 var textStyle = ViewBag.TextStyles.ContainsKey("uvod_secondText") ? ViewBag.TextStyles["uvod_secondText"] : null;
-                <div class="text-container" data-key="uvod_secondText" style="margin-top: 15px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto; font-family: @(textStyle?.FontFamily ?? "inherit");
+                <div class="text-container" data-key="uvod_secondText" style="margin-top: 15px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto; font-family: @(textStyle?.FontFamily ?? "Arial");
         font-size: @(textStyle?.FontSize ?? "inherit")px;
         font-weight: @(textStyle?.FontWeight ?? "normal");
         font-style: @(textStyle?.FontStyle ?? "normal");

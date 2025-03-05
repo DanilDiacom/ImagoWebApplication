@@ -44,6 +44,7 @@ namespace ImagoWebApplication.Controllers {
         public IActionResult Plasmotronic() {
             SetViewBagEntries();
             SetViewHomeBagImages();
+            SetViewHomeBagStyles();
             return View();
         }
 

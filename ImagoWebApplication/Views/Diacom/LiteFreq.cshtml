@@ -46,7 +46,7 @@
                 {
                     var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Device_Title") ? ViewBag.TextStyles["Device_Title"] : null;
                     <h1 class="text-center" style="margin-bottom: 20px; margin-top: -15px;
-                font-family: @(titleStyle?.FontFamily ?? "inherit");
+                font-family: @(titleStyle?.FontFamily ?? "Arial");
                 font-size: @(titleStyle?.FontSize ?? "inherit")px;
                 font-weight: @(titleStyle?.FontWeight ?? "normal");
                 font-style: @(titleStyle?.FontStyle ?? "normal");
@@ -81,7 +81,7 @@
 
                             <li class="list-group-item" data-key="@key" data-value="@key.Replace("_Label", "_Value")">
                                 <strong data-key="@key" style="
-                            font-family: @(labelStyle?.FontFamily ?? "inherit");
+                            font-family: @(labelStyle?.FontFamily ?? "Arial");
                             font-size: @(labelStyle?.FontSize ?? "inherit")px;
                             font-weight: @(labelStyle?.FontWeight ?? "Bold");
                             font-style: @(labelStyle?.FontStyle ?? "normal");
@@ -89,7 +89,7 @@
                                     @ViewBag.Entries[key]
                                 </strong>
                                 <span data-value="@key.Replace("_Label", "_Value")" style="
-                            font-family: @(valueStyle?.FontFamily ?? "inherit");
+                            font-family: @(valueStyle?.FontFamily ?? "Arial");
                             font-size: @(valueStyle?.FontSize ?? "inherit")px;
                             font-weight: @(valueStyle?.FontWeight ?? "normal");
                             font-style: @(valueStyle?.FontStyle ?? "normal");
@@ -111,7 +111,7 @@
                 {
                     var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("FreqPopisHeader") ? ViewBag.TextStyles["FreqPopisHeader"] : null;
                     <h2 data-key="FreqPopisHeader" style="margin-top: 20px; text-align:center;
-                font-family: @(headerStyle?.FontFamily ?? "inherit");
+                font-family: @(headerStyle?.FontFamily ?? "Arial");
                 font-size: @(headerStyle?.FontSize ?? "inherit")px;
                 font-weight: @(headerStyle?.FontWeight ?? "normal");
                 font-style: @(headerStyle?.FontStyle ?? "normal");
@@ -137,7 +137,7 @@
                     {
                         var textStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
                         <div class="text-container" data-key="@key" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
-                    font-family: @(textStyle?.FontFamily ?? "inherit");
+                    font-family: @(textStyle?.FontFamily ?? "Arial");
                     font-size: @(textStyle?.FontSize ?? "inherit")px;
                     font-weight: @(textStyle?.FontWeight ?? "normal");
                     font-style: @(textStyle?.FontStyle ?? "normal");

@@ -39,103 +39,109 @@
         </div>
 
         <!-- Product Details -->
+        <!-- Product Details -->
         <div class="col-md-6 d-flex align-items-center">
             <div>
-                <h1 class="text-center mb-4" data-key="Plasmotronic_Title" style="margin-left:50px; margin-top: -15px; margin-bottom:40px;">
-                    @ViewBag.Entries["Plasmotronic_Title"]
-                </h1>
+                <!-- Заголовок -->
+                @if (ViewBag.Entries.ContainsKey("Plasmotronic_Title"))
+                {
+                    var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Plasmotronic_Title") ? ViewBag.TextStyles["Plasmotronic_Title"] : null;
+                    <h1 class="text-center mb-4" data-key="Plasmotronic_Title" style="margin-left:50px; margin-top: -15px; margin-bottom:40px;
+                font-family: @(titleStyle?.FontFamily ?? "Arial");
+                font-size: @(titleStyle?.FontSize ?? "inherit")px;
+                font-weight: @(titleStyle?.FontWeight ?? "normal");
+                font-style: @(titleStyle?.FontStyle ?? "normal");
+                text-decoration: @(titleStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["Plasmotronic_Title"]
+                    </h1>
+                }
+
+                <!-- Список характеристик -->
                 <ul class="list-group">
-                    <li class="list-group-item" data-key="Plasmotronic_Weight_Label" data-value="Plasmotronic_Weight_Value">
-                        <strong data-key="Plasmotronic_Weight_Label">@ViewBag.Entries["Plasmotronic_Weight_Label"]</strong>
-                        <span data-value="Plasmotronic_Weight_Value">@ViewBag.Entries["Plasmotronic_Weight_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Plasmotronic_Dimensions_Label" data-value="Plasmotronic_Dimensions_Value">
-                        <strong data-key="Plasmotronic_Dimensions_Label">@ViewBag.Entries["Plasmotronic_Dimensions_Label"]</strong>
-                        <span data-value="Plasmotronic_Dimensions_Value">@ViewBag.Entries["Plasmotronic_Dimensions_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Plasmotronic_TouchScreen_Label" data-value="Plasmotronic_TouchScreen_Value">
-                        <strong data-key="Plasmotronic_TouchScreen_Label">@ViewBag.Entries["Plasmotronic_TouchScreen_Label"]</strong>
-                        <span data-value="Plasmotronic_TouchScreen_Value">@ViewBag.Entries["Plasmotronic_TouchScreen_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Plasmotronic_TubeLife_Label" data-value="Plasmotronic_TubeLife_Value">
-                        <strong data-key="Plasmotronic_TubeLife_Label">@ViewBag.Entries["Plasmotronic_TubeLife_Label"]</strong>
-                        <span data-value="Plasmotronic_TubeLife_Value">@ViewBag.Entries["Plasmotronic_TubeLife_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Plasmotronic_FrequencyRange_Label" data-value="Plasmotronic_FrequencyRange_Value">
-                        <strong data-key="Plasmotronic_FrequencyRange_Label">@ViewBag.Entries["Plasmotronic_FrequencyRange_Label"]</strong>
-                        <span data-value="Plasmotronic_FrequencyRange_Value">@ViewBag.Entries["Plasmotronic_FrequencyRange_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Plasmotronic_Voltage_Label" data-value="Plasmotronic_Voltage_Value">
-                        <strong data-key="Plasmotronic_Voltage_Label">@ViewBag.Entries["Plasmotronic_Voltage_Label"]</strong>
-                        <span data-value="Plasmotronic_Voltage_Value">@ViewBag.Entries["Plasmotronic_Voltage_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Plasmotronic_PowerConsumption_Label" data-value="Plasmotronic_PowerConsumption_Value">
-                        <strong data-key="Plasmotronic_PowerConsumption_Label">@ViewBag.Entries["Plasmotronic_PowerConsumption_Label"]</strong>
-                        <span data-value="Plasmotronic_PowerConsumption_Value">@ViewBag.Entries["Plasmotronic_PowerConsumption_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Plasmotronic_Languages_Label" data-value="Plasmotronic_Languages_Value">
-                        <strong data-key="Plasmotronic_Languages_Label">@ViewBag.Entries["Plasmotronic_Languages_Label"]</strong>
-                        <span data-value="Plasmotronic_Languages_Value">@ViewBag.Entries["Plasmotronic_Languages_Value"]</span>
-                    </li>
+                    @foreach (var key in new[]
+                    {
+                    "Plasmotronic_Weight_Label",
+                    "Plasmotronic_Dimensions_Label",
+                    "Plasmotronic_TouchScreen_Label",
+                    "Plasmotronic_TubeLife_Label",
+                    "Plasmotronic_FrequencyRange_Label",
+                    "Plasmotronic_Voltage_Label",
+                    "Plasmotronic_PowerConsumption_Label",
+                    "Plasmotronic_Languages_Label"
+                    })
+                    {
+                        if (ViewBag.Entries.ContainsKey(key))
+                        {
+                            var labelStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                            var valueStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key.Replace("_Label", "_Value")) ? ViewBag.TextStyles[key.Replace("_Label", "_Value")] : null;
+
+                            <li class="list-group-item" data-key="@key" data-value="@key.Replace("_Label", "_Value")">
+                                <strong data-key="@key" style="
+                            font-family: @(labelStyle?.FontFamily ?? "Arial");
+                            font-size: @(labelStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(labelStyle?.FontWeight ?? "Bold");
+                            font-style: @(labelStyle?.FontStyle ?? "normal");
+                            text-decoration: @(labelStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key]
+                                </strong>
+                                <span data-value="@key.Replace("_Label", "_Value")" style="
+                            font-family: @(valueStyle?.FontFamily ?? "inherit");
+                            font-size: @(valueStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(valueStyle?.FontWeight ?? "normal");
+                            font-style: @(valueStyle?.FontStyle ?? "normal");
+                            text-decoration: @(valueStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key.Replace("_Label", "_Value")]
+                                </span>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
-    </div>
 
-    <!-- Product Description -->
-    <div class="home-body-container">
-        <div class="container">
-            @if (ViewBag.Entries.ContainsKey("PlasmaPopisHeader"))
-            {
-                <h2 data-key="PlasmaPopisHeader" style="margin-top: 20px; text-align:center">
-                    @ViewBag.Entries["PlasmaPopisHeader"]
-                </h2>
-            }
+        <!-- Product Description -->
+        <div class="home-body-container">
+            <div class="container">
+                <!-- Заголовок -->
+                @if (ViewBag.Entries.ContainsKey("PlasmaPopisHeader"))
+                {
+                    var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("PlasmaPopisHeader") ? ViewBag.TextStyles["PlasmaPopisHeader"] : null;
+                    <h2 data-key="PlasmaPopisHeader" style="margin-top: 20px; text-align:center;
+                font-family: @(headerStyle?.FontFamily ?? "Arial");
+                font-size: @(headerStyle?.FontSize ?? "inherit")px;
+                font-weight: @(headerStyle?.FontWeight ?? "normal");
+                font-style: @(headerStyle?.FontStyle ?? "normal");
+                text-decoration: @(headerStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["PlasmaPopisHeader"]
+                    </h2>
+                }
 
-            @if (ViewBag.Entries.ContainsKey("PlasmaPopisText"))
-            {
-                <div class="text-container" data-key="PlasmaPopisText">
-                    <p>
-                        @ViewBag.Entries["PlasmaPopisText"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("PlasmaPopisTextFirst"))
-            {
-                <div class="text-container" data-key="PlasmaPopisTextFirst">
-                    <p>
-                        @ViewBag.Entries["PlasmaPopisTextFirst"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("PlasmaPopisTextSecond"))
-            {
-                <div class="text-container" data-key="PlasmaPopisTextSecond">
-                    <p>
-                        @ViewBag.Entries["PlasmaPopisTextSecond"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("PlasmaPopisTextTird"))
-            {
-                <div class="text-container" data-key="PlasmaPopisTextTird">
-                    <p>
-                        @ViewBag.Entries["PlasmaPopisTextTird"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("PlasmaPopisTextFour"))
-            {
-                <div class="text-container" data-key="PlasmaPopisTextFour">
-                    <p>
-                        @ViewBag.Entries["PlasmaPopisTextFour"]
-                    </p>
-                </div>
-            }
+                <!-- Текстовые блоки -->
+                @foreach (var key in new[]
+                {
+                "PlasmaPopisText",
+                "PlasmaPopisTextFirst",
+                "PlasmaPopisTextSecond",
+                "PlasmaPopisTextTird",
+                "PlasmaPopisTextFour"
+                })
+                {
+                    if (ViewBag.Entries.ContainsKey(key))
+                    {
+                        var textStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                        <div class="text-container" data-key="@key" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
+                    font-family: @(textStyle?.FontFamily ?? "Arial");
+                    font-size: @(textStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(textStyle?.FontWeight ?? "normal");
+                    font-style: @(textStyle?.FontStyle ?? "normal");
+                    text-decoration: @(textStyle?.TextDecoration ?? "none");">
+                            <p>
+                                @ViewBag.Entries[key]
+                            </p>
+                        </div>
+                    }
+                }
+            </div>
         </div>
     </div>
 </div>

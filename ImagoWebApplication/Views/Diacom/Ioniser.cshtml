@@ -38,14 +38,14 @@
 
         <!-- Product Details -->
         <!-- Product Details -->
-        <div class="col-md-6 d-flex align-items-center" style="margin-bottom: 130px;">
+        <div class="col-md-6 d-flex align-items-center" style="margin-bottom: 120px;">
             <div>
                 <!-- Заголовок -->
                 @if (ViewBag.Entries.ContainsKey("DiacomSoloIoniser_Title"))
                 {
                     var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomSoloIoniser_Title") ? ViewBag.TextStyles["DiacomSoloIoniser_Title"] : null;
                     <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;
-                font-family: @(titleStyle?.FontFamily ?? "inherit");
+                font-family: @(titleStyle?.FontFamily ?? "Arial");
                 font-size: @(titleStyle?.FontSize ?? "inherit")px;
                 font-weight: @(titleStyle?.FontWeight ?? "normal");
                 font-style: @(titleStyle?.FontStyle ?? "normal");
@@ -72,7 +72,7 @@
 
                             <li class="list-group-item" data-key="@key" data-value="@key.Replace("_Label", "_Value")">
                                 <strong data-key="@key" style="
-                            font-family: @(labelStyle?.FontFamily ?? "inherit");
+                            font-family: @(labelStyle?.FontFamily ?? "Arial");
                             font-size: @(labelStyle?.FontSize ?? "inherit")px;
                             font-weight: @(labelStyle?.FontWeight ?? "Bold");
                             font-style: @(labelStyle?.FontStyle ?? "normal");
@@ -80,7 +80,7 @@
                                     @ViewBag.Entries[key]
                                 </strong>
                                 <span data-value="@key.Replace("_Label", "_Value")" style="
-                            font-family: @(valueStyle?.FontFamily ?? "inherit");
+                            font-family: @(valueStyle?.FontFamily ?? "Arial");
                             font-size: @(valueStyle?.FontSize ?? "inherit")px;
                             font-weight: @(valueStyle?.FontWeight ?? "normal");
                             font-style: @(valueStyle?.FontStyle ?? "normal");
