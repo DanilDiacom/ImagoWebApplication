@@ -41,42 +41,60 @@
         <!-- Product Details -->
         <div class="col-md-6 d-flex align-items-center">
             <div>
-                <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;" data-key="DiacomSoloFreqPC_Title">@ViewBag.Entries["DiacomSoloFreqPC_Title"]</h1>
+                <!-- Заголовок -->
+                @if (ViewBag.Entries.ContainsKey("DiacomSoloFreqPC_Title"))
+                {
+                    var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomSoloFreqPC_Title") ? ViewBag.TextStyles["DiacomSoloFreqPC_Title"] : null;
+                    <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;
+                font-family: @(titleStyle?.FontFamily ?? "inherit");
+                font-size: @(titleStyle?.FontSize ?? "inherit")px;
+                font-weight: @(titleStyle?.FontWeight ?? "normal");
+                font-style: @(titleStyle?.FontStyle ?? "normal");
+                text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomSoloFreqPC_Title">
+                        @ViewBag.Entries["DiacomSoloFreqPC_Title"]
+                    </h1>
+                }
+
+                <!-- Список характеристик -->
                 <ul class="list-group">
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_PowerSource_Label" data-value="DiacomSoloFreqPC_PowerSource_Value">
-                        <strong data-key="DiacomSoloFreqPC_PowerSource_Label">@ViewBag.Entries["DiacomSoloFreqPC_PowerSource_Label"]</strong>
-                        <span data-value="DiacomSoloFreqPC_PowerSource_Value">@ViewBag.Entries["DiacomSoloFreqPC_PowerSource_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_Voltage_Label" data-value="DiacomSoloFreqPC_Voltage_Value">
-                        <strong data-key="DiacomSoloFreqPC_Voltage_Label">@ViewBag.Entries["DiacomSoloFreqPC_Voltage_Label"]</strong>
-                        <span data-value="DiacomSoloFreqPC_Voltage_Value">@ViewBag.Entries["DiacomSoloFreqPC_Voltage_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_PowerConsumption_Label" data-value="DiacomSoloFreqPC_PowerConsumption_Value">
-                        <strong data-key="DiacomSoloFreqPC_PowerConsumption_Label">@ViewBag.Entries["DiacomSoloFreqPC_PowerConsumption_Label"]</strong>
-                        <span data-value="DiacomSoloFreqPC_PowerConsumption_Value">@ViewBag.Entries["DiacomSoloFreqPC_PowerConsumption_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_FrequencyRange_Label" data-value="DiacomSoloFreqPC_FrequencyRange_Value">
-                        <strong data-key="DiacomSoloFreqPC_FrequencyRange_Label">@ViewBag.Entries["DiacomSoloFreqPC_FrequencyRange_Label"]</strong>
-                        <span data-value="DiacomSoloFreqPC_FrequencyRange_Value">@ViewBag.Entries["DiacomSoloFreqPC_FrequencyRange_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_PairingSpeed_Label" data-value="DiacomSoloFreqPC_PairingSpeed_Value">
-                        <strong data-key="DiacomSoloFreqPC_PairingSpeed_Label">@ViewBag.Entries["DiacomSoloFreqPC_PairingSpeed_Label"]</strong>
-                        <span data-value="DiacomSoloFreqPC_PairingSpeed_Value">@ViewBag.Entries["DiacomSoloFreqPC_PairingSpeed_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_Update_Label" data-value="DiacomSoloFreqPC_Update_Value">
-                        <strong data-key="DiacomSoloFreqPC_Update_Label">@ViewBag.Entries["DiacomSoloFreqPC_Update_Label"]</strong>
-                        <span data-value="DiacomSoloFreqPC_Update_Value">@ViewBag.Entries["DiacomSoloFreqPC_Update_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_UpdateProcedure_Label" data-value="DiacomSoloFreqPC_UpdateProcedure_Value">
-                        <strong data-key="DiacomSoloFreqPC_UpdateProcedure_Label">@ViewBag.Entries["DiacomSoloFreqPC_UpdateProcedure_Label"]</strong>
-                        <ul>
-                            <li><span data-value="DiacomSoloFreqPC_UpdateProcedure_Value">@ViewBag.Entries["DiacomSoloFreqPC_UpdateProcedure_Value"]</span></li>
-                        </ul>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloFreqPC_Warranty_Label" data-value="DiacomSoloFreqPC_Warranty_Value">
-                        <strong data-key="DiacomSoloFreqPC_Warranty_Label">@ViewBag.Entries["DiacomSoloFreqPC_Warranty_Label"]</strong>
-                        <span data-value="DiacomSoloFreqPC_Warranty_Value">@ViewBag.Entries["DiacomSoloFreqPC_Warranty_Value"]</span>
-                    </li>
+                    @foreach (var key in new[]
+                    {
+                    "DiacomSoloFreqPC_PowerSource_Label",
+                    "DiacomSoloFreqPC_Voltage_Label",
+                    "DiacomSoloFreqPC_PowerConsumption_Label",
+                    "DiacomSoloFreqPC_FrequencyRange_Label",
+                    "DiacomSoloFreqPC_PairingSpeed_Label",
+                    "DiacomSoloFreqPC_Update_Label",
+                    "DiacomSoloFreqPC_UpdateProcedure_Label",
+                    "DiacomSoloFreqPC_Warranty_Label"
+                    })
+                    {
+                        if (ViewBag.Entries.ContainsKey(key))
+                        {
+                            var labelStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                            var valueStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key.Replace("_Label", "_Value")) ? ViewBag.TextStyles[key.Replace("_Label", "_Value")] : null;
+
+                            <li class="list-group-item" data-key="@key" data-value="@key.Replace("_Label", "_Value")">
+                                <strong data-key="@key" style="
+                            font-family: @(labelStyle?.FontFamily ?? "inherit");
+                            font-size: @(labelStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(labelStyle?.FontWeight ?? "Bold");
+                            font-style: @(labelStyle?.FontStyle ?? "normal");
+                            text-decoration: @(labelStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key]
+                                </strong>
+                                <span data-value="@key.Replace("_Label", "_Value")" style="
+                            font-family: @(valueStyle?.FontFamily ?? "inherit");
+                            font-size: @(valueStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(valueStyle?.FontWeight ?? "normal");
+                            font-style: @(valueStyle?.FontStyle ?? "normal");
+                            text-decoration: @(valueStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key.Replace("_Label", "_Value")]
+                                </span>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
@@ -85,38 +103,37 @@
     <!-- Product Description -->
     <div class="home-body-container">
         <div class="container">
+            <!-- Заголовок -->
             @if (ViewBag.Entries.ContainsKey("FreqPcPopisHeader"))
             {
-                <h2 data-key="FreqPcPopisHeader" style="margin-top: 20px; text-align:center">
+                var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("FreqPcPopisHeader") ? ViewBag.TextStyles["FreqPcPopisHeader"] : null;
+                <h2 data-key="FreqPcPopisHeader" style="margin-top: 20px; text-align:center;
+                font-family: @(headerStyle?.FontFamily ?? "inherit");
+                font-size: @(headerStyle?.FontSize ?? "inherit")px;
+                font-weight: @(headerStyle?.FontWeight ?? "normal");
+                font-style: @(headerStyle?.FontStyle ?? "normal");
+                text-decoration: @(headerStyle?.TextDecoration ?? "none");">
                     @ViewBag.Entries["FreqPcPopisHeader"]
                 </h2>
             }
 
-            @if (ViewBag.Entries.ContainsKey("FreqPcPopisText"))
+            <!-- Текстовые блоки -->
+            @foreach (var key in new[] { "FreqPcPopisText", "FreqPcPopisTextFirst", "FreqPcPopisTextSecond" })
             {
-                <div class="text-container" data-key="FreqPcPopisText">
-                    <p>
-                        @ViewBag.Entries["FreqPcPopisText"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("FreqPcPopisTextFirst"))
-            {
-                <div class="text-container" data-key="FreqPcPopisTextFirst">
-                    <p>
-                        @ViewBag.Entries["FreqPcPopisTextFirst"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("FreqPcPopisTextSecond"))
-            {
-                <div class="text-container" data-key="FreqPcPopisTextSecond">
-                    <p>
-                        @ViewBag.Entries["FreqPcPopisTextSecond"]
-                    </p>
-                </div>
+                if (ViewBag.Entries.ContainsKey(key))
+                {
+                    var textStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                    <div class="text-container" data-key="@key" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
+                    font-family: @(textStyle?.FontFamily ?? "inherit");
+                    font-size: @(textStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(textStyle?.FontWeight ?? "normal");
+                    font-style: @(textStyle?.FontStyle ?? "normal");
+                    text-decoration: @(textStyle?.TextDecoration ?? "none");">
+                        <p>
+                            @ViewBag.Entries[key]
+                        </p>
+                    </div>
+                }
             }
         </div>
     </div>

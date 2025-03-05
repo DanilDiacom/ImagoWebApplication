@@ -59,6 +59,7 @@ public class HomeController : Controller {
 
     public IActionResult GDPR() {
         SetViewHomeBagEntries();
+        SetViewHomeBagStyles();
         return View();
     }
 

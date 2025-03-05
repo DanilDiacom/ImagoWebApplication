@@ -37,76 +37,98 @@
         </div>
 
         <!-- Product Details -->
+        <!-- Product Details -->
         <div class="col-md-6 d-flex align-items-center" style="margin-bottom: 130px;">
             <div>
-                <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;" data-key="DiacomSoloIoniser_Title">@ViewBag.Entries["DiacomSoloIoniser_Title"]</h1>
+                <!-- Заголовок -->
+                @if (ViewBag.Entries.ContainsKey("DiacomSoloIoniser_Title"))
+                {
+                    var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomSoloIoniser_Title") ? ViewBag.TextStyles["DiacomSoloIoniser_Title"] : null;
+                    <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;
+                font-family: @(titleStyle?.FontFamily ?? "inherit");
+                font-size: @(titleStyle?.FontSize ?? "inherit")px;
+                font-weight: @(titleStyle?.FontWeight ?? "normal");
+                font-style: @(titleStyle?.FontStyle ?? "normal");
+                text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomSoloIoniser_Title">
+                        @ViewBag.Entries["DiacomSoloIoniser_Title"]
+                    </h1>
+                }
+
+                <!-- Список характеристик -->
                 <ul class="list-group">
-                    <li class="list-group-item" data-key="DiacomSoloIoniser_Power_Label" data-value="DiacomSoloIoniser_Power_Value">
-                        <strong data-key="DiacomSoloIoniser_Power_Label">@ViewBag.Entries["DiacomSoloIoniser_Power_Label"]</strong>
-                        <span data-value="DiacomSoloIoniser_Power_Value">@ViewBag.Entries["DiacomSoloIoniser_Power_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloIoniser_Voltage_Label" data-value="DiacomSoloIoniser_Voltage_Value">
-                        <strong data-key="DiacomSoloIoniser_Voltage_Label">@ViewBag.Entries["DiacomSoloIoniser_Voltage_Label"]</strong>
-                        <span data-value="DiacomSoloIoniser_Voltage_Value">@ViewBag.Entries["DiacomSoloIoniser_Voltage_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloIoniser_PowerConsumption_Label" data-value="DiacomSoloIoniser_PowerConsumption_Value">
-                        <strong data-key="DiacomSoloIoniser_PowerConsumption_Label">@ViewBag.Entries["DiacomSoloIoniser_PowerConsumption_Label"]</strong>
-                        <span data-value="DiacomSoloIoniser_PowerConsumption_Value">@ViewBag.Entries["DiacomSoloIoniser_PowerConsumption_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomSoloIoniser_Price_Label" data-value="DiacomSoloIoniser_Price_Value">
-                        <strong data-key="DiacomSoloIoniser_Price_Label">@ViewBag.Entries["DiacomSoloIoniser_Price_Label"]</strong>
-                        <span data-value="DiacomSoloIoniser_Price_Value">@ViewBag.Entries["DiacomSoloIoniser_Price_Value"]</span>
-                    </li>
+                    @foreach (var key in new[]
+                    {
+                    "DiacomSoloIoniser_Power_Label",
+                    "DiacomSoloIoniser_Voltage_Label",
+                    "DiacomSoloIoniser_PowerConsumption_Label",
+                    "DiacomSoloIoniser_Price_Label"
+                    })
+                    {
+                        if (ViewBag.Entries.ContainsKey(key))
+                        {
+                            var labelStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                            var valueStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key.Replace("_Label", "_Value")) ? ViewBag.TextStyles[key.Replace("_Label", "_Value")] : null;
+
+                            <li class="list-group-item" data-key="@key" data-value="@key.Replace("_Label", "_Value")">
+                                <strong data-key="@key" style="
+                            font-family: @(labelStyle?.FontFamily ?? "inherit");
+                            font-size: @(labelStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(labelStyle?.FontWeight ?? "Bold");
+                            font-style: @(labelStyle?.FontStyle ?? "normal");
+                            text-decoration: @(labelStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key]
+                                </strong>
+                                <span data-value="@key.Replace("_Label", "_Value")" style="
+                            font-family: @(valueStyle?.FontFamily ?? "inherit");
+                            font-size: @(valueStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(valueStyle?.FontWeight ?? "normal");
+                            font-style: @(valueStyle?.FontStyle ?? "normal");
+                            text-decoration: @(valueStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key.Replace("_Label", "_Value")]
+                                </span>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
-    </div>
 
-    <!-- Product Description -->
-    <div class="home-body-container">
-        <div class="container">
-            @if (ViewBag.Entries.ContainsKey("IoniserPopisHeader"))
-            {
-                <h2 data-key="IoniserPopisHeader" style="margin-top: 20px; text-align:center">
-                    @ViewBag.Entries["IoniserPopisHeader"]
-                </h2>
-            }
+        <!-- Product Description -->
+        <div class="home-body-container">
+            <div class="container">
+                <!-- Заголовок -->
+                @if (ViewBag.Entries.ContainsKey("IoniserPopisHeader"))
+                {
+                    var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("IoniserPopisHeader") ? ViewBag.TextStyles["IoniserPopisHeader"] : null;
+                    <h2 data-key="IoniserPopisHeader" style="margin-top: 20px; text-align:center;
+                font-family: @(headerStyle?.FontFamily ?? "inherit");
+                font-size: @(headerStyle?.FontSize ?? "inherit")px;
+                font-weight: @(headerStyle?.FontWeight ?? "normal");
+                font-style: @(headerStyle?.FontStyle ?? "normal");
+                text-decoration: @(headerStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["IoniserPopisHeader"]
+                    </h2>
+                }
 
-            @if (ViewBag.Entries.ContainsKey("IoniserPopisText"))
-            {
-                <div class="text-container" data-key="IoniserPopisText">
-                    <p>
-                        @ViewBag.Entries["IoniserPopisText"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("IoniserPopisTextFirst"))
-            {
-                <div class="text-container" data-key="IoniserPopisTextFirst">
-                    <p>
-                        @ViewBag.Entries["IoniserPopisTextFirst"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("IoniserPopisTextSecond"))
-            {
-                <div class="text-container" data-key="IoniserPopisTextSecond">
-                    <p>
-                        @ViewBag.Entries["IoniserPopisTextSecond"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("IoniserPopisTextThird"))
-            {
-                <div class="text-container" data-key="IoniserPopisTextThird">
-                    <p>
-                        @ViewBag.Entries["IoniserPopisTextThird"]
-                    </p>
-                </div>
-            }
+                <!-- Текстовые блоки -->
+                @foreach (var key in new[] { "IoniserPopisText", "IoniserPopisTextFirst", "IoniserPopisTextSecond", "IoniserPopisTextThird" })
+                {
+                    if (ViewBag.Entries.ContainsKey(key))
+                    {
+                        var textStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                        <div class="text-container" data-key="@key" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
+                    font-family: @(textStyle?.FontFamily ?? "inherit");
+                    font-size: @(textStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(textStyle?.FontWeight ?? "normal");
+                    font-style: @(textStyle?.FontStyle ?? "normal");
+                    text-decoration: @(textStyle?.TextDecoration ?? "none");">
+                            <p>
+                                @ViewBag.Entries[key]
+                            </p>
+                        </div>
+                    }
+                }
+            </div>
         </div>
-    </div>
 </div>

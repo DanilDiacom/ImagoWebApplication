@@ -41,93 +41,106 @@
         <!-- Product Details -->
         <div class="col-md-6 d-flex align-items-center">
             <div>
-                <h1 class="text-center" style="margin-bottom: 20px; margin-top: -15px;" data-key="DiacomMedio_Title">@ViewBag.Entries["DiacomMedio_Title"]</h1>
+                <!-- Заголовок -->
+                @if (ViewBag.Entries.ContainsKey("DiacomMedio_Title"))
+                {
+                    var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomMedio_Title") ? ViewBag.TextStyles["DiacomMedio_Title"] : null;
+                    <h1 class="text-center" style="margin-bottom: 20px; margin-top: -15px;
+                font-family: @(titleStyle?.FontFamily ?? "inherit");
+                font-size: @(titleStyle?.FontSize ?? "inherit")px;
+                font-weight: @(titleStyle?.FontWeight ?? "normal");
+                font-style: @(titleStyle?.FontStyle ?? "normal");
+                text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomMedio_Title">
+                        @ViewBag.Entries["DiacomMedio_Title"]
+                    </h1>
+                }
+
+                <!-- Список характеристик -->
                 <ul class="list-group">
-                    <li class="list-group-item" data-key="DiacomMedio_PowerSource_Label" data-value="DiacomMedio_PowerSource_Value">
-                        <strong data-key="DiacomMedio_PowerSource_Label">@ViewBag.Entries["DiacomMedio_PowerSource_Label"]</strong>
-                        <span data-value="DiacomMedio_PowerSource_Value">@ViewBag.Entries["DiacomMedio_PowerSource_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomMedio_Voltage_Label" data-value="DiacomMedio_Voltage_Value">
-                        <strong data-key="DiacomMedio_Voltage_Label">@ViewBag.Entries["DiacomMedio_Voltage_Label"]</strong>
-                        <span data-value="DiacomMedio_Voltage_Value">@ViewBag.Entries["DiacomMedio_Voltage_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomMedio_PowerConsumption_Label" data-value="DiacomMedio_PowerConsumption_Value">
-                        <strong data-key="DiacomMedio_PowerConsumption_Label">@ViewBag.Entries["DiacomMedio_PowerConsumption_Label"]</strong>
-                        <span data-value="DiacomMedio_PowerConsumption_Value">@ViewBag.Entries["DiacomMedio_PowerConsumption_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomMedio_FrequencyRange_Label" data-value="DiacomMedio_FrequencyRange_Value">
-                        <strong data-key="DiacomMedio_FrequencyRange_Label">@ViewBag.Entries["DiacomMedio_FrequencyRange_Label"]</strong>
-                        <span data-value="DiacomMedio_FrequencyRange_Value">@ViewBag.Entries["DiacomMedio_FrequencyRange_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomMedio_PairingSpeed_Label" data-value="DiacomMedio_PairingSpeed_Value">
-                        <strong data-key="DiacomMedio_PairingSpeed_Label">@ViewBag.Entries["DiacomMedio_PairingSpeed_Label"]</strong>
-                        <span data-value="DiacomMedio_PairingSpeed_Value">@ViewBag.Entries["DiacomMedio_PairingSpeed_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomMedio_Update_Label" data-value="DiacomMedio_Update_Value">
-                        <strong data-key="DiacomMedio_Update_Label">@ViewBag.Entries["DiacomMedio_Update_Label"]</strong>
-                        <span data-value="DiacomMedio_Update_Value">@ViewBag.Entries["DiacomMedio_Update_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomMedio_UpdateProcedure_Label" data-value="DiacomMedio_UpdateProcedure_Value">
-                        <strong data-key="DiacomMedio_UpdateProcedure_Label">@ViewBag.Entries["DiacomMedio_UpdateProcedure_Label"]</strong>
-                        <ul>
-                            <li><span data-value="DiacomMedio_UpdateProcedure_Value">@ViewBag.Entries["DiacomMedio_UpdateProcedure_Value"]</span></li>
-                            <li><span data-value="DiacomMedio_Warranty_Label">@ViewBag.Entries["DiacomMedio_Warranty_Label"]</span></li>
-                        </ul>
-                    </li>
-                    <li class="list-group-item" data-key="DiacomMedio_Warranty_Label" data-value="DiacomMedio_Warranty_Value">
-                        <strong data-key="DiacomMedio_Warranty_Label">@ViewBag.Entries["DiacomMedio_Warranty_Label"]</strong>
-                        <span data-value="DiacomMedio_Warranty_Value">@ViewBag.Entries["DiacomMedio_Warranty_Value"]</span>
-                    </li>
+                    @foreach (var key in new[]
+                    {
+                    "DiacomMedio_PowerSource_Label",
+                    "DiacomMedio_Voltage_Label",
+                    "DiacomMedio_PowerConsumption_Label",
+                    "DiacomMedio_FrequencyRange_Label",
+                    "DiacomMedio_PairingSpeed_Label",
+                    "DiacomMedio_Update_Label",
+                    "DiacomMedio_UpdateProcedure_Label",
+                    "DiacomMedio_Warranty_Label"
+                    })
+                    {
+                        if (ViewBag.Entries.ContainsKey(key))
+                        {
+                            var labelStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                            var valueStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key.Replace("_Label", "_Value")) ? ViewBag.TextStyles[key.Replace("_Label", "_Value")] : null;
+
+                            <li class="list-group-item" data-key="@key" data-value="@key.Replace("_Label", "_Value")">
+                                <strong data-key="@key" style="
+                            font-family: @(labelStyle?.FontFamily ?? "inherit");
+                            font-size: @(labelStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(labelStyle?.FontWeight ?? "Bold");
+                            font-style: @(labelStyle?.FontStyle ?? "normal");
+                            text-decoration: @(labelStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key]
+                                </strong>
+                                <span data-value="@key.Replace("_Label", "_Value")" style="
+                            font-family: @(valueStyle?.FontFamily ?? "inherit");
+                            font-size: @(valueStyle?.FontSize ?? "inherit")px;
+                            font-weight: @(valueStyle?.FontWeight ?? "normal");
+                            font-style: @(valueStyle?.FontStyle ?? "normal");
+                            text-decoration: @(valueStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key.Replace("_Label", "_Value")]
+                                </span>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
-    </div>
 
-    <!-- Product Description -->
-    <div class="home-body-container">
-        <div class="container">
-            @if (ViewBag.Entries.ContainsKey("MedioPopisHeader"))
-            {
-                <h2 data-key="MedioPopisHeader" style="margin-top: 20px; text-align:center">
-                    @ViewBag.Entries["MedioPopisHeader"]
-                </h2>
-            }
+        <!-- Product Description -->
+        <div class="home-body-container">
+            <div class="container">
+                <!-- Заголовок -->
+                @if (ViewBag.Entries.ContainsKey("MedioPopisHeader"))
+                {
+                    var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("MedioPopisHeader") ? ViewBag.TextStyles["MedioPopisHeader"] : null;
+                    <h2 data-key="MedioPopisHeader" style="margin-top: 20px; text-align:center;
+                font-family: @(headerStyle?.FontFamily ?? "inherit");
+                font-size: @(headerStyle?.FontSize ?? "inherit")px;
+                font-weight: @(headerStyle?.FontWeight ?? "normal");
+                font-style: @(headerStyle?.FontStyle ?? "normal");
+                text-decoration: @(headerStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["MedioPopisHeader"]
+                    </h2>
+                }
 
-            @if (ViewBag.Entries.ContainsKey("MedioPopisText"))
-            {
-                <div class="text-container" data-key="MedioPopisText">
-                    <p>
-                        @ViewBag.Entries["MedioPopisText"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("MedioPopisTextFirst"))
-            {
-                <div class="text-container" data-key="MedioPopisTextFirst">
-                    <p>
-                        @ViewBag.Entries["MedioPopisTextFirst"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("MedioPopisTextSecond"))
-            {
-                <div class="text-container" data-key="MedioPopisTextSecond">
-                    <p>
-                        @ViewBag.Entries["MedioPopisTextSecond"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("MedioPopisTextTird"))
-            {
-                <div class="text-container" data-key="MedioPopisTextTird">
-                    <p>
-                        @ViewBag.Entries["MedioPopisTextTird"]
-                    </p>
-                </div>
-            }
+                <!-- Текстовые блоки -->
+                @foreach (var key in new[]
+                {
+                "MedioPopisText",
+                "MedioPopisTextFirst",
+                "MedioPopisTextSecond",
+                "MedioPopisTextTird"
+                })
+                {
+                    if (ViewBag.Entries.ContainsKey(key))
+                    {
+                        var textStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                        <div class="text-container" data-key="@key" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
+                    font-family: @(textStyle?.FontFamily ?? "inherit");
+                    font-size: @(textStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(textStyle?.FontWeight ?? "normal");
+                    font-style: @(textStyle?.FontStyle ?? "normal");
+                    text-decoration: @(textStyle?.TextDecoration ?? "none");">
+                            <p>
+                                @ViewBag.Entries[key]
+                            </p>
+                        </div>
+                    }
+                }
+            </div>
         </div>
     </div>
 </div>

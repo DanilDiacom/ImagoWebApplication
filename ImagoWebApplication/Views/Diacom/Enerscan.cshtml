@@ -43,42 +43,46 @@
         <!-- Product Details -->
         <div class="col-md-6 d-flex align-items-center">
             <div>
-                <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;" data-key="DiacomEnerscan_Device_Title">
-                    @ViewBag.Entries["DiacomEnerscan_Device_Title"]
-                </h1>
+                @if (ViewBag.Entries.ContainsKey("DiacomEnerscan_Device_Title"))
+                {
+                    var headerStyle = ViewBag.TextStyles.ContainsKey("DiacomEnerscan_Device_Title") ? ViewBag.TextStyles["DiacomEnerscan_Device_Title"] : null;
+                    <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;font-family: @(headerStyle?.FontFamily ?? "inherit");
+                        font-size: @(headerStyle?.FontSize ?? "inherit")px;
+                        font-weight: @(headerStyle?.FontWeight ?? "normal");
+                        font-style: @(headerStyle?.FontStyle ?? "normal");
+                        text-decoration: @(headerStyle?.TextDecoration ?? "none");" data-key ="DiacomEnerscan_Device_Title">
+                        @ViewBag.Entries["DiacomEnerscan_Device_Title"]
+                    </h1>
+                }
+               
                 <ul class="list-group">
-                    <li class="list-group-item" data-key="Weight_Label" data-value="Weight_Value">
-                        <strong data-key="Weight_Label">@ViewBag.Entries["Weight_Label"]</strong>
-                        <span data-value="Weight_Value">@ViewBag.Entries["Weight_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Dimensions_Label" data-value="Dimensions_Value">
-                        <strong data-key="Dimensions_Label">@ViewBag.Entries["Dimensions_Label"]</strong>
-                        <span data-value="Dimensions_Value">@ViewBag.Entries["Dimensions_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="TouchScreen_Label" data-value="TouchScreen_Value">
-                        <strong data-key="TouchScreen_Label">@ViewBag.Entries["TouchScreen_Label"]</strong>
-                        <span data-value="TouchScreen_Value">@ViewBag.Entries["TouchScreen_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="TubeLife_Label" data-value="TubeLife_Value">
-                        <strong data-key="TubeLife_Label">@ViewBag.Entries["TubeLife_Label"]</strong>
-                        <span data-value="TubeLife_Value">@ViewBag.Entries["TubeLife_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="FrequencyRange_Label" data-value="FrequencyRange_Value">
-                        <strong data-key="FrequencyRange_Label">@ViewBag.Entries["FrequencyRange_Label"]</strong>
-                        <span data-value="FrequencyRange_Value">@ViewBag.Entries["FrequencyRange_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Voltage_Label" data-value="Voltage_Value">
-                        <strong data-key="Voltage_Label">@ViewBag.Entries["Voltage_Label"]</strong>
-                        <span data-value="Voltage_Value">@ViewBag.Entries["Voltage_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="PowerConsumption_Label" data-value="PowerConsumption_Value">
-                        <strong data-key="PowerConsumption_Label">@ViewBag.Entries["PowerConsumption_Label"]</strong>
-                        <span data-value="PowerConsumption_Value">@ViewBag.Entries["PowerConsumption_Value"]</span>
-                    </li>
-                    <li class="list-group-item" data-key="Languages_Label" data-value="Languages_Value">
-                        <strong data-key="Languages_Label">@ViewBag.Entries["Languages_Label"]</strong>
-                        <span data-value="Languages_Value">@ViewBag.Entries["Languages_Value"]</span>
-                    </li>
+                    @foreach (var key in new[] { "Weight_Label", "Dimensions_Label", "TouchScreen_Label", "TubeLife_Label", "FrequencyRange_Label", "Voltage_Label", "PowerConsumption_Label", "Languages_Label" })
+                    {
+                        if (ViewBag.Entries.ContainsKey(key))
+                        {
+                            var labelStyle = ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                            var valueStyle = ViewBag.TextStyles.ContainsKey(key.Replace("_Label", "_Value")) ? ViewBag.TextStyles[key.Replace("_Label", "_Value")] : null;
+
+                            <li class="list-group-item" data-key="@key" data-value="@key.Replace("_Label", "_Value")">
+                                <strong data-key="@key" style="
+                    font-family: @(labelStyle?.FontFamily ?? "inherit");
+                    font-size: @(labelStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(labelStyle?.FontWeight ?? "Bold");
+                    font-style: @(labelStyle?.FontStyle ?? "normal");
+                    text-decoration: @(labelStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key]
+                                </strong>
+                                <span data-value="@key.Replace("_Label", "_Value")" style="
+                    font-family: @(valueStyle?.FontFamily ?? "inherit");
+                    font-size: @(valueStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(valueStyle?.FontWeight ?? "normal");
+                    font-style: @(valueStyle?.FontStyle ?? "normal");
+                    text-decoration: @(valueStyle?.TextDecoration ?? "none");">
+                                    @ViewBag.Entries[key.Replace("_Label", "_Value")]
+                                </span>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
@@ -88,54 +92,37 @@
 
     <div class="home-body-container">
         <div class="container">
+            <!-- Заголовок -->
             @if (ViewBag.Entries.ContainsKey("enerscan_header"))
             {
-                <h2 data-key="enerscan_header" style="margin-top: 20px; text-align:center">
+                var headerStyle = ViewBag.TextStyles.ContainsKey("enerscan_header") ? ViewBag.TextStyles["enerscan_header"] : null;
+                <h2 data-key="enerscan_header" style="margin-top: 20px; text-align:center;
+                font-family: @(headerStyle?.FontFamily ?? "inherit");
+                font-size: @(headerStyle?.FontSize ?? "inherit")px;
+                font-weight: @(headerStyle?.FontWeight ?? "normal");
+                font-style: @(headerStyle?.FontStyle ?? "normal");
+                text-decoration: @(headerStyle?.TextDecoration ?? "none");">
                     @ViewBag.Entries["enerscan_header"]
                 </h2>
             }
 
-            @if (ViewBag.Entries.ContainsKey("EnerscanPopisText"))
+            <!-- Текстовые блоки -->
+            @foreach (var key in new[] { "EnerscanPopisText", "EnerscanPopisTextFirst", "EnerscanPopisTextSecond", "EnerscanPopisTextTird", "EnerscanPopisTextFour" })
             {
-                <div class="text-container" data-key="EnerscanPopisText" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;">
-                    <p>
-                        @ViewBag.Entries["EnerscanPopisText"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("EnerscanPopisTextFirst"))
-            {
-                <div class="text-container" data-key="EnerscanPopisTextFirst" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;">
-                    <p>
-                        @ViewBag.Entries["EnerscanPopisTextFirst"]
-                    </p>
-                </div>
-            }
-
-            @if (ViewBag.Entries.ContainsKey("EnerscanPopisTextSecond"))
-            {
-                <div class="text-container" data-key="EnerscanPopisTextSecond" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;">
-                    <p>
-                        @ViewBag.Entries["EnerscanPopisTextSecond"]
-                    </p>
-                </div>
-            }
-            @if (ViewBag.Entries.ContainsKey("EnerscanPopisTextTird"))
-            {
-                <div class="text-container" data-key="EnerscanPopisTextTird" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;">
-                    <p>
-                        @ViewBag.Entries["EnerscanPopisTextTird"]
-                    </p>
-                </div>
-            }
-            @if (ViewBag.Entries.ContainsKey("EnerscanPopisTextFour"))
-            {
-                <div class="text-container" data-key="EnerscanPopisTextFour" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;">
-                    <p>
-                        @ViewBag.Entries["EnerscanPopisTextFour"]
-                    </p>
-                </div>
+                if (ViewBag.Entries.ContainsKey(key))
+                {
+                    var textStyle = ViewBag.TextStyles.ContainsKey(key) ? ViewBag.TextStyles[key] : null;
+                    <div class="text-container" data-key="@key" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
+                    font-family: @(textStyle?.FontFamily ?? "inherit");
+                    font-size: @(textStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(textStyle?.FontWeight ?? "normal");
+                    font-style: @(textStyle?.FontStyle ?? "normal");
+                    text-decoration: @(textStyle?.TextDecoration ?? "none");">
+                        <p>
+                            @ViewBag.Entries[key]
+                        </p>
+                    </div>
+                }
             }
         </div>
     </div>

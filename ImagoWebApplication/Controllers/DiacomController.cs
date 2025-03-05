@@ -29,9 +29,15 @@ namespace ImagoWebApplication.Controllers {
             ViewBag.Images = images;
         }
 
+        private void SetViewHomeBagStyles() {
+            var styles = TextStyle.GetAllStyles();
+            ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
+        }
+
         public IActionResult Enerscan() {
             SetViewBagEntries();
             SetViewHomeBagImages();
+            SetViewHomeBagStyles();
             return View();
         }
 
@@ -44,24 +50,32 @@ namespace ImagoWebApplication.Controllers {
         public IActionResult Medio() {
             SetViewBagEntries();
             SetViewHomeBagImages();
+            SetViewHomeBagStyles();
+
             return View();
         }
 
         public IActionResult LiteFreq() {
             SetViewBagEntries();
             SetViewHomeBagImages();
+            SetViewHomeBagStyles();
+
             return View();
         }
 
         public IActionResult FreqPc() {
             SetViewBagEntries();
             SetViewHomeBagImages();
+            SetViewHomeBagStyles();
+
             return View();
         }
 
         public IActionResult Ioniser() {
             SetViewBagEntries();
             SetViewHomeBagImages();
+            SetViewHomeBagStyles();
+
             return View();
         }
 
