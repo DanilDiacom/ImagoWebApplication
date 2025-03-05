@@ -65,6 +65,8 @@ public class HomeController : Controller {
 
     public IActionResult Marketing() {
         SetViewHomeBagEntries();
+        SetViewHomeBagStyles();
+
         return View();
     }
 
