@@ -5,51 +5,194 @@
 <section id="content">
     <div class="inner-content">
         <div class="container">
-            <h1 class="page-title" style="text-align:center; margin-top: 20px;" data-key="DiacomClub_Benefits_Title">@ViewBag.Entries["DiacomClub_Benefits_Title"]</h1>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefits_Title"))
+            {
+                var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefits_Title") ? ViewBag.TextStyles["DiacomClub_Benefits_Title"] : null;
+                <h1 class="page-title" style="text-align:center; margin-top: 20px;
+                    font-family: @(titleStyle?.FontFamily ?? "Arial");
+                    font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                    font-weight: @(titleStyle?.FontWeight ?? "600");
+                    font-style: @(titleStyle?.FontStyle ?? "normal");
+                    text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                    data-key="DiacomClub_Benefits_Title">
+                    @ViewBag.Entries["DiacomClub_Benefits_Title"]
+                </h1>
+            }
 
             <div class="benefits-container">
-                <div class="benefit-item">
-                    <span class="icon">💰</span>
-                    <div>
-                        <h3 data-key="DiacomClub_Benefit1_Title">@ViewBag.Entries["DiacomClub_Benefit1_Title"]</h3>
-                        <p data-key="DiacomClub_Benefit1_Desc">@ViewBag.Entries["DiacomClub_Benefit1_Desc"]</p>
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefit1_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Benefit1_Desc"))
+                {
+                    var benefit1TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit1_Title") ? ViewBag.TextStyles["DiacomClub_Benefit1_Title"] : null;
+                    var benefit1DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit1_Desc") ? ViewBag.TextStyles["DiacomClub_Benefit1_Desc"] : null;
+                    <div class="benefit-item">
+                        <span class="icon">💰</span>
+                        <div>
+                            <h3 style="
+                                font-family: @(benefit1TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit1TitleStyle?.FontSize ?? "1.2rem");
+                                font-weight: @(benefit1TitleStyle?.FontWeight ?? "600");
+                                font-style: @(benefit1TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit1TitleStyle?.TextDecoration ?? "none");"
+                                data-key="DiacomClub_Benefit1_Title">
+                                @ViewBag.Entries["DiacomClub_Benefit1_Title"]
+                            </h3>
+                            <p style="
+                                font-family: @(benefit1DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit1DescStyle?.FontSize ?? "1rem");
+                                font-weight: @(benefit1DescStyle?.FontWeight ?? "400");
+                                font-style: @(benefit1DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit1DescStyle?.TextDecoration ?? "none");"
+                               data-key="DiacomClub_Benefit1_Desc">
+                                @ViewBag.Entries["DiacomClub_Benefit1_Desc"]
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="benefit-item">
-                    <span class="icon">🎓</span>
-                    <div>
-                        <h3 data-key="DiacomClub_Benefit2_Title">@ViewBag.Entries["DiacomClub_Benefit2_Title"]</h3>
-                        <p data-key="DiacomClub_Benefit2_Desc">@ViewBag.Entries["DiacomClub_Benefit2_Desc"]</p>
+                }
+
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefit2_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Benefit2_Desc"))
+                {
+                    var benefit2TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit2_Title") ? ViewBag.TextStyles["DiacomClub_Benefit2_Title"] : null;
+                    var benefit2DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit2_Desc") ? ViewBag.TextStyles["DiacomClub_Benefit2_Desc"] : null;
+                    <div class="benefit-item">
+                        <span class="icon">🎓</span>
+                        <div>
+                            <h3 style="
+                                font-family: @(benefit2TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit2TitleStyle?.FontSize ?? "1.2rem");
+                                font-weight: @(benefit2TitleStyle?.FontWeight ?? "600");
+                                font-style: @(benefit2TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit2TitleStyle?.TextDecoration ?? "none");"
+                                data-key="DiacomClub_Benefit2_Title">
+                                @ViewBag.Entries["DiacomClub_Benefit2_Title"]
+                            </h3>
+                            <p style="
+                                font-family: @(benefit2DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit2DescStyle?.FontSize ?? "1rem");
+                                font-weight: @(benefit2DescStyle?.FontWeight ?? "400");
+                                font-style: @(benefit2DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit2DescStyle?.TextDecoration ?? "none");"
+                               data-key="DiacomClub_Benefit2_Desc">
+                                @ViewBag.Entries["DiacomClub_Benefit2_Desc"]
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="benefit-item">
-                    <span class="icon">🎁</span>
-                    <div>
-                        <h3 data-key="DiacomClub_Benefit3_Title">@ViewBag.Entries["DiacomClub_Benefit3_Title"]</h3>
-                        <p data-key="DiacomClub_Benefit3_Desc">@ViewBag.Entries["DiacomClub_Benefit3_Desc"]</p>
+                }
+
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefit3_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Benefit3_Desc"))
+                {
+                    var benefit3TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit3_Title") ? ViewBag.TextStyles["DiacomClub_Benefit3_Title"] : null;
+                    var benefit3DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit3_Desc") ? ViewBag.TextStyles["DiacomClub_Benefit3_Desc"] : null;
+                    <div class="benefit-item">
+                        <span class="icon">🎁</span>
+                        <div>
+                            <h3 style="
+                                font-family: @(benefit3TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit3TitleStyle?.FontSize ?? "1.2rem");
+                                font-weight: @(benefit3TitleStyle?.FontWeight ?? "600");
+                                font-style: @(benefit3TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit3TitleStyle?.TextDecoration ?? "none");"
+                                data-key="DiacomClub_Benefit3_Title">
+                                @ViewBag.Entries["DiacomClub_Benefit3_Title"]
+                            </h3>
+                            <p style="
+                                font-family: @(benefit3DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit3DescStyle?.FontSize ?? "1rem");
+                                font-weight: @(benefit3DescStyle?.FontWeight ?? "400");
+                                font-style: @(benefit3DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit3DescStyle?.TextDecoration ?? "none");"
+                               data-key="DiacomClub_Benefit3_Desc">
+                                @ViewBag.Entries["DiacomClub_Benefit3_Desc"]
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="benefit-item">
-                    <span class="icon">📜</span>
-                    <div>
-                        <h3 data-key="DiacomClub_Benefit4_Title">@ViewBag.Entries["DiacomClub_Benefit4_Title"]</h3>
-                        <p data-key="DiacomClub_Benefit4_Desc">@ViewBag.Entries["DiacomClub_Benefit4_Desc"]</p>
+                }
+
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefit4_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Benefit4_Desc"))
+                {
+                    var benefit4TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit4_Title") ? ViewBag.TextStyles["DiacomClub_Benefit4_Title"] : null;
+                    var benefit4DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit4_Desc") ? ViewBag.TextStyles["DiacomClub_Benefit4_Desc"] : null;
+                    <div class="benefit-item">
+                        <span class="icon">📜</span>
+                        <div>
+                            <h3 style="
+                                font-family: @(benefit4TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit4TitleStyle?.FontSize ?? "1.2rem");
+                                font-weight: @(benefit4TitleStyle?.FontWeight ?? "600");
+                                font-style: @(benefit4TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit4TitleStyle?.TextDecoration ?? "none");"
+                                data-key="DiacomClub_Benefit4_Title">
+                                @ViewBag.Entries["DiacomClub_Benefit4_Title"]
+                            </h3>
+                            <p style="
+                                font-family: @(benefit4DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit4DescStyle?.FontSize ?? "1rem");
+                                font-weight: @(benefit4DescStyle?.FontWeight ?? "400");
+                                font-style: @(benefit4DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit4DescStyle?.TextDecoration ?? "none");"
+                               data-key="DiacomClub_Benefit4_Desc">
+                                @ViewBag.Entries["DiacomClub_Benefit4_Desc"]
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="benefit-item">
-                    <span class="icon">🛠️</span>
-                    <div>
-                        <h3 data-key="DiacomClub_Benefit5_Title">@ViewBag.Entries["DiacomClub_Benefit5_Title"]</h3>
-                        <p data-key="DiacomClub_Benefit5_Desc">@ViewBag.Entries["DiacomClub_Benefit5_Desc"]</p>
+                }
+
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefit5_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Benefit5_Desc"))
+                {
+                    var benefit5TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit5_Title") ? ViewBag.TextStyles["DiacomClub_Benefit5_Title"] : null;
+                    var benefit5DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit5_Desc") ? ViewBag.TextStyles["DiacomClub_Benefit5_Desc"] : null;
+                    <div class="benefit-item">
+                        <span class="icon">🛠️</span>
+                        <div>
+                            <h3 style="
+                                font-family: @(benefit5TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit5TitleStyle?.FontSize ?? "1.2rem");
+                                font-weight: @(benefit5TitleStyle?.FontWeight ?? "600");
+                                font-style: @(benefit5TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit5TitleStyle?.TextDecoration ?? "none");"
+                                data-key="DiacomClub_Benefit5_Title">
+                                @ViewBag.Entries["DiacomClub_Benefit5_Title"]
+                            </h3>
+                            <p style="
+                                font-family: @(benefit5DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit5DescStyle?.FontSize ?? "1rem");
+                                font-weight: @(benefit5DescStyle?.FontWeight ?? "400");
+                                font-style: @(benefit5DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit5DescStyle?.TextDecoration ?? "none");"
+                               data-key="DiacomClub_Benefit5_Desc">
+                                @ViewBag.Entries["DiacomClub_Benefit5_Desc"]
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="benefit-item">
-                    <span class="icon">🏷️</span>
-                    <div>
-                        <h3 data-key="DiacomClub_Benefit6_Title">@ViewBag.Entries["DiacomClub_Benefit6_Title"]</h3>
-                        <p data-key="DiacomClub_Benefit6_Desc">@ViewBag.Entries["DiacomClub_Benefit6_Desc"]</p>
+                }
+
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefit6_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Benefit6_Desc"))
+                {
+                    var benefit6TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit6_Title") ? ViewBag.TextStyles["DiacomClub_Benefit6_Title"] : null;
+                    var benefit6DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefit6_Desc") ? ViewBag.TextStyles["DiacomClub_Benefit6_Desc"] : null;
+                    <div class="benefit-item">
+                        <span class="icon">🏷️</span>
+                        <div>
+                            <h3 style="
+                                font-family: @(benefit6TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit6TitleStyle?.FontSize ?? "1.2rem");
+                                font-weight: @(benefit6TitleStyle?.FontWeight ?? "600");
+                                font-style: @(benefit6TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit6TitleStyle?.TextDecoration ?? "none");"
+                                data-key="DiacomClub_Benefit6_Title">
+                                @ViewBag.Entries["DiacomClub_Benefit6_Title"]
+                            </h3>
+                            <p style="
+                                font-family: @(benefit6DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(benefit6DescStyle?.FontSize ?? "1rem");
+                                font-weight: @(benefit6DescStyle?.FontWeight ?? "400");
+                                font-style: @(benefit6DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(benefit6DescStyle?.TextDecoration ?? "none");"
+                               data-key="DiacomClub_Benefit6_Desc">
+                                @ViewBag.Entries["DiacomClub_Benefit6_Desc"]
+                            </p>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -77,7 +220,7 @@
         transition: transform 0.3s ease;
     }
 
-        
+
         .benefit-item .icon {
             font-size: 30px;
             margin-right: 15px;

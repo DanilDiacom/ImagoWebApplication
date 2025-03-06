@@ -5,30 +5,95 @@
 <section id="content">
     <div class="inner-content">
         <div class="container">
-            <h1 class="page-title" style="text-align:center;margin-top: 20px;" data-key="DiacomClub_Skoleni_Title">@ViewBag.Entries["DiacomClub_Skoleni_Title"]</h1>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_Skoleni_Title"))
+            {
+                var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Skoleni_Title") ? ViewBag.TextStyles["DiacomClub_Skoleni_Title"] : null;
+                <h1 class="page-title" style="text-align:center;margin-top: 20px;
+                    font-family: @(titleStyle?.FontFamily ?? "Arial");
+                    font-size: @(titleStyle?.FontSize ?? "inherit")px;
+                    font-weight: @(titleStyle?.FontWeight ?? "normal");
+                    font-style: @(titleStyle?.FontStyle ?? "normal");
+                    text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                    data-key="DiacomClub_Skoleni_Title">
+                    @ViewBag.Entries["DiacomClub_Skoleni_Title"]
+                </h1>
+            }
 
             <div class="steps-container">
-                <h2 class="steps-title" data-key="DiacomClub_Skoleni_Header">@ViewBag.Entries["DiacomClub_Skoleni_Header"]</h2>
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Skoleni_Header"))
+                {
+                    var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Skoleni_Header") ? ViewBag.TextStyles["DiacomClub_Skoleni_Header"] : null;
+                    <h2 class="steps-title" style="
+                        font-family: @(headerStyle?.FontFamily ?? "Arial");
+                        font-size: @(headerStyle?.FontSize ?? "inherit")px;
+                        font-weight: @(headerStyle?.FontWeight ?? "normal");
+                        font-style: @(headerStyle?.FontStyle ?? "normal");
+                        text-decoration: @(headerStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_Skoleni_Header">
+                        @ViewBag.Entries["DiacomClub_Skoleni_Header"]
+                    </h2>
+                }
 
-                <div class="step">
-                    <div class="step-icon">📄</div>
-                    <div class="step-text">
-                        <strong data-key="DiacomClub_Step1_Title">@ViewBag.Entries["DiacomClub_Step1_Title"]</strong><br>
-                        <span data-key="DiacomClub_Step1_Desc">@ViewBag.Entries["DiacomClub_Step1_Desc"]</span>
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Step1_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Step1_Desc"))
+                {
+                    var step1TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Step1_Title") ? ViewBag.TextStyles["DiacomClub_Step1_Title"] : null;
+                    var step1DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Step1_Desc") ? ViewBag.TextStyles["DiacomClub_Step1_Desc"] : null;
+                    <div class="step">
+                        <div class="step-icon">📄</div>
+                        <div class="step-text">
+                            <strong style="
+                                font-family: @(step1TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(step1TitleStyle?.FontSize ?? "24")px;
+                                font-weight: @(step1TitleStyle?.FontWeight ?? "Bold");
+                                font-style: @(step1TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(step1TitleStyle?.TextDecoration ?? "none");"
+                                    data-key="DiacomClub_Step1_Title">
+                                @ViewBag.Entries["DiacomClub_Step1_Title"]
+                            </strong><br>
+                            <span style="
+                                font-family: @(step1DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(step1DescStyle?.FontSize ?? "inherit")px;
+                                font-weight: @(step1DescStyle?.FontWeight ?? "normal");
+                                font-style: @(step1DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(step1DescStyle?.TextDecoration ?? "none");"
+                                  data-key="DiacomClub_Step1_Desc">
+                                @ViewBag.Entries["DiacomClub_Step1_Desc"]
+                            </span>
+                        </div>
                     </div>
-                </div>
+                }
 
                 <div class="arrow">↓</div>
 
-                <div class="step">
-                    <div class="step-icon">💰</div>
-                    <div class="step-text">
-                        <strong data-key="DiacomClub_Step2_Title">@ViewBag.Entries["DiacomClub_Step2_Title"]</strong><br>
-                        <span data-key="DiacomClub_Step2_Desc">@ViewBag.Entries["DiacomClub_Step2_Desc"]</span>
+                @if (ViewBag.Entries.ContainsKey("DiacomClub_Step2_Title") && ViewBag.Entries.ContainsKey("DiacomClub_Step2_Desc"))
+                {
+                    var step2TitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Step2_Title") ? ViewBag.TextStyles["DiacomClub_Step2_Title"] : null;
+                    var step2DescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Step2_Desc") ? ViewBag.TextStyles["DiacomClub_Step2_Desc"] : null;
+                    <div class="step">
+                        <div class="step-icon">💰</div>
+                        <div class="step-text">
+                            <strong style="
+                                font-family: @(step2TitleStyle?.FontFamily ?? "Arial");
+                                font-size: @(step2TitleStyle?.FontSize ?? "24")px;
+                                font-weight: @(step2TitleStyle?.FontWeight ?? "Bold");
+                                font-style: @(step2TitleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(step2TitleStyle?.TextDecoration ?? "none");"
+                                    data-key="DiacomClub_Step2_Title">
+                                @ViewBag.Entries["DiacomClub_Step2_Title"]
+                            </strong><br>
+                            <span style="
+                                font-family: @(step2DescStyle?.FontFamily ?? "Arial");
+                                font-size: @(step2DescStyle?.FontSize ?? "inherit")px;
+                                font-weight: @(step2DescStyle?.FontWeight ?? "normal");
+                                font-style: @(step2DescStyle?.FontStyle ?? "normal");
+                                text-decoration: @(step2DescStyle?.TextDecoration ?? "none");"
+                                  data-key="DiacomClub_Step2_Desc">
+                                @ViewBag.Entries["DiacomClub_Step2_Desc"]
+                            </span>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
-
         </div>
     </div>
 </section>

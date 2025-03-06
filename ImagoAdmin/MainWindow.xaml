@@ -82,7 +82,8 @@
                         <TextBlock Text="Písmo:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
                         <ComboBox Name="FontFamilyComboBox" Width="200" SelectionChanged="FontFamilyComboBox_SelectionChanged">
                             <ComboBoxItem Content="Arial"/>
-                            <ComboBoxItem Content="Times New Roman"/>
+                                <ComboBoxItem Content="Segoe UI"/>
+                                <ComboBoxItem Content="Times New Roman"/>
                             <ComboBoxItem Content="Courier New"/>
                             <ComboBoxItem Content="Verdana"/>
                             <ComboBoxItem Content="Georgia"/>
@@ -109,7 +110,19 @@
                             <ComboBoxItem Content="28"/>
                             <ComboBoxItem Content="32"/>
                             <ComboBoxItem Content="36"/>
-                        </ComboBox>
+                                <ComboBoxItem Content="38"/>
+                                <ComboBoxItem Content="40"/>
+                                <ComboBoxItem Content="42"/>
+                                <ComboBoxItem Content="44"/>
+                                <ComboBoxItem Content="46"/>
+                                <ComboBoxItem Content="48"/>
+                                <ComboBoxItem Content="50"/>
+                                <ComboBoxItem Content="52"/>
+                                <ComboBoxItem Content="54"/>
+                                <ComboBoxItem Content="56"/>
+                                <ComboBoxItem Content="58"/>
+                                <ComboBoxItem Content="60"/>
+                            </ComboBox>
                     </StackPanel>
 
                     <!-- Форматирование -->

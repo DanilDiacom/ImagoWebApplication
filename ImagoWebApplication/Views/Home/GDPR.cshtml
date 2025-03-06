@@ -49,7 +49,6 @@
             background-color: #f9f9f9;
         }
 
-
     /* Общие стили */
     .content-text {
         font-size: 1.2rem;
@@ -87,14 +86,26 @@
         <!-- Заголовок страницы -->
         @if (ViewBag.Entries.ContainsKey("GDPR_Title"))
         {
-            <h1 class="page-title" data-key="GDPR_Title">
+            var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_Title") ? ViewBag.TextStyles["GDPR_Title"] : null;
+            <h1 class="page-title" data-key="GDPR_Title" style="
+                font-family: @(titleStyle?.FontFamily ?? "Arial, sans-serif");
+                font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                font-weight: @(titleStyle?.FontWeight ?? "normal");
+                font-style: @(titleStyle?.FontStyle ?? "normal");
+                text-decoration: @(titleStyle?.TextDecoration ?? "none");">
                 @ViewBag.Entries["GDPR_Title"]
             </h1>
         }
 
         @if (ViewBag.Entries.ContainsKey("GDPR_Header"))
         {
-            <h3 data-key="GDPR_Header">
+            var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_Header") ? ViewBag.TextStyles["GDPR_Header"] : null;
+            <h3 data-key="GDPR_Header" style="
+                font-family: @(headerStyle?.FontFamily ?? "Arial, sans-serif");
+                font-size: @(headerStyle?.FontSize ?? "1.5rem");
+                font-weight: @(headerStyle?.FontWeight ?? "normal");
+                font-style: @(headerStyle?.FontStyle ?? "normal");
+                text-decoration: @(headerStyle?.TextDecoration ?? "none");">
                 @ViewBag.Entries["GDPR_Header"]
             </h3>
         }
@@ -103,15 +114,31 @@
             <!-- Секция "Správce osobních údajů" -->
             @if (ViewBag.Entries.ContainsKey("GDPR_DataController"))
             {
-                <p><b data-key="GDPR_DataController">@ViewBag.Entries["GDPR_DataController"]</b></p>
+                var dataControllerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_DataController") ? ViewBag.TextStyles["GDPR_DataController"] : null;
+                <p>
+                    <b data-key="GDPR_DataController" style="
+                    font-family: @(dataControllerStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(dataControllerStyle?.FontSize ?? "inherit");
+                    font-weight: @(dataControllerStyle?.FontWeight ?? "normal");
+                    font-style: @(dataControllerStyle?.FontStyle ?? "normal");
+                    text-decoration: @(dataControllerStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_DataController"]
+                    </b>
+                </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_DataController_Details"))
             {
+                var dataControllerDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_DataController_Details") ? ViewBag.TextStyles["GDPR_DataController_Details"] : null;
                 <table class="styled-table">
                     <tbody>
                         <tr>
-                            <td colspan="2" data-key="GDPR_DataController_Details">
+                            <td colspan="2" data-key="GDPR_DataController_Details" style="
+                                font-family: @(dataControllerDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                                font-size: @(dataControllerDetailsStyle?.FontSize ?? "inherit");
+                                font-weight: @(dataControllerDetailsStyle?.FontWeight ?? "normal");
+                                font-style: @(dataControllerDetailsStyle?.FontStyle ?? "normal");
+                                text-decoration: @(dataControllerDetailsStyle?.TextDecoration ?? "none");">
                                 @Html.Raw(ViewBag.Entries["GDPR_DataController_Details"])
                             </td>
                         </tr>
@@ -122,28 +149,59 @@
             <!-- Секция "Právní základ pro zpracování" -->
             @if (ViewBag.Entries.ContainsKey("GDPR_LegalBasis"))
             {
-                <p><b data-key="GDPR_LegalBasis">@ViewBag.Entries["GDPR_LegalBasis"]</b></p>
+                var legalBasisStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_LegalBasis") ? ViewBag.TextStyles["GDPR_LegalBasis"] : null;
+                <p>
+                    <b data-key="GDPR_LegalBasis" style="
+                    font-family: @(legalBasisStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(legalBasisStyle?.FontSize ?? "inherit");
+                    font-weight: @(legalBasisStyle?.FontWeight ?? "normal");
+                    font-style: @(legalBasisStyle?.FontStyle ?? "normal");
+                    text-decoration: @(legalBasisStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_LegalBasis"]
+                    </b>
+                </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_LegalBasis_Details"))
             {
+                var legalBasisDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_LegalBasis_Details") ? ViewBag.TextStyles["GDPR_LegalBasis_Details"] : null;
                 <ul>
-                    <li data-key="GDPR_LegalBasis_Details">
+                    <li data-key="GDPR_LegalBasis_Details" style="
+                        font-family: @(legalBasisDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                        font-size: @(legalBasisDetailsStyle?.FontSize ?? "inherit");
+                        font-weight: @(legalBasisDetailsStyle?.FontWeight ?? "normal");
+                        font-style: @(legalBasisDetailsStyle?.FontStyle ?? "normal");
+                        text-decoration: @(legalBasisDetailsStyle?.TextDecoration ?? "none");">
                         @ViewBag.Entries["GDPR_LegalBasis_Details"]
                     </li>
                 </ul>
             }
 
-            <!-- Секция "Účel zpracování" -->
             @if (ViewBag.Entries.ContainsKey("GDPR_Purpose"))
             {
-                <p><b data-key="GDPR_Purpose">@ViewBag.Entries["GDPR_Purpose"]</b></p>
+                var purposeStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_Purpose") ? ViewBag.TextStyles["GDPR_Purpose"] : null;
+                <p>
+                    <b data-key="GDPR_Purpose" style="
+                    font-family: @(purposeStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_Purpose"]
+                    </b>
+                </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_Purpose_Details"))
             {
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_Purpose_Details") ? ViewBag.TextStyles["GDPR_Purpose_Details"] : null;
                 <ul>
-                    <li data-key="GDPR_Purpose_Details">
+                    <li data-key="GDPR_Purpose_Details" style="
+                        font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                        font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                        font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                        font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                        text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
                         @ViewBag.Entries["GDPR_Purpose_Details"]
                     </li>
                 </ul>
@@ -152,13 +210,30 @@
             <!-- Секция "Příjemci osobních údajů" -->
             @if (ViewBag.Entries.ContainsKey("GDPR_Recipients"))
             {
-                <p><b data-key="GDPR_Recipients">@ViewBag.Entries["GDPR_Recipients"]</b></p>
+                var purposeStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_Recipients") ? ViewBag.TextStyles["GDPR_Recipients"] : null;
+
+                <p>
+                    <b data-key="GDPR_Recipients" style="
+                    font-family: @(purposeStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_Recipients"]
+                    </b>
+                </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_Recipients_Details"))
             {
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_Recipients_Details") ? ViewBag.TextStyles["GDPR_Recipients_Details"] : null;
                 <ul>
-                    <li data-key="GDPR_Recipients_Details">
+                    <li data-key="GDPR_Recipients_Details" style="
+                        font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                        font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                        font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                        font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                        text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
                         @ViewBag.Entries["GDPR_Recipients_Details"]
                     </li>
                 </ul>
@@ -167,77 +242,166 @@
             <!-- Секция "Doba zpracování osobních údajů" -->
             @if (ViewBag.Entries.ContainsKey("GDPR_ProcessingTime"))
             {
-                <p><b data-key="GDPR_ProcessingTime">@ViewBag.Entries["GDPR_ProcessingTime"]</b></p>
+                var purposeStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_ProcessingTime") ? ViewBag.TextStyles["GDPR_ProcessingTime"] : null;
+
+                <p>
+                    <b data-key="GDPR_ProcessingTime" style="
+                    font-family: @(purposeStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_ProcessingTime"]
+                    </b>
+                </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_ProcessingTime_Details"))
             {
-                <p data-key="GDPR_ProcessingTime_Details">
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_ProcessingTime_Details") ? ViewBag.TextStyles["GDPR_ProcessingTime_Details"] : null;
+
+                <p data-key="GDPR_ProcessingTime_Details" style="
+                    font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
                     @ViewBag.Entries["GDPR_ProcessingTime_Details"]
                 </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_AccessRight"))
             {
-                <p><b data-key="GDPR_AccessRight">@ViewBag.Entries["GDPR_AccessRight"]</b></p>
+                var purposeStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_AccessRight") ? ViewBag.TextStyles["GDPR_AccessRight"] : null;
+
+                <p>
+                    <b data-key="GDPR_AccessRight" style="
+                    font-family: @(purposeStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_AccessRight"]
+                    </b>
+                </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_AccessRight_Details"))
             {
-                <p data-key="GDPR_AccessRight_Details">
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_AccessRight_Details") ? ViewBag.TextStyles["GDPR_AccessRight_Details"] : null;
+
+                <p data-key="GDPR_AccessRight_Details" style="
+                    font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
                     @ViewBag.Entries["GDPR_AccessRight_Details"]
                 </p>
             }
 
-           
             @if (ViewBag.Entries.ContainsKey("GDPR_DeletionRight_Details"))
             {
-                <p data-key="GDPR_DeletionRight_Details">
-                    @ViewBag.Entries["GDPR_DeletionRight_Details"]
+                var purposeStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_DeletionRight_Details") ? ViewBag.TextStyles["GDPR_DeletionRight_Details"] : null;
+
+                <p>
+                    <b data-key="GDPR_DeletionRight_Details" style="
+                    font-family: @(purposeStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_DeletionRight_Details"]
+                    </b>
                 </p>
             }
 
-           
             @if (ViewBag.Entries.ContainsKey("GDPR_ProcessingRestriction_Details"))
             {
-                <p data-key="GDPR_ProcessingRestriction_Details">
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_ProcessingRestriction_Details") ? ViewBag.TextStyles["GDPR_ProcessingRestriction_Details"] : null;
+
+                <p data-key="GDPR_ProcessingRestriction_Details" style="
+                    font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
                     @ViewBag.Entries["GDPR_ProcessingRestriction_Details"]
                 </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_DataPortability"))
             {
-                <p><b data-key="GDPR_DataPortability">@ViewBag.Entries["GDPR_DataPortability"]</b></p>
+                var purposeStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_DataPortability") ? ViewBag.TextStyles["GDPR_DataPortability"] : null;
+
+                <p>
+                    <b data-key="GDPR_DataPortability" style="
+                    font-family: @(purposeStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_DataPortability"]
+                    </b>
+                </p>
             }
 
             @if (ViewBag.Entries.ContainsKey("GDPR_DataPortability_Details"))
             {
-                <p data-key="GDPR_DataPortability_Details">
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_DataPortability_Details") ? ViewBag.TextStyles["GDPR_DataPortability_Details"] : null;
+
+                <p data-key="GDPR_DataPortability_Details" style="
+                    font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
                     @ViewBag.Entries["GDPR_DataPortability_Details"]
                 </p>
             }
 
-           
             @if (ViewBag.Entries.ContainsKey("GDPR_ConsentWithdrawal_Details"))
             {
-                <p data-key="GDPR_ConsentWithdrawal_Details">
-                    @ViewBag.Entries["GDPR_ConsentWithdrawal_Details"]
+                var purposeStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_ConsentWithdrawal_Details") ? ViewBag.TextStyles["GDPR_ConsentWithdrawal_Details"] : null;
+
+                <p>
+                    <b data-key="GDPR_ConsentWithdrawal_Details" style="
+                    font-family: @(purposeStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["GDPR_ConsentWithdrawal_Details"]
+                    </b>
                 </p>
             }
 
-            
+
             @if (ViewBag.Entries.ContainsKey("GDPR_Complaint_Details"))
             {
-                <p data-key="GDPR_Complaint_Details">
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_Complaint_Details") ? ViewBag.TextStyles["GDPR_Complaint_Details"] : null;
+
+                <p data-key="GDPR_Complaint_Details" style="
+                    font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
                     @ViewBag.Entries["GDPR_Complaint_Details"]
                 </p>
             }
 
-           
             @if (ViewBag.Entries.ContainsKey("GDPR_MoreInfo_Details"))
             {
-                <p data-key="GDPR_MoreInfo_Details">
-                    @Html.Raw(ViewBag.Entries["GDPR_MoreInfo_Details"])
+                var purposeDetailsStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("GDPR_MoreInfo_Details") ? ViewBag.TextStyles["GDPR_MoreInfo_Details"] : null;
+
+                <p data-key="GDPR_MoreInfo_Details" style="
+                    font-family: @(purposeDetailsStyle?.FontFamily ?? "Arial, sans-serif");
+                    font-size: @(purposeDetailsStyle?.FontSize ?? "inherit");
+                    font-weight: @(purposeDetailsStyle?.FontWeight ?? "normal");
+                    font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
+                    text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");">
+                    @ViewBag.Entries["GDPR_MoreInfo_Details"]
                 </p>
             }
         </div>

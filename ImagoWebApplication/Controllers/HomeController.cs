@@ -77,6 +77,8 @@ public class HomeController : Controller {
 
     public IActionResult Školení() {
         SetViewHomeBagEntries();
+        SetViewHomeBagStyles();
+
         return View();
     }
 
@@ -87,11 +89,15 @@ public class HomeController : Controller {
 
     public IActionResult PracovniAktiv() {
         SetViewHomeBagEntries();
+        SetViewHomeBagStyles();
+
         return View();
     }
 
     public IActionResult PageDCW() {
         SetViewHomeBagEntries();
+        SetViewHomeBagStyles();
+
         return View();
     }
 
@@ -118,6 +124,8 @@ public class HomeController : Controller {
     public IActionResult Prozovna() {
         SetViewHomeBagEntries();
         SetViewHomeBagImages();
+        SetViewHomeBagStyles();
+
         return View();
     }
 

@@ -2,57 +2,154 @@
     ViewData["Title"] = "Pracovní aktiv";
 }
 
-<link rel="stylesheet" href="~/css/aktiv.css asp-append-version="true" />
+<link rel="stylesheet" href="~/css/aktiv.css" asp-append-version="true" />
 
 <section>
     <div class="container-gen">
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Title"))
+        {
+            var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Title") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Title"] : null;
+            <h1 class="page-title" style="text-align: center;
+                font-family: @(titleStyle?.FontFamily ?? "Arial");
+                font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                font-weight: @(titleStyle?.FontWeight ?? "600");
+                font-style: @(titleStyle?.FontStyle ?? "normal");
+                text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                data-key="DiacomClub_PracovniAktiv_Title">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Title"]
+            </h1>
+        }
 
-        <h1 class="page-title" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Title">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Title"]
-        </h1>
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Subtitle"))
+        {
+            var subtitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Subtitle") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Subtitle"] : null;
+            <h2 class="section-title" style="text-align: center;
+                font-family: @(subtitleStyle?.FontFamily ?? "Arial");
+                font-size: @(subtitleStyle?.FontSize ?? "2rem");
+                font-weight: @(subtitleStyle?.FontWeight ?? "600");
+                font-style: @(subtitleStyle?.FontStyle ?? "normal");
+                text-decoration: @(subtitleStyle?.TextDecoration ?? "none");"
+                data-key="DiacomClub_PracovniAktiv_Subtitle">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Subtitle"]
+            </h2>
+        }
 
-        <h2 class="section-title" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Subtitle">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Subtitle"]
-        </h2>
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Desc1"))
+        {
+            var desc1Style = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Desc1") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Desc1"] : null;
+            <p class="text" style="text-align: center;
+                font-family: @(desc1Style?.FontFamily ?? "Arial");
+                font-size: @(desc1Style?.FontSize ?? "1rem");
+                font-weight: @(desc1Style?.FontWeight ?? "400");
+                font-style: @(desc1Style?.FontStyle ?? "normal");
+                text-decoration: @(desc1Style?.TextDecoration ?? "none");"
+               data-key="DiacomClub_PracovniAktiv_Desc1">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc1"]
+            </p>
+        }
 
-        <p class="text" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Desc1">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc1"]
-        </p>
-
-        <p class="quote" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_Quote">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Quote"]
-        </p>
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Quote"))
+        {
+            var quoteStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Quote") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Quote"] : null;
+            <p class="quote" style="text-align: center;
+                font-family: @(quoteStyle?.FontFamily ?? "Arial");
+                font-size: @(quoteStyle?.FontSize ?? "1.25rem");
+                font-weight: @(quoteStyle?.FontWeight ?? "600");
+                font-style: @(quoteStyle?.FontStyle ?? "italic");
+                text-decoration: @(quoteStyle?.TextDecoration ?? "none");"
+               data-key="DiacomClub_PracovniAktiv_Quote">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Quote"]
+            </p>
+        }
 
         <div class="komentar-block">
-            <h3 class="section-title" style="text-align: center;" data-key="DiacomClub_PracovniAktiv_CommentTitle">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentTitle"]
-            </h3>
-            <p class="text">
-                <span data-key="DiacomClub_PracovniAktiv_CommentDesc">
-                    @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentDesc"]
-                </span>
-                <a href="http://www.semes.sk/urmium-2017/" class="styled-link" target="_blank">
-                    http://www.semes.sk/urmium-2017/
-                </a>
-            </p>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_CommentTitle"))
+            {
+                var commentTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_CommentTitle") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_CommentTitle"] : null;
+                <h3 class="section-title" style="text-align: center;
+                    font-family: @(commentTitleStyle?.FontFamily ?? "Arial");
+                    font-size: @(commentTitleStyle?.FontSize ?? "1.75rem");
+                    font-weight: @(commentTitleStyle?.FontWeight ?? "600");
+                    font-style: @(commentTitleStyle?.FontStyle ?? "normal");
+                    text-decoration: @(commentTitleStyle?.TextDecoration ?? "none");"
+                    data-key="DiacomClub_PracovniAktiv_CommentTitle">
+                    @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentTitle"]
+                </h3>
+            }
+
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_CommentDesc"))
+            {
+                var commentDescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_CommentDesc") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_CommentDesc"] : null;
+                <p class="text" style="
+                    font-family: @(commentDescStyle?.FontFamily ?? "Arial");
+                    font-size: @(commentDescStyle?.FontSize ?? "1rem");
+                    font-weight: @(commentDescStyle?.FontWeight ?? "400");
+                    font-style: @(commentDescStyle?.FontStyle ?? "normal");
+                    text-decoration: @(commentDescStyle?.TextDecoration ?? "none");">
+                    <span data-key="DiacomClub_PracovniAktiv_CommentDesc">
+                        @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentDesc"]
+                    </span>
+                    <a href="http://www.semes.sk/urmium-2017/" class="styled-link" target="_blank">
+                        http://www.semes.sk/urmium-2017/
+                    </a>
+                </p>
+            }
         </div>
 
-        <p class="text" data-key="DiacomClub_PracovniAktiv_Desc2">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc2"]
-        </p>
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Desc2"))
+        {
+            var desc2Style = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Desc2") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Desc2"] : null;
+            <p class="text" style="
+                font-family: @(desc2Style?.FontFamily ?? "Arial");
+                font-size: @(desc2Style?.FontSize ?? "1rem");
+                font-weight: @(desc2Style?.FontWeight ?? "400");
+                font-style: @(desc2Style?.FontStyle ?? "normal");
+                text-decoration: @(desc2Style?.TextDecoration ?? "none");"
+               data-key="DiacomClub_PracovniAktiv_Desc2">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc2"]
+            </p>
+        }
 
-        <p class="text" data-key="DiacomClub_PracovniAktiv_Desc3">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc3"]
-        </p>
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Desc3"))
+        {
+            var desc3Style = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Desc3") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Desc3"] : null;
+            <p class="text" style="
+                font-family: @(desc3Style?.FontFamily ?? "Arial");
+                font-size: @(desc3Style?.FontSize ?? "1rem");
+                font-weight: @(desc3Style?.FontWeight ?? "400");
+                font-style: @(desc3Style?.FontStyle ?? "normal");
+                text-decoration: @(desc3Style?.TextDecoration ?? "none");"
+               data-key="DiacomClub_PracovniAktiv_Desc3">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc3"]
+            </p>
+        }
 
-        <p class="signature" data-key="DiacomClub_PracovniAktiv_Signature">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Signature"]
-        </p>
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Signature"))
+        {
+            var signatureStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Signature") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Signature"] : null;
+            <p class="signature" style="
+                font-family: @(signatureStyle?.FontFamily ?? "Arial");
+                font-size: @(signatureStyle?.FontSize ?? "1.25rem");
+                font-weight: @(signatureStyle?.FontWeight ?? "600");
+                font-style: @(signatureStyle?.FontStyle ?? "italic");
+                text-decoration: @(signatureStyle?.TextDecoration ?? "none");"
+               data-key="DiacomClub_PracovniAktiv_Signature">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Signature"]
+            </p>
+        }
 
-        <p class="author" data-key="DiacomClub_PracovniAktiv_Author">
-            @ViewBag.Entries["DiacomClub_PracovniAktiv_Author"]
-        </p>
-
+        @if (ViewBag.Entries.ContainsKey("DiacomClub_PracovniAktiv_Author"))
+        {
+            var authorStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Author") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Author"] : null;
+            <p class="author" style="
+                font-family: @(authorStyle?.FontFamily ?? "Arial");
+                font-size: @(authorStyle?.FontSize ?? "1.25rem");
+                font-weight: @(authorStyle?.FontWeight ?? "600");
+                font-style: @(authorStyle?.FontStyle ?? "normal");
+                text-decoration: @(authorStyle?.TextDecoration ?? "none");"
+               data-key="DiacomClub_PracovniAktiv_Author">
+                @ViewBag.Entries["DiacomClub_PracovniAktiv_Author"]
+            </p>
+        }
     </div>
-
 </section>

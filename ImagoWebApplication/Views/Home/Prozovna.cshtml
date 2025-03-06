@@ -8,22 +8,63 @@
     var prozovnaImage = images?.Where(img => img["EntryKey"].Contains("018963c6-8446-4fb8-a0d9-8a13fc7175ed")).FirstOrDefault();
 }
 
-
 <link rel="stylesheet" href="~/css/prozovna.css" asp-append-version="true" />
 
 <section id="content">
     <div class="inner-content">
         <div class="container">
+
             @if (ViewBag.Entries.ContainsKey("Skoleni_Title"))
             {
-                <h1 class="page-title" data-key="Skoleni_Title">@ViewBag.Entries["Skoleni_Title"]</h1>
+                var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_Title") ? ViewBag.TextStyles["Skoleni_Title"] : null;
+                <h1 class="page-title" data-key="Skoleni_Title" style="
+                    font-family: @(titleStyle?.FontFamily ?? "Arial");
+                    font-size: @(titleStyle?.FontSize ?? "inherit");
+                    font-weight: @(titleStyle?.FontWeight ?? "600");
+                    font-style: @(titleStyle?.FontStyle ?? "normal");
+                    text-decoration: @(titleStyle?.TextDecoration ?? "none");">
+                    @ViewBag.Entries["Skoleni_Title"]
+                </h1>
             }
 
-            <h2 data-key="Skoleni_Header">@ViewBag.Entries["Skoleni_Header"]</h2>
-
+            @if (ViewBag.Entries.ContainsKey("Skoleni_Header"))
+            {
+                var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_Header") ? ViewBag.TextStyles["Skoleni_Header"] : null;
+                <h2 class="section-header" data-key="Skoleni_Header" style="
+        font-family: @(headerStyle?.FontFamily ?? "Arial");
+        font-size: @(headerStyle?.FontSize ?? "inherit")px;
+        font-weight: @(headerStyle?.FontWeight ?? "normal");
+        font-style: @(headerStyle?.FontStyle ?? "normal");
+        text-decoration: @(headerStyle?.TextDecoration ?? "none");">
+                    @ViewBag.Entries["Skoleni_Header"]
+                </h2>
+            }
             <div class="section">
-                <h3 data-key="Skoleni_Label_First">@ViewBag.Entries["Skoleni_Label_First"]</h3>
-                <p data-key="Skoleni_SubLabel_First">@ViewBag.Entries["Skoleni_SubLabel_First"]</p>
+                @if (ViewBag.Entries.ContainsKey("Skoleni_Label_First"))
+                {
+                    var labelFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_Label_First") ? ViewBag.TextStyles["Skoleni_Label_First"] : null;
+                    <h3 class="label" data-key="Skoleni_Label_First" style="
+        font-family: @(labelFirstStyle?.FontFamily ?? "Arial");
+        font-size: @(labelFirstStyle?.FontSize ?? "inherit")px;
+        font-weight: @(labelFirstStyle?.FontWeight ?? "normal");
+        font-style: @(labelFirstStyle?.FontStyle ?? "normal");
+        text-decoration: @(labelFirstStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["Skoleni_Label_First"]
+                    </h3>
+                }
+
+                @if (ViewBag.Entries.ContainsKey("Skoleni_SubLabel_First"))
+                {
+                    var subLabelFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_SubLabel_First") ? ViewBag.TextStyles["Skoleni_SubLabel_First"] : null;
+                    <p class="sub-label" data-key="Skoleni_SubLabel_First" style="
+        font-family: @(subLabelFirstStyle?.FontFamily ?? "Arial");
+        font-size: @(subLabelFirstStyle?.FontSize ?? "inherit")px;
+        font-weight: @(subLabelFirstStyle?.FontWeight ?? "normal");
+        font-style: @(subLabelFirstStyle?.FontStyle ?? "normal");
+        text-decoration: @(subLabelFirstStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["Skoleni_SubLabel_First"]
+                    </p>
+                }
                 <div class="image-container">
                     @if (prozovnaImage != null)
                     {
@@ -36,9 +77,31 @@
             </div>
 
             <div class="section">
-                <h3 data-key="Skoleni_Label_Second">@ViewBag.Entries["Skoleni_Label_Second"]</h3>
-                <p data-key="Skoleni_SubLabel_Second">@ViewBag.Entries["Skoleni_SubLabel_Second"]</p>
+                @if (ViewBag.Entries.ContainsKey("Skoleni_Label_Second"))
+                {
+                    var labelSecondStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_Label_Second") ? ViewBag.TextStyles["Skoleni_Label_Second"] : null;
+                    <h3 class="label" data-key="Skoleni_Label_Second" style="
+        font-family: @(labelSecondStyle?.FontFamily ?? "Arial");
+        font-size: @(labelSecondStyle?.FontSize ?? "inherit")px;
+        font-weight: @(labelSecondStyle?.FontWeight ?? "normal");
+        font-style: @(labelSecondStyle?.FontStyle ?? "normal");
+        text-decoration: @(labelSecondStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["Skoleni_Label_Second"]
+                    </h3>
+                }
 
+                @if (ViewBag.Entries.ContainsKey("Skoleni_SubLabel_Second"))
+                {
+                    var subLabelSecondStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_SubLabel_Second") ? ViewBag.TextStyles["Skoleni_SubLabel_Second"] : null;
+                    <p class="sub-label" data-key="Skoleni_SubLabel_Second" style="
+        font-family: @(subLabelSecondStyle?.FontFamily ?? "Arial");
+        font-size: @(subLabelSecondStyle?.FontSize ?? "inherit")px;
+        font-weight: @(subLabelSecondStyle?.FontWeight ?? "normal");
+        font-style: @(subLabelSecondStyle?.FontStyle ?? "normal");
+        text-decoration: @(subLabelSecondStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["Skoleni_SubLabel_Second"]
+                    </p>
+                }
                 <!-- Карусель изображений -->
                 @if (filteredImages.Count > 0) { 
                     <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -64,11 +127,34 @@
             </div>
 
             <div class="section">
-                <h3 data-key="Skoleni_Label_Third">@ViewBag.Entries["Skoleni_Label_Third"]</h3>
+                @if (ViewBag.Entries.ContainsKey("Skoleni_Label_Third"))
+                {
+                    var labelThirdStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_Label_Third") ? ViewBag.TextStyles["Skoleni_Label_Third"] : null;
+                    <h3 class="label" data-key="Skoleni_Label_Third" style="
+            font-family: @(labelThirdStyle?.FontFamily ?? "Arial");
+        font-size: @(labelThirdStyle?.FontSize ?? "inherit")px;
+        font-weight: @(labelThirdStyle?.FontWeight ?? "normal");
+            font-style: @(labelThirdStyle?.FontStyle ?? "normal");
+            text-decoration: @(labelThirdStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["Skoleni_Label_Third"]
+                    </h3>
+                }
             </div>
 
             <div class="pricing">
-                <h3 data-key="Skoleni_SubLabel_Third">@ViewBag.Entries["Skoleni_SubLabel_Third"]</h3>
+                @if (ViewBag.Entries.ContainsKey("Skoleni_SubLabel_Third"))
+                {
+                    var subLabelThirdStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Skoleni_SubLabel_Third") ? ViewBag.TextStyles["Skoleni_SubLabel_Third"] : null;
+                    <h3 class="sub-label" data-key="Skoleni_SubLabel_Third" style="
+                font-family: @(subLabelThirdStyle?.FontFamily ?? "Arial");
+        font-size: @(subLabelThirdStyle?.FontSize ?? "inherit")px;
+        font-weight: @(subLabelThirdStyle?.FontWeight ?? "normal");
+                font-style: @(subLabelThirdStyle?.FontStyle ?? "normal");
+                text-decoration: @(subLabelThirdStyle?.TextDecoration ?? "none");">
+                        @ViewBag.Entries["Skoleni_SubLabel_Third"]
+                    </h3>
+                }
+
                 <table class="pricing-table">
                     <thead>
                         <tr>

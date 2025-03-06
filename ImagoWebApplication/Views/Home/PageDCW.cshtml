@@ -5,69 +5,203 @@
 <section id="content">
     <div class="inner-content">
         <div class="container">
-            <header class="page-header">
-                <h1 class="page-title text-center" data-key="DiacomClub_DCW_Title">@ViewBag.Entries["DiacomClub_DCW_Title"]</h1>
-            </header>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Title"))
+            {
+                var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Title") ? ViewBag.TextStyles["DiacomClub_DCW_Title"] : null;
+                <header class="page-header">
+                    <h1 class="page-title text-center" style="
+                        font-family: @(titleStyle?.FontFamily ?? "Arial");
+                        font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                        font-weight: @(titleStyle?.FontWeight ?? "600");
+                        font-style: @(titleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Title">
+                        @ViewBag.Entries["DiacomClub_DCW_Title"]
+                    </h1>
+                </header>
+            }
 
-            <article class="experience-block">
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_First") && ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_First_Name"))
+            {
+                var firstTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_First") ? ViewBag.TextStyles["DiacomClub_DCW_Content_First"] : null;
+                var firstNameStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_First_Name") ? ViewBag.TextStyles["DiacomClub_DCW_Content_First_Name"] : null;
+                <article class="experience-block">
+                    <h2 class="experience-title" style="
+                        font-family: @(firstTitleStyle?.FontFamily ?? "Arial");
+                        font-size: @(firstTitleStyle?.FontSize ?? "2rem");
+                        font-weight: @(firstTitleStyle?.FontWeight ?? "600");
+                        font-style: @(firstTitleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(firstTitleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Content_First">
+                        @ViewBag.Entries["DiacomClub_DCW_Content_First"]
+                    </h2>
+                    <p style="
+                        font-family: @(firstNameStyle?.FontFamily ?? "Arial");
+                        font-size: @(firstNameStyle?.FontSize ?? "1rem");
+                        font-weight: @(firstNameStyle?.FontWeight ?? "400");
+                        font-style: @(firstNameStyle?.FontStyle ?? "normal");
+                        text-decoration: @(firstNameStyle?.TextDecoration ?? "none");"
+                       data-key="DiacomClub_DCW_Content_First_Name">
+                        @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_First_Name"])
+                    </p>
+                </article>
+            }
 
-                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_First">@ViewBag.Entries["DiacomClub_DCW_Content_First"]</h2>
-                <p data-key="DiacomClub_DCW_Content_First_Name">@Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_First_Name"])</p>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Second") && ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Second_Name"))
+            {
+                var secondTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Second") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Second"] : null;
+                var secondNameStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Second_Name") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Second_Name"] : null;
+                <article class="experience-block">
+                    <h2 class="experience-title" style="
+                        font-family: @(secondTitleStyle?.FontFamily ?? "Arial");
+                        font-size: @(secondTitleStyle?.FontSize ?? "2rem");
+                        font-weight: @(secondTitleStyle?.FontWeight ?? "600");
+                        font-style: @(secondTitleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(secondTitleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Content_Second">
+                        @ViewBag.Entries["DiacomClub_DCW_Content_Second"]
+                    </h2>
+                    <p style="
+                        font-family: @(secondNameStyle?.FontFamily ?? "Arial");
+                        font-size: @(secondNameStyle?.FontSize ?? "1rem");
+                        font-weight: @(secondNameStyle?.FontWeight ?? "400");
+                        font-style: @(secondNameStyle?.FontStyle ?? "normal");
+                        text-decoration: @(secondNameStyle?.TextDecoration ?? "none");"
+                       data-key="DiacomClub_DCW_Content_Second_Name">
+                        @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Second_Name"])
+                    </p>
+                </article>
+            }
 
-            </article>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Third") && ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Third_Text"))
+            {
+                var thirdTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Third") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Third"] : null;
+                var thirdTextStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Third_Text") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Third_Text"] : null;
+                <article class="experience-block">
+                    <h2 class="experience-title" style="
+                        font-family: @(thirdTitleStyle?.FontFamily ?? "Arial");
+                        font-size: @(thirdTitleStyle?.FontSize ?? "2rem");
+                        font-weight: @(thirdTitleStyle?.FontWeight ?? "600");
+                        font-style: @(thirdTitleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(thirdTitleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Content_Third">
+                        @ViewBag.Entries["DiacomClub_DCW_Content_Third"]
+                    </h2>
+                    <p style="
+                        font-family: @(thirdTextStyle?.FontFamily ?? "Arial");
+                        font-size: @(thirdTextStyle?.FontSize ?? "1rem");
+                        font-weight: @(thirdTextStyle?.FontWeight ?? "400");
+                        font-style: @(thirdTextStyle?.FontStyle ?? "normal");
+                        text-decoration: @(thirdTextStyle?.TextDecoration ?? "none");"
+                       data-key="DiacomClub_DCW_Content_Third_Text">
+                        @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Third_Text"])
+                    </p>
+                </article>
+            }
 
-            <article class="experience-block">
-                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Second">@ViewBag.Entries["DiacomClub_DCW_Content_Second"]</h2>
-                <p data-key="DiacomClub_DCW_Content_Second_Name">
-                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Second_Name"])
-                </p>
-            </article>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Fourth") && ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Fourth_Text"))
+            {
+                var fourthTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Fourth") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Fourth"] : null;
+                var fourthTextStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Fourth_Text") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Fourth_Text"] : null;
+                <article class="experience-block">
+                    <h2 class="experience-title" style="
+                        font-family: @(fourthTitleStyle?.FontFamily ?? "Arial");
+                        font-size: @(fourthTitleStyle?.FontSize ?? "2rem");
+                        font-weight: @(fourthTitleStyle?.FontWeight ?? "600");
+                        font-style: @(fourthTitleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(fourthTitleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Content_Fourth">
+                        @ViewBag.Entries["DiacomClub_DCW_Content_Fourth"]
+                    </h2>
+                    <p style="
+                        font-family: @(fourthTextStyle?.FontFamily ?? "Arial");
+                        font-size: @(fourthTextStyle?.FontSize ?? "1rem");
+                        font-weight: @(fourthTextStyle?.FontWeight ?? "400");
+                        font-style: @(fourthTextStyle?.FontStyle ?? "normal");
+                        text-decoration: @(fourthTextStyle?.TextDecoration ?? "none");"
+                       data-key="DiacomClub_DCW_Content_Fourth_Text">
+                        @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fourth_Text"])
+                    </p>
+                </article>
+            }
 
-            <article class="experience-block">
-                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Third">
-                    @ViewBag.Entries["DiacomClub_DCW_Content_Third"]
-                </h2>
-                <p data-key="DiacomClub_DCW_Content_Third_Text">
-                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Third_Text"])
-                </p>
-            </article>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Fifth") && ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Fifth_Text"))
+            {
+                var fifthTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Fifth") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Fifth"] : null;
+                var fifthTextStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Fifth_Text") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Fifth_Text"] : null;
+                <article class="experience-block">
+                    <h2 class="experience-title" style="
+                        font-family: @(fifthTitleStyle?.FontFamily ?? "Arial");
+                        font-size: @(fifthTitleStyle?.FontSize ?? "2rem");
+                        font-weight: @(fifthTitleStyle?.FontWeight ?? "600");
+                        font-style: @(fifthTitleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(fifthTitleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Content_Fifth">
+                        @ViewBag.Entries["DiacomClub_DCW_Content_Fifth"]
+                    </h2>
+                    <p style="
+                        font-family: @(fifthTextStyle?.FontFamily ?? "Arial");
+                        font-size: @(fifthTextStyle?.FontSize ?? "1rem");
+                        font-weight: @(fifthTextStyle?.FontWeight ?? "400");
+                        font-style: @(fifthTextStyle?.FontStyle ?? "normal");
+                        text-decoration: @(fifthTextStyle?.TextDecoration ?? "none");"
+                       data-key="DiacomClub_DCW_Content_Fifth_Text">
+                        @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fifth_Text"])
+                    </p>
+                </article>
+            }
 
-            <article class="experience-block">
-                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Fourth">
-                    @ViewBag.Entries["DiacomClub_DCW_Content_Fourth"]
-                </h2>
-                <p data-key="DiacomClub_DCW_Content_Fourth_Text">
-                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fourth_Text"])
-                </p>
-            </article>
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Sixth") && ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Sixth_Text"))
+            {
+                var sixthTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Sixth") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Sixth"] : null;
+                var sixthTextStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Sixth_Text") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Sixth_Text"] : null;
+                <article class="experience-block">
+                    <h2 class="experience-title" style="
+                        font-family: @(sixthTitleStyle?.FontFamily ?? "Arial");
+                        font-size: @(sixthTitleStyle?.FontSize ?? "2rem");
+                        font-weight: @(sixthTitleStyle?.FontWeight ?? "600");
+                        font-style: @(sixthTitleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(sixthTitleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Content_Sixth">
+                        @ViewBag.Entries["DiacomClub_DCW_Content_Sixth"]
+                    </h2>
+                    <p style="
+                        font-family: @(sixthTextStyle?.FontFamily ?? "Arial");
+                        font-size: @(sixthTextStyle?.FontSize ?? "1rem");
+                        font-weight: @(sixthTextStyle?.FontWeight ?? "400");
+                        font-style: @(sixthTextStyle?.FontStyle ?? "normal");
+                        text-decoration: @(sixthTextStyle?.TextDecoration ?? "none");"
+                       data-key="DiacomClub_DCW_Content_Sixth_Text">
+                        @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Sixth_Text"])
+                    </p>
+                </article>
+            }
 
-            <article class="experience-block">
-                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Fifth">
-                    @ViewBag.Entries["DiacomClub_DCW_Content_Fifth"]
-                </h2>
-                <p data-key="DiacomClub_DCW_Content_Fifth_Text">
-                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fifth_Text"])
-                </p>
-            </article>
-
-            <article class="experience-block">
-                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Sixth">
-                    @ViewBag.Entries["DiacomClub_DCW_Content_Sixth"]
-                </h2>
-                <p data-key="DiacomClub_DCW_Content_Sixth_Text">
-                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Sixth_Text"])
-                </p>
-            </article>
-
-            <article class="experience-block">
-                <h2 class="experience-title" data-key="DiacomClub_DCW_Content_Seventh">
-                    @ViewBag.Entries["DiacomClub_DCW_Content_Seventh"]
-                </h2>
-                <p data-key="DiacomClub_DCW_Content_Seventh_Text">
-                    @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Seventh_Text"])
-                </p>
-            </article>
-
+            @if (ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Seventh") && ViewBag.Entries.ContainsKey("DiacomClub_DCW_Content_Seventh_Text"))
+            {
+                var seventhTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Seventh") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Seventh"] : null;
+                var seventhTextStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_DCW_Content_Seventh_Text") ? ViewBag.TextStyles["DiacomClub_DCW_Content_Seventh_Text"] : null;
+                <article class="experience-block">
+                    <h2 class="experience-title" style="
+                        font-family: @(seventhTitleStyle?.FontFamily ?? "Arial");
+                        font-size: @(seventhTitleStyle?.FontSize ?? "2rem");
+                        font-weight: @(seventhTitleStyle?.FontWeight ?? "600");
+                        font-style: @(seventhTitleStyle?.FontStyle ?? "normal");
+                        text-decoration: @(seventhTitleStyle?.TextDecoration ?? "none");"
+                        data-key="DiacomClub_DCW_Content_Seventh">
+                        @ViewBag.Entries["DiacomClub_DCW_Content_Seventh"]
+                    </h2>
+                    <p style="
+                        font-family: @(seventhTextStyle?.FontFamily ?? "Arial");
+                        font-size: @(seventhTextStyle?.FontSize ?? "1rem");
+                        font-weight: @(seventhTextStyle?.FontWeight ?? "400");
+                        font-style: @(seventhTextStyle?.FontStyle ?? "normal");
+                        text-decoration: @(seventhTextStyle?.TextDecoration ?? "none");"
+                       data-key="DiacomClub_DCW_Content_Seventh_Text">
+                        @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Seventh_Text"])
+                    </p>
+                </article>
+            }
         </div>
     </div>
 </section>
