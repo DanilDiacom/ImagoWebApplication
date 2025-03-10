@@ -1,0 +1,95 @@
+﻿<Window x:Class="ImagoAdmin.AddNovinyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:ImagoAdmin"
+        Icon="favicon.ico"
+        Title="Přidání nového produktu" Height="1000" Width="800"
+        WindowStartupLocation="CenterScreen">
+
+    <!-- Добавляем ScrollViewer для прокрутки -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Základní informace -->
+            <StackPanel Grid.Row="0" Margin="0 0 0 10">
+                <TextBlock Text="Název:"/>
+                <TextBox x:Name="TitleTextBox" Width="Auto" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Text="Komentář:" Margin="0 10 0 0"/>
+                <TextBox x:Name="CommentTextBox" Width="Auto" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Text="Popis:" Margin="0 10 0 0"/>
+                <TextBox x:Name="DescriptionTextBox" Width="Auto" Height="150" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <!-- Ikona produktu -->
+            <GroupBox Header="Ikona produktu" Grid.Row="1" Margin="0 10 0 10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image x:Name="SelectedIconImage" Width="100" Height="100" Margin="0 0 10 0" />
+                    <Button Content="Vybrat ikonu" Width="100" Height="30" Margin="10 0 10 0" Click="SelectIcon_Click" Grid.Column="2" HorizontalAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <!-- Parametry -->
+            <GroupBox Header="Parametry" Grid.Row="2" Margin="0 10 0 10">
+                <StackPanel>
+                    <ItemsControl x:Name="ParametersItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                                    <TextBox x:Name="ParameterNameTextBox" Width="323" Margin="0 0 10 0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox x:Name="ParameterValueTextBox" Width="323" Margin="0 0 10 0" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Content="Odstranit" Width="80" Click="RemoveParameter_Click" Tag="{Binding}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
+                        <Button Content="Přidat parametr" Width="140" Margin="0 20 5 0" Click="AddParameter_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Fotografie -->
+            <GroupBox Header="Fotografie" Grid.Row="3" Margin="0 10 0 10">
+                <StackPanel>
+                    <ListBox x:Name="PhotoListBox" Height="200">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding}" Height="150" Width="150" Margin="5"/>
+                                    <Button Content="Odstranit fotku" Margin="50,0,0,0" Width="100" Height="40" Tag="{Binding}" Click="RemovePhoto_Click"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Content="Přidat fotku" Width="120" Margin="0 10 0 0" Click="AddPhoto_Click"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Akční tlačítka -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
+                <Button Content="Uložit" Width="120" Margin="0 0 10 0" Click="Save_Click"/>
+                <Button Content="Zrušit" Width="120" Click="Cancel_Click"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>

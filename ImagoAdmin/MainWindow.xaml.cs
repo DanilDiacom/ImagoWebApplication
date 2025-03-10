@@ -133,6 +133,11 @@ namespace ImagoAdmin {
                     EditMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
                     DeleteMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
 
+                    AddNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                    lv_Noviny.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                    EditNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                    DeleteNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+
                     if (selectedPage.Id == 38) {
                         MeetingList.Clear();
                         foreach (var meeting in Meeting.GetMeetings()) {
@@ -460,6 +465,22 @@ namespace ImagoAdmin {
         }
 
         private void AddDeviceButton_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+
+
+        private void AddNovinyButton_Click(object sender, RoutedEventArgs e) {
+            AddNovinyWindow addNovinyWindow = new AddNovinyWindow();
+            addNovinyWindow.ShowDialog();
+            lv_Meeting.Items.Refresh();
+        }
+
+        private void EditNovinyButton_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void DeleteNovinyButton_Click(object sender, RoutedEventArgs e) {
 
         }
     }
