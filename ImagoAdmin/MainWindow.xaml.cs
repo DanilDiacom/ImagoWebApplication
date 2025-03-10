@@ -12,6 +12,10 @@ namespace ImagoAdmin {
     public partial class MainWindow : Window {
         public ObservableCollection<Pages> PagesList { get; set; } = new ObservableCollection<Pages>();
         public ObservableCollection<Meeting> MeetingList { get; set; } = new ObservableCollection<Meeting>();
+
+        public ObservableCollection<Noviny> NovinkyList { get; set; } = new ObservableCollection<Noviny>();
+
+
         private bool isContentModified = false;
         public int pageId;
         public string pageName;
@@ -142,6 +146,13 @@ namespace ImagoAdmin {
                         MeetingList.Clear();
                         foreach (var meeting in Meeting.GetMeetings()) {
                             MeetingList.Add(meeting);
+                        }
+                    }
+
+                    if (selectedPage.Id == 8) {
+                        NovinkyList.Clear();
+                        foreach (var meeting in Noviny.GetNoviny()) {
+                            NovinkyList.Add(meeting);
                         }
                     }
 
@@ -473,15 +484,30 @@ namespace ImagoAdmin {
         private void AddNovinyButton_Click(object sender, RoutedEventArgs e) {
             AddNovinyWindow addNovinyWindow = new AddNovinyWindow();
             addNovinyWindow.ShowDialog();
-            lv_Meeting.Items.Refresh();
+            lv_Noviny.Items.Refresh();
         }
 
         private void EditNovinyButton_Click(object sender, RoutedEventArgs e) {
-
+            if (lv_Noviny.SelectedItem == null) return;
+            var novinky = (Noviny)lv_Noviny.SelectedItem;
+            UpdateNovinky novinkyWindow = new UpdateNovinky(novinky);
+            novinkyWindow.ShowDialog();
+            lv_Noviny.Items.Refresh();
         }
 
         private void DeleteNovinyButton_Click(object sender, RoutedEventArgs e) {
+            if (lv_Noviny.SelectedItem == null) return;
 
+            var meeting = (Noviny)lv_Noviny.SelectedItem;
+            var result = MessageBox.Show("Opravdu chcete tuto novou položku smazat?", "Potvrzení smazání", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes) {
+                Noviny.DeleteNoviny(meeting.Id);
+
+                MessageBox.Show("Informace o novém produktu byly odstraněny", "Dokončeno", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                lv_Meeting.Items.Refresh();
+            }
         }
     }
 }

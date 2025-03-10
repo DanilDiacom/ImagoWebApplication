@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using ImagoLib.Models;
 using Microsoft.Win32;
 
 namespace ImagoAdmin {
     public partial class AddNovinyWindow : Window {
         public ObservableCollection<Parameter> Parameters { get; set; }
-        public ObservableCollection<string> Photos { get; set; }
+        public ObservableCollection<BitmapImage> Photos { get; set; }
         public string SelectedIconPath { get; set; } // Путь к выбранной иконке
 
         public AddNovinyWindow() {
             InitializeComponent();
             DataContext = this;
 
-            // Инициализация коллекции параметров с 4 начальными полями
             Parameters = new ObservableCollection<Parameter>
             {
                 new Parameter(),
@@ -25,14 +26,12 @@ namespace ImagoAdmin {
                 new Parameter()
             };
 
-            // Инициализация коллекции фотографий
-            Photos = new ObservableCollection<string>();
+            Photos = new ObservableCollection<BitmapImage>();
 
             ParametersItemsControl.ItemsSource = Parameters;
             PhotoListBox.ItemsSource = Photos;
         }
 
-        // Выбор иконки
         private void SelectIcon_Click(object sender, RoutedEventArgs e) {
             var openFileDialog = new OpenFileDialog {
                 Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg"
@@ -44,71 +43,96 @@ namespace ImagoAdmin {
             }
         }
 
-        // Добавление фотографии
         private void AddPhoto_Click(object sender, RoutedEventArgs e) {
-            var openFileDialog = new OpenFileDialog {
-                Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg"
+            OpenFileDialog openFileDialog = new OpenFileDialog {
+                Multiselect = true,
+                Filter = "Obrázky (*.jpg;*.png;*.jpeg)|*.jpg;*.png;*.jpeg"
             };
 
             if (openFileDialog.ShowDialog() == true) {
-                Photos.Add(openFileDialog.FileName);
+                foreach (var file in openFileDialog.FileNames) {
+                    BitmapImage image = new BitmapImage(new Uri(file));
+                    Photos.Add(image);
+                }
+                PhotoListBox.Items.Refresh();
             }
         }
 
-        // Удаление фотографии
         private void RemovePhoto_Click(object sender, RoutedEventArgs e) {
-            if (sender is Button button && button.Tag is string selectedPhoto) {
-                Photos.Remove(selectedPhoto);
+            if (sender is Button button && button.Tag is BitmapImage image) {
+                Photos.Remove(image);
+                PhotoListBox.Items.Refresh();
             }
         }
 
-        // Добавление параметра
         private void AddParameter_Click(object sender, RoutedEventArgs e) {
             Parameters.Add(new Parameter());
         }
 
-        // Удаление параметра
         private void RemoveParameter_Click(object sender, RoutedEventArgs e) {
             if (sender is Button button && button.Tag is Parameter parameter) {
                 Parameters.Remove(parameter);
             }
         }
 
-        // Сохранение данных
         private void Save_Click(object sender, RoutedEventArgs e) {
-            // Логика сохранения данных в базу данных
-            // Сохранить иконку
-            SaveIconToDatabase(SelectedIconPath);
+            try {
+                var noviny = new Noviny {
+                    PostedDate = DateTime.Now,
+                    Title = TitleTextBox.Text,
+                    Comment = CommentTextBox.Text,
+                    Description = DescriptionTextBox.Text,
+                    IconPhoto = SelectedIconPath != null ? File.ReadAllBytes(SelectedIconPath) : null
+                };
 
-            // Сохранить параметры
-            foreach (var parameter in Parameters) {
-                SaveParameterNameToDatabase(parameter.Name);
-                SaveParameterValueToDatabase(parameter.Value);
+                int novinyId = Noviny.InsertNoviny(noviny);
+
+                // Сохраняем параметры
+                foreach (var parameter in Parameters) {
+                    var novinyParameter = new NovinyParameter {
+                        NovinyId = novinyId,
+                        ParameterName = parameter.Name,
+                        ParameterValue = parameter.Value
+                    };
+                    NovinyParameter.InsertParameter(novinyParameter);
+                }
+
+                // Сохраняем фотографии
+                foreach (var photo in Photos) {
+                    var photoInfo = new NovinyFoto {
+                        NovinyId = novinyId,
+                        PhotoName = System.IO.Path.GetFileName(photo.UriSource.LocalPath),
+                        PhotoData = ConvertImageToByteArray(photo)
+                    };
+                    NovinyFoto.InsertPhoto(photoInfo, novinyId);
+                }
+
+                MessageBox.Show("Data úspěšně uložena!", "Hotovo", MessageBoxButton.OK, MessageBoxImage.Information);
+                DialogResult = true;
+                this.Close();
             }
-
-            MessageBox.Show("Данные сохранены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            catch (Exception ex) {
+                MessageBox.Show($"Ошибка при сохранении данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        // Отмена и закрытие окна
+        private byte[] ConvertImageToByteArray(BitmapImage image) {
+            using (var memoryStream = new System.IO.MemoryStream()) {
+                BitmapEncoder encoder = new JpegBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(image));
+                encoder.Save(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
+
+
         private void Cancel_Click(object sender, RoutedEventArgs e) {
             this.Close();
         }
-
-        // Методы для сохранения в базу данных (заглушки)
-        private void SaveIconToDatabase(string iconPath) {
-            // Логика сохранения иконки
-        }
-
-        private void SaveParameterNameToDatabase(string name) {
-            // Логика сохранения названия параметра
-        }
-
-        private void SaveParameterValueToDatabase(string value) {
-            // Логика сохранения значения параметра
-        }
     }
 
-    // Модель параметра
+
+
     public class Parameter : INotifyPropertyChanged {
         private string _name;
         private string _value;

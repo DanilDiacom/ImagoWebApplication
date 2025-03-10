@@ -54,7 +54,7 @@
             <Button Name="EditMeetingButton" Content="✏ Opravit mítink" Click="EditMeetingButton_Click" Visibility="Collapsed"/>
             <Button Name="DeleteMeetingButton" Content="🗑 Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed"/>
 
-            <ListView Name="lv_Noviny" ItemsSource="{Binding NovinyList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
+            <ListView Name="lv_Noviny" ItemsSource="{Binding NovinkyList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" />

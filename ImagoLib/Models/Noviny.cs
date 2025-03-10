@@ -155,5 +155,14 @@ namespace ImagoLib.Models {
                 cmd.ExecuteNonQuery();
             }
         }
+        public static void DeleteParametersForNoviny(int novinyId) {
+            using (var db = Db.Get()) {
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "DELETE FROM NovinyParameters WHERE NovinyId = @NovinyId";
+                Db.SetParam(cmd, "@NovinyId", novinyId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
     }
 }
