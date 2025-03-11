@@ -10,7 +10,7 @@
 
     .news-list a {
         background-color: #1d4f99;
-        font-size:16px;
+        font-size: 16px;
     }
 </style>
 
@@ -24,44 +24,36 @@
         </form>
 
         <div class="row">
-            <!-- Левый блок с новостями -->
             <div class="col-lg-9">
                 <div class="news-list">
-                    <div class="news-item d-flex align-items-start mb-4">
-                        <a href="/cs/news/view/3" class="me-3">
-                            <img src="~/img/65c348caced39_60x60_ffffff.jpg" class="rounded" alt="News Image">
-                        </a>
-                        <div>
-                            <span class="badge bg-secondary">2024-02-07 10:09:35</span>
-                            <h5 class="mt-2">HEALTHYCOM - ZÁPŮJČKA ENERSCAN PRO VŠECHNY</h5>
-                            <p>Nově od 1.2. zápůjčka přístroje ENERSCAN pro všechny aktivní členy již od 1. úrovně.</p>
-                            <a href="/cs/news/view/3" class="btn btn-info btn-sm">Číst více »</a>
-                        </div>
-                    </div>
-
-                    <div class="news-item d-flex align-items-start mb-4">
-                        <a href="/cs/news/view/2" class="me-3">
-                            <img src="~/img/634eacbfd132f_60x60_ffffff.png" class="rounded" alt="News Image">
-                        </a>
-                        <div>
-                            <span class="badge bg-secondary">2022-10-18 15:39:58</span>
-                            <h5 class="mt-2">NOVÝ PŘÍSTROJ DIACOM MEDIO</h5>
-                            <p>Pro své klienty jsme v počátku tohoto roku připravili face-lift přístroje Medio v praktickém kufříku.</p>
-                            <a href="/cs/news/view/2" class="btn btn-info btn-sm">Číst více »</a>
-                        </div>
-                    </div>
-
-                    <div class="news-item d-flex align-items-start mb-4">
-                        <a href="/cs/news/view/1" class="me-3">
-                            <img src="~/img/634eac4fc5bd9_60x60_ffffff.jpg" class="rounded" alt="News Image">
-                        </a>
-                        <div>
-                            <span class="badge bg-secondary">2022-10-18 15:37:17</span>
-                            <h5 class="mt-2">NOVÝ PŘÍSTROJ ANIMAL</h5>
-                            <p>Scanner-Animal bude koncipován jako nový přístroj, který bude složen ze dvou částí. První část nového přístroje bude tvořit základní modul, druhá část přístroje bude jeho příslušenství.</p>
-                            <a href="/cs/news/view/1" class="btn btn-info btn-sm">Číst více »</a>
-                        </div>
-                    </div>
+                    @if (ViewBag.Novinky != null)
+                    {
+                        @foreach (var novinky in ViewBag.Novinky)
+                        {
+                            <div class="news-item d-flex align-items-start mb-4">
+                                @if (novinky.IconPhoto != null && novinky.IconPhoto.Length > 0)
+                                {
+                                    <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@novinky.Id" class="me-3">
+                                        @{
+                                            var base64 = Convert.ToBase64String(novinky.IconPhoto);
+                                            var imgSrc = "data:image/jpeg;base64," + base64;
+                                            <img src="@imgSrc" class="rounded" alt="News Image">
+                                        }
+                                    </a>
+                                }
+                                <div>
+                                    <span class="badge bg-secondary">@novinky.PostedDate.ToString("yyyy-MM-dd")</span>
+                                    <h5 class="mt-2">@novinky.Title</h5>
+                                    <p>@novinky.Comment</p>
+                                    <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@novinky.Id" class="btn btn-info btn-sm">Číst více »</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Nejsou žádné nové informace o nových produktech!</p>
+                    }
                 </div>
             </div>
 

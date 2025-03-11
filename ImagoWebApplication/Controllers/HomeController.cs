@@ -38,20 +38,6 @@ public class HomeController : Controller {
         return View();
     }
 
-
-    public IActionResult Mitink() {
-        var meetings = Meeting.GetMeetings().OrderByDescending(m => m.Id).ToList();
-
-        foreach (var meeting in meetings) {
-            meeting.Photos = MeetingPhoto.GetPhotosForMeeting(meeting.Id);
-        }
-
-        SetViewHomeBagEntries();
-        ViewBag.Meetings = meetings;
-        return View();
-    }
-
-
     public IActionResult Privacy() {
         SetViewHomeBagEntries();
         return View();
@@ -129,8 +115,27 @@ public class HomeController : Controller {
         return View();
     }
 
+    public IActionResult Mitink() {
+        var meetings = Meeting.GetMeetings().OrderByDescending(m => m.Id).ToList();
+
+        foreach (var meeting in meetings) {
+            meeting.Photos = MeetingPhoto.GetPhotosForMeeting(meeting.Id);
+        }
+
+        SetViewHomeBagEntries();
+        ViewBag.Meetings = meetings;
+        return View();
+    }
+
     public IActionResult Novinky() {
         SetViewHomeBagEntries();
+        var novinkyList = Noviny.GetNoviny().OrderByDescending(m => m.Id).ToList();
+
+        foreach (var item in novinkyList) { 
+            item.Photos = NovinyFoto.GetPhotosForRequest(item.Id);
+        }
+
+        ViewBag.Novinky = novinkyList;
         return View();
     }
 
@@ -138,6 +143,19 @@ public class HomeController : Controller {
         SetViewHomeBagEntries();
         return View();
     }
+
+    public IActionResult ProductDetails(int id) {
+        var novinka = Noviny.GetNoviny().FirstOrDefault(n => n.Id == id);
+
+        if (novinka != null) {
+            novinka.Photos = NovinyFoto.GetPhotosForRequest(novinka.Id);
+            novinka.Parameters = NovinyParameter.GetParametersForNoviny(novinka.Id);
+        }
+
+        ViewBag.NovinkaDetails = novinka;
+        return View();
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() {

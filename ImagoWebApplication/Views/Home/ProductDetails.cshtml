@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Nové Detaily Produktu";
+    var novinka = ViewBag.NovinkaDetails as ImagoLib.Models.Noviny;
+}
+
+<link rel="stylesheet" href="~/css/productDetails.css" asp-append-version="true" />
+
+@if (novinka != null)
+{
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-start" style="margin-top: 20px; margin-bottom:20px;">
+            <!-- Image Carousel -->
+            <div class="col-md-6 carousel-container">
+                @if (novinka.Photos != null && novinka.Photos.Count > 0)
+                {
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < novinka.Photos.Count; i++)
+                            {
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(novinka.Photos[i].PhotoData)" class="d-block w-100">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <p style="text-align:center;">Omlouvám se, došlo k chybě při načítání obrázků.</p>
+                }
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-6 d-flex align-items-center" style="margin-bottom: 120px;">
+                <div>
+                    <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;">@novinka.Title</h1>
+
+                    <ul class="list-group">
+                        @if (novinka.Parameters != null)
+                        {
+                            @foreach (var param in novinka.Parameters)
+                            {
+                                <li class="list-group-item"><strong>@param.ParameterName:</strong> @param.ParameterValue</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Product Description -->
+            <div class="home-body-container">
+                <div class="container">
+                    <h2 style="margin-top: 20px; text-align:center;">Popis produktu</h2>
+
+                    <div class="text-container" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;">
+                        <p>
+                            @novinka.Description
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Produkt nenalezen.</p>
+}

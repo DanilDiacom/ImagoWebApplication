@@ -243,8 +243,8 @@ namespace ImagoAdmin {
         }
 
         private void RemoveParameter_Click(object sender, RoutedEventArgs e) {
-            if (sender is Button button && button.Tag is PhotoItem photoItem) {
-                Photos.Remove(photoItem);
+            if (sender is Button button && button.Tag is Parameter parameter) {
+                Parameters.Remove(parameter);
             }
         }
 

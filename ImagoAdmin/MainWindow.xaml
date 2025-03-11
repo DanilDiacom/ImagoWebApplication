@@ -45,7 +45,7 @@
             <ListView Name="lv_Meeting" ItemsSource="{Binding MeetingList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" />
+                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -57,7 +57,7 @@
             <ListView Name="lv_Noviny" ItemsSource="{Binding NovinkyList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" />
+                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
                     </GridView>
                 </ListView.View>
             </ListView>

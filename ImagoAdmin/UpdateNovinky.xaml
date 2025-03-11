@@ -4,11 +4,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ImagoAdmin"
-     Icon="favicon.ico"
-        Title="Opravit novy produkt" Height="1000" Width="800"
-        WindowStartupLocation="CenterScreen">
+      Icon="favicon.ico"
+      Title="Opravit novy produkt" 
+      Height="1000" Width="800"
+      MinHeight="1000" MinWidth="800"
+      WindowStartupLocation="CenterScreen">
 
-    <!-- Добавляем ScrollViewer для прокрутки -->
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid Margin="10">
             <Grid.RowDefinitions>
@@ -22,21 +23,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Základní informace -->
             <StackPanel Grid.Row="0" Margin="0 0 0 10">
                 <TextBlock Text="Název:"/>
-                <TextBox x:Name="TitleTextBox" Width="Auto" HorizontalAlignment="Stretch"/>
+                <TextBox x:Name="TitleTextBox" Width="Auto" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
 
                 <TextBlock Text="Komentář:" Margin="0 10 0 0"/>
-                <TextBox x:Name="CommentTextBox" Width="Auto" HorizontalAlignment="Stretch"/>
+                <TextBox x:Name="CommentTextBox" Width="Auto" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
 
                 <TextBlock Text="Popis:" Margin="0 10 0 0"/>
-                <TextBox x:Name="DescriptionTextBox" Width="Auto" Height="150" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Stretch"/>
+                <TextBox x:Name="DescriptionTextBox" Width="Auto" Height="150" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto"/>
             </StackPanel>
 
-            <!-- Ikona produktu -->
             <GroupBox Header="Ikona produktu" Grid.Row="1" Margin="0 10 0 10">
-
                 <StackPanel>
                     <ListBox x:Name="IconListBox" Height="100">
                         <ListBox.ItemTemplate>
@@ -50,16 +48,15 @@
                     </ListBox>
                 </StackPanel>
             </GroupBox>
-            
-            <!-- Parametry -->
+
             <GroupBox Header="Parametry" Grid.Row="2" Margin="0 10 0 10">
                 <StackPanel>
                     <ItemsControl x:Name="ParametersItemsControl" ItemsSource="{Binding Parameters}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
-                                    <TextBox x:Name="ParameterNameTextBox" Width="323" Margin="0 0 10 0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox x:Name="ParameterValueTextBox" Width="323" Margin="0 0 10 0" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox x:Name="ParameterNameTextBox" Width="323" Margin="0 0 10 0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+                                    <TextBox x:Name="ParameterValueTextBox" Width="323" Margin="0 0 10 0" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
                                     <Button Content="Odstranit" Width="80" Click="RemoveParameter_Click" Tag="{Binding}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -72,7 +69,6 @@
                 </StackPanel>
             </GroupBox>
 
-            <!-- Fotografie -->
             <GroupBox Header="Fotografie" Grid.Row="3" Margin="0 10 0 10">
                 <StackPanel>
                     <ListBox x:Name="PhotoListBox" Height="200">
@@ -89,7 +85,6 @@
                 </StackPanel>
             </GroupBox>
 
-            <!-- Akční tlačítka -->
             <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
                 <Button Content="Uložit" Width="120" Margin="0 0 10 0" Click="Save_Click"/>
                 <Button Content="Zrušit" Width="120" Click="Cancel_Click"/>

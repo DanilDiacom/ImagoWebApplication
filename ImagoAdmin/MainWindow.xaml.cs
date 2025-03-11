@@ -12,7 +12,6 @@ namespace ImagoAdmin {
     public partial class MainWindow : Window {
         public ObservableCollection<Pages> PagesList { get; set; } = new ObservableCollection<Pages>();
         public ObservableCollection<Meeting> MeetingList { get; set; } = new ObservableCollection<Meeting>();
-
         public ObservableCollection<Noviny> NovinkyList { get; set; } = new ObservableCollection<Noviny>();
 
 
@@ -143,17 +142,11 @@ namespace ImagoAdmin {
                     DeleteNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
 
                     if (selectedPage.Id == 38) {
-                        MeetingList.Clear();
-                        foreach (var meeting in Meeting.GetMeetings()) {
-                            MeetingList.Add(meeting);
-                        }
+                        LoadMeetingList();
                     }
 
                     if (selectedPage.Id == 8) {
-                        NovinkyList.Clear();
-                        foreach (var meeting in Noviny.GetNoviny()) {
-                            NovinkyList.Add(meeting);
-                        }
+                        LoadNovinkyList();
                     }
 
                     await LoadPageFromDatabase(selectedPage.Id);
@@ -169,6 +162,20 @@ namespace ImagoAdmin {
             }
             finally {
                 _isProcessingSelectionChange = false;
+            }
+        }
+
+        private void LoadMeetingList() {
+            MeetingList.Clear();
+            foreach (var meeting in Meeting.GetMeetings()) {
+                MeetingList.Add(meeting);
+            }
+        }
+
+        private void LoadNovinkyList() {
+            NovinkyList.Clear();
+            foreach (var meeting in Noviny.GetNoviny()) {
+                NovinkyList.Add(meeting);
             }
         }
 
@@ -410,7 +417,7 @@ namespace ImagoAdmin {
         private void AddMeetingButton_Click(object sender, RoutedEventArgs e) {
             AddMeetingWindow meetingWindow = new AddMeetingWindow();
             meetingWindow.ShowDialog();
-            lv_Meeting.Items.Refresh();
+            LoadMeetingList();
         }
 
         private void EditMeetingButton_Click(object sender, RoutedEventArgs e) {
@@ -418,7 +425,7 @@ namespace ImagoAdmin {
             var meeting = (Meeting)lv_Meeting.SelectedItem;
             UpdateMeeting meetingWindow = new UpdateMeeting(meeting);
             meetingWindow.ShowDialog();
-            lv_Meeting.Items.Refresh();
+            LoadMeetingList();
         }
 
         private void DeleteMeetingButton_Click(object sender, RoutedEventArgs e) {
@@ -432,7 +439,7 @@ namespace ImagoAdmin {
 
                 MessageBox.Show("Schůzka byla úspěšně smazána!","Dokončeno",MessageBoxButton.OK,MessageBoxImage.Information);
 
-                lv_Meeting.Items.Refresh();  
+                LoadMeetingList();
             }
         }
 
@@ -484,7 +491,7 @@ namespace ImagoAdmin {
         private void AddNovinyButton_Click(object sender, RoutedEventArgs e) {
             AddNovinyWindow addNovinyWindow = new AddNovinyWindow();
             addNovinyWindow.ShowDialog();
-            lv_Noviny.Items.Refresh();
+            LoadNovinkyList();
         }
 
         private void EditNovinyButton_Click(object sender, RoutedEventArgs e) {
@@ -492,7 +499,7 @@ namespace ImagoAdmin {
             var novinky = (Noviny)lv_Noviny.SelectedItem;
             UpdateNovinky novinkyWindow = new UpdateNovinky(novinky);
             novinkyWindow.ShowDialog();
-            lv_Noviny.Items.Refresh();
+            LoadNovinkyList();
         }
 
         private void DeleteNovinyButton_Click(object sender, RoutedEventArgs e) {
@@ -506,7 +513,7 @@ namespace ImagoAdmin {
 
                 MessageBox.Show("Informace o novém produktu byly odstraněny", "Dokončeno", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                lv_Meeting.Items.Refresh();
+                LoadNovinkyList();
             }
         }
     }

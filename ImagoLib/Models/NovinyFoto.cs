@@ -38,6 +38,7 @@ namespace ImagoLib.Models {
             return new ObservableCollection<NovinyFoto>(photos);
         }
 
+       
         public static void InsertPhoto(NovinyFoto photo, int NovinyId) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();

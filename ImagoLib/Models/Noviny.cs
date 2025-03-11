@@ -13,7 +13,7 @@ namespace ImagoLib.Models {
         [ObservableProperty] public string m_Description;
         [ObservableProperty] public byte[] m_IconPhoto;
 
-        public ObservableCollection<NovinyPhoto> Photos { get; set; } = new ObservableCollection<NovinyPhoto>();
+        public ObservableCollection<NovinyFoto> Photos { get; set; } = new ObservableCollection<NovinyFoto>();
         public ObservableCollection<NovinyParameter> Parameters { get; set; } = new ObservableCollection<NovinyParameter>();
 
         private static Noviny FromDataReader(IDataReader dr) {
@@ -33,6 +33,24 @@ namespace ImagoLib.Models {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
                 cmd.CommandText = "SELECT Id, PostedDate, Title, Comment, Description, IconPhoto FROM Noviny";
+                using (var dr = cmd.ExecuteReader()) {
+                    while (dr.Read()) {
+                        allNoviny.Add(FromDataReader(dr));
+                    }
+                }
+            }
+
+            return new ObservableCollection<Noviny>(allNoviny);
+        }
+
+        public static ObservableCollection<Noviny> GetNovinyFromId(int id) {
+            var allNoviny = new List<Noviny>();
+
+            using (var db = Db.Get()) {
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "SELECT Id, PostedDate, Title, Comment, Description, IconPhoto FROM Noviny Where Id = @id";
+                Db.SetParam(cmd, "@id", id);
+
                 using (var dr = cmd.ExecuteReader()) {
                     while (dr.Read()) {
                         allNoviny.Add(FromDataReader(dr));
@@ -84,16 +102,7 @@ namespace ImagoLib.Models {
             }
         }
     }
-
-    public partial class NovinyPhoto : ObservableObject {
-        [ObservableProperty] public int m_Id;
-        [ObservableProperty] public int m_NovinyId;
-        [ObservableProperty] public string m_PhotoName;
-        [ObservableProperty] public byte[] m_PhotoData;
-    }
-
-
-
+    
     public partial class NovinyParameter : ObservableObject {
         [ObservableProperty] public int m_Id;
         [ObservableProperty] public int m_NovinyId;
