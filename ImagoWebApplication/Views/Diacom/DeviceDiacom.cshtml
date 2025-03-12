@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "DeviceDiacom";
+}
+
+<h1>DeviceDiacom</h1>
+
+<!-- Отображение текста -->
+@if (ViewBag.DeviceText != null)
+{
+    foreach (var entry in ViewBag.DeviceText)
+    {
+        <p><strong>@entry.Key:</strong> @entry.Value</p>
+    }
+}
+
+<!-- Отображение изображений -->
+@if (ViewBag.DeviceImages != null)
+{
+    foreach (var image in ViewBag.DeviceImages)
+    {
+        <img src="data:image/png;base64, @image["Base64"]" alt="@image["EntryKey"]" />
+    }
+}

@@ -1,18 +1,21 @@
 ﻿using ImagoLib.Models;
+using ImagoWebApplication.Controllers;
 using ImagoWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-public class HomeController : Controller {
+public class HomeController : BaseController {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger) {
+    public HomeController(ILogger<HomeController> logger) : base() {
         _logger = logger;
+
     }
 
     private void SetViewHomeBagEntries() {
         var entries = DictionaryEntryForText.GetAllEntries();
         ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
+
     }
     private void SetViewHomeBagStyles() {
         var styles = TextStyle.GetAllStyles();
@@ -143,7 +146,7 @@ public class HomeController : Controller {
         SetViewHomeBagEntries();
         return View();
     }
-
+    
     public IActionResult ProductDetails(int id) {
         var novinka = Noviny.GetNoviny().FirstOrDefault(n => n.Id == id);
 

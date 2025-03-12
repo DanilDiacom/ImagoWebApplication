@@ -23,10 +23,28 @@
     object-fit: cover;
 }
 
+.col-md-6.d-flex.align-items-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем содержимое */
+    justify-content: flex-start; /* Начинаем с верха */
+    height: 100%; /* Растягиваем по высоте */
+}
+
+    .col-md-6.d-flex.align-items-center > div {
+        width: 500px;
+        
+    }
+
 .list-group {
     width: 500px;
-    margin-left: 45px;
+    max-height: 250px; /* Уменьшаем, чтобы заголовок не сдвигался */
+    overflow-y: auto; /* Прокрутка при необходимости */
+    margin-top: 10px; /* Отступ от заголовка */
+    padding-right: 10px;
 }
+
+
 
 .home-body-container {
     margin-top: 20px;

@@ -4,9 +4,10 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using ImagoWebApplication.Models;
+using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 
 namespace ImagoWebApplication.Controllers {
-    public class DiacomController : Controller {
+    public class DiacomController : BaseController {
         private readonly ILogger<DiacomController> _logger;
 
         public DiacomController(ILogger<DiacomController> logger) {
@@ -17,6 +18,25 @@ namespace ImagoWebApplication.Controllers {
             var entries = DictionaryEntryForText.GetAllEntries();
             ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
         }
+
+
+
+        private void SetViewBagEntrie(int id) {
+            var entries = DictionaryEntryForText.GetEntriesForPage(id);
+            ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
+        }
+        private void SetViewHomeBagImage(int id) {
+            var images = DictionaryEntryForImages.GetEntriesForPage(id)
+                .Select(img => new Dictionary<string, string> {
+            { "EntryKey", img.EntryKey },
+            { "Base64", Convert.ToBase64String(img.ImageData) }
+                })
+                .ToList();
+
+            ViewBag.Images = images;
+        }
+
+
 
         private void SetViewHomeBagImages() {
             var images = DictionaryEntryForImages.GetAllEntries()
@@ -33,6 +53,13 @@ namespace ImagoWebApplication.Controllers {
             var styles = TextStyle.GetAllStyles();
             ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
         }
+        public IActionResult DeviceDiacom(int id) // Принимаем id из URL
+        {
+            SetViewBagEntrie(id);
+            SetViewHomeBagImage(id);
+            SetViewHomeBagStyles();
+            return View();
+        }
 
         public IActionResult Enerscan() {
             SetViewBagEntries();
@@ -40,6 +67,8 @@ namespace ImagoWebApplication.Controllers {
             SetViewHomeBagStyles();
             return View();
         }
+
+       
 
         public IActionResult Plasmotronic() {
             SetViewBagEntries();

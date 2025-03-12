@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using System.Linq
+@using ImagoLib.Models
+@using System.Collections.ObjectModel
+@{
+    var page = ViewBag.Pages as ObservableCollection<ImagoLib.Models.Pages>;
+}
+<!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="utf-8" />
@@ -48,79 +54,48 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Úvod</a>
-                        </li>
-
-                        <!-- 2-я кнопка с dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                O nás
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Home" asp-action="GDPR">GDPR</a>
-                                </li>
-                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Marketing">Marketing a cíle společnosti</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Mitink">Mítink společnosti IMAGO D&T ve spolupráci s DIACOM TECHNOLOGY</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- 3-я кнопка с dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Přístroje Diacom
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Enerscan">DIACOM ENERSCAN</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="LiteFreq">DIACOM FREQ LITE</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Plasmotronic">PLASMOTRONIC</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Medio">DIACOM MEDIO</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="FreqPc">DIACOM-SOLO-FREQ-PC</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Ioniser">DIACOM-SOLO-Ionizer</a></li>
-                                @* <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="ProductPrice">CENY PRISTROJU DIACOM</a></li>*@
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Diacom" asp-action="Navody">Navody k pristrojum</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- 4-я кнопка с dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Provozovna
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="productsDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Prozovna">Školení a doškolování</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- 5-я кнопка с dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="guidesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Diacom club
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="guidesDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Školení">Školení</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Vyhody">Výhody pro členy DIACOM CLUB WORD</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="AKTUALNE">AKTUÁLNĚ ZE SPOLKU</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="PracovniAktiv">Pracovní aktiv</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="PageDCW">Okénko členů DCW z.s.– zkušenosti</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- Новинки -->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Novinky">Novinky</a>
-                        </li>
-
-                        <!-- Контакты -->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Příslušenství">Příslušenství</a>
-                        </li>
-
-                        <!-- Контакты -->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Kontakty">Kontakty</a>
-                        </li>
+                        @if (page != null)
+                        {
+                            @foreach (var pages in page)
+                            {
+                                if (pages.SubPages != null && pages.SubPages.Any())
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="@pages.Title" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            @pages.Title
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="@pages.Title">
+                                            @foreach (var subPage in pages.SubPages)
+                                            {
+                                                <li>
+                                                    @if (subPage.ParentId == 5 || subPage.Id == 5)
+                                                    {
+                                                        <a class="dropdown-item" href="/Diacom/DeviceDiacom?id=@subPage.Id">@subPage.Title</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="dropdown-item" href="@subPage.Url">@subPage.Title</a>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        @if (pages.ParentId == 5 || pages.Id == 5)
+                                        {
+                                            <a class="nav-link" href="@pages.Url?id=@pages.Id">@pages.Title</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="nav-link" href="@pages.Url">@pages.Title</a>
+                                        }
+                                    </li>
+                                }
+                            }
+                        }
                     </ul>
                 </div>
             </div>
@@ -181,11 +156,10 @@
     <footer id="box-footer" style="background-color: #1d4f99; color: #fff;">
         <div class="container">
             <p class="copyright text-center">
-                © 2025 IMAGO D&T, s.r.o. Všechna práva vyhrazena.
+                &copy; @DateTime.Now.Year IMAGO D&T, s.r.o. Všechna práva vyhrazena.
             </p>
         </div>
     </footer>
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

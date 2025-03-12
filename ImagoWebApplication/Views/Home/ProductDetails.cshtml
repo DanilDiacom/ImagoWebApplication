@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Nové Detaily Produktu";
     var novinka = ViewBag.NovinkaDetails as ImagoLib.Models.Noviny;
+
 }
 
 <link rel="stylesheet" href="~/css/productDetails.css" asp-append-version="true" />
@@ -37,21 +38,23 @@
             </div>
 
             <!-- Product Details -->
-            <div class="col-md-6 d-flex align-items-center" style="margin-bottom: 120px;">
+            <div class="col-md-6 d-flex align-items-center">
                 <div>
-                    <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;">@novinka.Title</h1>
-
+                    <h1 class="text-center"> @novinka.Title </h1>
                     <ul class="list-group">
                         @if (novinka.Parameters != null)
                         {
                             @foreach (var param in novinka.Parameters)
                             {
-                                <li class="list-group-item"><strong>@param.ParameterName:</strong> @param.ParameterValue</li>
+                                <li class="list-group-item">
+                                    <strong>@param.ParameterName:</strong> @param.ParameterValue
+                                </li>
                             }
                         }
                     </ul>
                 </div>
             </div>
+
 
             <!-- Product Description -->
             <div class="home-body-container">

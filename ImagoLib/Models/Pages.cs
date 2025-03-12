@@ -47,5 +47,4 @@ namespace ImagoLib.Models {
             return new ObservableCollection<Pages>(pageDictionary.Values.Where(p => !p.ParentId.HasValue));
         }
     }
-
 }
