@@ -53,11 +53,12 @@ namespace ImagoWebApplication.Controllers {
             var styles = TextStyle.GetAllStyles();
             ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
         }
-        public IActionResult DeviceDiacom(int id) // Принимаем id из URL
+        public IActionResult DeviceDiacom(int id)
         {
             SetViewBagEntrie(id);
             SetViewHomeBagImage(id);
             SetViewHomeBagStyles();
+            ViewBag.PageId = id;
             return View();
         }
 

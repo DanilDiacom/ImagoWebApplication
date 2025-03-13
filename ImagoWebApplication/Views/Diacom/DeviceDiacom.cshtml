@@ -1,23 +1,165 @@
-﻿@{
-    ViewData["Title"] = "DeviceDiacom";
+﻿@using ImagoLib.Models
+@{
+    ViewData["Title"] = "Device Diacom";
 }
 
-<h1>DeviceDiacom</h1>
-
-<!-- Отображение текста -->
-@if (ViewBag.DeviceText != null)
-{
-    foreach (var entry in ViewBag.DeviceText)
-    {
-        <p><strong>@entry.Key:</strong> @entry.Value</p>
-    }
+@{
+    var images = ViewBag.Images as List<Dictionary<string, string>>;
+    var entries = ViewBag.Entries as Dictionary<string, string>;
+    var textStyles = ViewBag.TextStyles as Dictionary<string, TextStyle>;
+    var pageId = ViewBag.PageId as int?;
 }
 
-<!-- Отображение изображений -->
-@if (ViewBag.DeviceImages != null)
+<link rel="stylesheet" href="~/css/deviceDiacom.css" asp-append-version="true" />
+
+@if (pageId == 46)
 {
-    foreach (var image in ViewBag.DeviceImages)
-    {
-        <img src="data:image/png;base64, @image["Base64"]" alt="@image["EntryKey"]" />
-    }
+    <section id="content">
+        <div class="inner-content">
+            <div class="container">
+                <h1 class="page-title" style="margin-top:20px; text-align:center; margin-bottom:20px;">Návody k přístrojům</h1>
+                <p class="text-center" style="margin-bottom:20px;">Připravili jsme pro Vás instruktážní videa s podrobným návodem k jednotlivým přístrojů.</p>
+                <p class="text-center">
+                    <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen=""
+                            frameborder="0"
+                            height="315"
+                            src="https://www.youtube.com/embed/w5F7zgRqVs0"
+                            title="YouTube video player"
+                            width="560">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-start" style="margin-top: 20px; margin-bottom:20px;">
+            <div class="col-md-6 carousel-container">
+                @if (images != null && images.Count > 0)
+                {
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < images.Count; i++)
+                            {
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="data:image/png;base64,@images[i]["Base64"]" class="d-block w-100">
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <p style="text-align:center;">Omlouvám se, došlo k chybě při načítání obrázků.</p>
+                }
+            </div>
+
+            <div class="col-md-6 d-flex align-items-center" style="margin-bottom: 120px;">
+                <div>
+                    @if (entries != null)
+                    {
+                        var titleKey = entries.Keys.FirstOrDefault(k => k.Contains("Title"));
+                        if (titleKey != null)
+                        {
+                            var titleStyle = textStyles != null && textStyles.ContainsKey(titleKey) ? textStyles[titleKey] : null;
+                            <h1 class="text-center" style="margin-bottom: 10px; margin-top: -15px;
+                                font-family: @(titleStyle?.FontFamily ?? "Arial");
+                                font-size: @(titleStyle?.FontSize ?? "inherit")px;
+                                font-weight: @(titleStyle?.FontWeight ?? "normal");
+                                font-style: @(titleStyle?.FontStyle ?? "normal");
+                                text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                                data-key="@titleKey">
+                                @entries[titleKey]
+                            </h1>
+                        }
+                    }
+
+                    <ul class="list-group">
+                        @if (entries != null)
+                        {
+                            foreach (var key in entries.Keys.Where(k => k.EndsWith("_Label")))
+                            {
+                                var valueKey = key.Replace("_Label", "_Value");
+                                if (entries.ContainsKey(valueKey))
+                                {
+                                    var labelStyle = textStyles != null && textStyles.ContainsKey(key) ? textStyles[key] : null;
+                                    var valueStyle = textStyles != null && textStyles.ContainsKey(valueKey) ? textStyles[valueKey] : null;
+
+                                    <li class="list-group-item" data-key="@key" data-value="@valueKey">
+                                        <strong data-key="@key" style="
+                                            font-family: @(labelStyle?.FontFamily ?? "Arial");
+                                            font-size: @(labelStyle?.FontSize ?? "inherit")px;
+                                            font-weight: @(labelStyle?.FontWeight ?? "Bold");
+                                            font-style: @(labelStyle?.FontStyle ?? "normal");
+                                            text-decoration: @(labelStyle?.TextDecoration ?? "none");">
+                                            @entries[key]
+                                        </strong>
+                                        <span data-value="@valueKey" style="
+                                            font-family: @(valueStyle?.FontFamily ?? "Arial");
+                                            font-size: @(valueStyle?.FontSize ?? "inherit")px;
+                                            font-weight: @(valueStyle?.FontWeight ?? "normal");
+                                            font-style: @(valueStyle?.FontStyle ?? "normal");
+                                            text-decoration: @(valueStyle?.TextDecoration ?? "none");">
+                                            @entries[valueKey]
+                                        </span>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="home-body-container">
+            <div class="container">
+                @if (entries != null)
+                {
+                    var popisHeaderKey = entries.Keys.FirstOrDefault(k => k.Contains("PopisHeader"));
+                    if (popisHeaderKey != null)
+                    {
+                        var headerStyle = textStyles != null && textStyles.ContainsKey(popisHeaderKey) ? textStyles[popisHeaderKey] : null;
+                        <h2 data-key="@popisHeaderKey" style="margin-top: 20px; text-align:center;
+                            font-family: @(headerStyle?.FontFamily ?? "inherit");
+                            font-size: @(headerStyle?.FontSize ?? "1.25rem");
+                            font-weight: @(headerStyle?.FontWeight ?? "Bold");
+                            font-style: @(headerStyle?.FontStyle ?? "normal");
+                            text-decoration: @(headerStyle?.TextDecoration ?? "none");">
+                            @entries[popisHeaderKey]
+                        </h2>
+                    }
+                }
+
+                @if (entries != null)
+                {
+                    foreach (var key in entries.Keys)
+                    {
+                        if (!key.EndsWith("_Label") && !key.EndsWith("_Value") && !key.Contains("Title") && !key.Contains("PopisHeader"))
+                        {
+                            var textStyle = textStyles != null && textStyles.ContainsKey(key) ? textStyles[key] : null;
+                            <div class="text-container" data-key="@key" style="margin-top: 20px; font-size: 20px; text-align: justify; padding: 0 15px; max-width: 1150px; margin-right: auto; margin-left: auto;
+                                font-family: @(textStyle?.FontFamily ?? "inherit");
+                                font-size: @(textStyle?.FontSize ?? "inherit")px;
+                                font-weight: @(textStyle?.FontWeight ?? "normal");
+                                font-style: @(textStyle?.FontStyle ?? "normal");
+                                text-decoration: @(textStyle?.TextDecoration ?? "none");">
+                                <p>
+                                    @entries[key]
+                                </p>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
 }
