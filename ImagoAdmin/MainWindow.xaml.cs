@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Media;
 using SkiaSharp;
+using System.Security.Policy;
 
 namespace ImagoAdmin {
     public partial class MainWindow : Window {
@@ -151,7 +152,14 @@ namespace ImagoAdmin {
 
                     await LoadPageFromDatabase(selectedPage.Id);
 
-                    await SavePageHtmlToDatabase("https://localhost:7090" + selectedPage.Url, selectedPage.Id);
+                    string url;
+                    if (selectedPage.ParentId == 5 || selectedPage.Id == 5) {
+                        url = $"{selectedPage.Url}?id={selectedPage.Id}";
+                    }
+                    else {
+                        url = selectedPage.Url;
+                    }
+                    await SavePageHtmlToDatabase("https://localhost:7090" + url, selectedPage.Id);
 
                     var entries = DictionaryEntryForText.GetEntriesForEditind(selectedPage.Id);
                     EntryList.ItemsSource = entries;
@@ -188,20 +196,31 @@ namespace ImagoAdmin {
             if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
                 TextEditor.Text = selectedEntry.ContentText;
 
-                var style = TextStyle.GetTextStyle(selectedEntry.EntryKey);
-                if (style != null) {
-                    TextEditor.FontFamily = new FontFamily(style.FontFamily);
-                    TextEditor.FontSize = double.Parse(style.FontSize);
-                    TextEditor.FontWeight = (FontWeight)new FontWeightConverter().ConvertFromString(style.FontWeight);
-                    TextEditor.FontStyle = (FontStyle)new FontStyleConverter().ConvertFromString(style.FontStyle);
-                    TextEditor.TextDecorations = style.TextDecoration == "Underline" ? TextDecorations.Underline : null;
+                // Определяем selectedAttribute в зависимости от ключа
+                if (selectedEntry.EntryKey.EndsWith("_Label")) {
+                    selectedAttribute = "data-key";
                 }
+                else if (selectedEntry.EntryKey.EndsWith("_Value")) {
+                    selectedAttribute = "data-value";
+                }
+
+                var style = TextStyle.GetTextStyle(selectedEntry.EntryKey);
+
+                // Устанавливаем значения по умолчанию, если стиль не найден
+                TextEditor.FontFamily = new FontFamily(style?.FontFamily ?? "Arial, sans-serif");
+                TextEditor.FontSize = double.Parse(style?.FontSize ?? "16");
+                TextEditor.FontWeight = (FontWeight)new FontWeightConverter().ConvertFromString(style?.FontWeight ?? "Normal");
+                TextEditor.FontStyle = (FontStyle)new FontStyleConverter().ConvertFromString(style?.FontStyle ?? "Normal");
+                TextEditor.TextDecorations = style?.TextDecoration == "Underline" ? TextDecorations.Underline : null;
 
                 currentEntryKey = selectedEntry.EntryKey;
                 previousEntry = selectedEntry;
+
+                // Обновляем содержимое и стили в WebView
+                await UpdateWebViewContent(selectedEntry.EntryKey, selectedEntry.ContentText);
+                await UpdateWebViewStyles(selectedEntry.EntryKey, style);
             }
         }
-
 
         private async Task SaveChanched(DictionaryEntryForText entry) {
             if (entry == null || string.IsNullOrEmpty(TextEditor.Text)) {
@@ -246,22 +265,20 @@ namespace ImagoAdmin {
 
             if (selectedAttribute == "data-key") {
                 script = $@"
-        var element = document.querySelector('[data-key=""{key}""]');
-        if (element) {{
-            var strongElement = element.querySelector('strong[data-key]');
-            if (strongElement) {{
-                strongElement.innerHTML = `{newText.Replace("`", "\\`")}`;
-            }} else {{
-                element.innerHTML = `{newText.Replace("`", "\\`")}`;
+            var element = document.querySelector('li[data-key=""{key}""]');
+            if (element) {{
+                var strongElement = element.querySelector('strong[data-key]');
+                if (strongElement) {{
+                    strongElement.innerHTML = `{newText.Replace("`", "\\`")}`;
+                }}
             }}
-        }}
-    ";
+        ";
             }
             else if (selectedAttribute == "data-value") {
                 script = $@"
-            var parentElement = document.querySelector('[data-value=""{key}""]');
-            if (parentElement) {{
-                var valueElement = parentElement.querySelector('span[data-value]');
+            var element = document.querySelector('li[data-value=""{key}""]');
+            if (element) {{
+                var valueElement = element.querySelector('span[data-value]');
                 if (valueElement) {{
                     valueElement.innerHTML = `{newText.Replace("`", "\\`")}`;
                 }}
@@ -276,16 +293,48 @@ namespace ImagoAdmin {
         }
 
         private async Task UpdateWebViewStyles(string key, TextStyle style) {
-            string script = $@"
-                var element = document.querySelector('[data-key=""{key}""]');
-                if (element) {{
-                    element.style.fontFamily = '{style.FontFamily}';
-                    element.style.fontSize = '{style.FontSize}px';
-                    element.style.fontWeight = '{style.FontWeight}';
-                    element.style.fontStyle = '{style.FontStyle}';
-                    element.style.textDecoration = '{style.TextDecoration}';
+            // Если стиль не найден, используем значения по умолчанию
+            var fontFamily = style?.FontFamily ?? "Arial, sans-serif";
+            var fontSize = style?.FontSize ?? "16px";
+            var fontWeight = style?.FontWeight ?? "normal";
+            var fontStyle = style?.FontStyle ?? "normal";
+            var textDecoration = style?.TextDecoration ?? "none";
+
+            string script;
+
+            if (selectedAttribute == "data-key") {
+                script = $@"
+            var element = document.querySelector('li[data-key=""{key}""]');
+            if (element) {{
+                var strongElement = element.querySelector('strong[data-key]');
+                if (strongElement) {{
+                    strongElement.style.fontFamily = '{fontFamily}';
+                    strongElement.style.fontSize = '{fontSize}';
+                    strongElement.style.fontWeight = '{fontWeight}';
+                    strongElement.style.fontStyle = '{fontStyle}';
+                    strongElement.style.textDecoration = '{textDecoration}';
                 }}
-            ";
+            }}
+        ";
+            }
+            else if (selectedAttribute == "data-value") {
+                script = $@"
+            var element = document.querySelector('li[data-value=""{key}""]');
+            if (element) {{
+                var valueElement = element.querySelector('span[data-value]');
+                if (valueElement) {{
+                    valueElement.style.fontFamily = '{fontFamily}';
+                    valueElement.style.fontSize = '{fontSize}';
+                    valueElement.style.fontWeight = '{fontWeight}';
+                    valueElement.style.fontStyle = '{fontStyle}';
+                    valueElement.style.textDecoration = '{textDecoration}';
+                }}
+            }}
+        ";
+            }
+            else {
+                return;
+            }
 
             await webView.CoreWebView2.ExecuteScriptAsync(script);
         }

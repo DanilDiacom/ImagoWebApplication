@@ -13,7 +13,6 @@
     <link rel="shortcut icon" href="/img/favicon.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ImagoWebApplication.styles.css" asp-append-version="true" />
 </head>
 <body>
     <div class="main-content">
@@ -67,6 +66,10 @@
                                         <ul class="dropdown-menu" aria-labelledby="@pages.Title">
                                             @foreach (var subPage in pages.SubPages)
                                             {
+                                                if (subPage.Id == 45)
+                                                {
+                                                    continue;
+                                                }
                                                 <li>
                                                     @if (subPage.ParentId == 5 || subPage.Id == 5)
                                                     {
@@ -87,10 +90,6 @@
                                         @if (pages.ParentId == 5 || pages.Id == 5)
                                         {
                                             <a class="nav-link" href="@pages.Url?id=@pages.Id">@pages.Title</a>
-                                        }
-                                        else if (pages.Title == "Navody")
-                                        {
-                                            <a class="nav-link" href="@pages.Url">@pages.Title</a>
                                         }
                                         else
                                         {
