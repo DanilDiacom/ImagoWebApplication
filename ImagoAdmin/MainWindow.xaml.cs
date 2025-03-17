@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows.Media;
 using SkiaSharp;
 using System.Security.Policy;
+using System.Diagnostics;
 
 namespace ImagoAdmin {
     public partial class MainWindow : Window {
@@ -219,9 +220,23 @@ namespace ImagoAdmin {
             }
 
             if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
+                // Устанавливаем currentEntryKey
+                currentEntryKey = selectedEntry.EntryKey;
+
+                var style = TextStyle.GetTextStyle(selectedEntry.EntryKey);
+
+                if (style != null) {
+                    TextEditor.FontFamily = new FontFamily(style.FontFamily ?? "Arial, sans-serif");
+                    TextEditor.FontSize = double.Parse(style.FontSize?.Replace("px", "") ?? "16");
+                    TextEditor.FontWeight = (FontWeight)new FontWeightConverter().ConvertFromString(style.FontWeight ?? "Normal");
+                    TextEditor.FontStyle = (FontStyle)new FontStyleConverter().ConvertFromString(style.FontStyle ?? "Normal");
+                    TextEditor.TextDecorations = style.TextDecoration == "Underline" ? TextDecorations.Underline : null;
+
+                    ApplyStylesToControls(style);
+                }
+
                 TextEditor.Text = selectedEntry.ContentText;
 
-                // Обновляем selectedAttribute
                 if (selectedEntry.EntryKey.EndsWith("_Label")) {
                     selectedAttribute = "data-key";
                 }
@@ -229,22 +244,36 @@ namespace ImagoAdmin {
                     selectedAttribute = "data-value";
                 }
                 else {
-                    selectedAttribute = "data-key"; // По умолчанию, если атрибут не определен
+                    selectedAttribute = "data-key";
                 }
 
-                // Обновляем стили и контент
-                var style = TextStyle.GetTextStyle(selectedEntry.EntryKey);
-                TextEditor.FontFamily = new FontFamily(style?.FontFamily ?? "Arial, sans-serif");
-                TextEditor.FontSize = double.Parse(style?.FontSize?.Replace("px", "") ?? "16"); // Убираем "px" при загрузке
-                TextEditor.FontWeight = (FontWeight)new FontWeightConverter().ConvertFromString(style?.FontWeight ?? "Normal");
-                TextEditor.FontStyle = (FontStyle)new FontStyleConverter().ConvertFromString(style?.FontStyle ?? "Normal");
-                TextEditor.TextDecorations = style?.TextDecoration == "Underline" ? TextDecorations.Underline : null;
-
-                currentEntryKey = selectedEntry.EntryKey;
                 previousEntry = selectedEntry;
 
                 await UpdateWebViewContent(selectedEntry.EntryKey, selectedEntry.ContentText);
                 await UpdateWebViewStyles(selectedEntry.EntryKey, style);
+            }
+        }
+
+        private void ApplyStylesToControls(TextStyle style) {
+            if (style == null) return; 
+
+            if (FontFamilyComboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == style.FontFamily) is ComboBoxItem fontFamilyItem) {
+                FontFamilyComboBox.SelectedItem = fontFamilyItem;
+            }
+
+            if (FontSizeComboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == style.FontSize?.Replace("px", "")) is ComboBoxItem fontSizeItem) {
+                FontSizeComboBox.SelectedItem = fontSizeItem;
+            }
+
+            BoldButton.Tag = style.FontWeight == "Bold" ? "True" : "False";
+            BoldButton.FontWeight = style.FontWeight == "Bold" ? FontWeights.Bold : FontWeights.Normal;
+
+            ItalicButton.Tag = style.FontStyle == "Italic" ? "True" : "False";
+            ItalicButton.FontStyle = style.FontStyle == "Italic" ? FontStyles.Italic : FontStyles.Normal;
+
+            UnderlineButton.Tag = style.TextDecoration == "Underline" ? "True" : "False";
+            if (UnderlineButton.Content is TextBlock underlineTextBlock) {
+                underlineTextBlock.TextDecorations = style.TextDecoration == "Underline" ? TextDecorations.Underline : null;
             }
         }
 
@@ -272,6 +301,10 @@ namespace ImagoAdmin {
         }
 
         private async Task<TextStyle> SaveCurrentStyles(string entryKey) {
+            if (string.IsNullOrEmpty(entryKey)) {
+                return null;
+            }
+
             var style = new TextStyle {
                 EntryKey = entryKey,
                 FontFamily = TextEditor.FontFamily.Source,
@@ -288,7 +321,7 @@ namespace ImagoAdmin {
 
         private async Task UpdateWebViewContent(string key, string newText) {
             if (string.IsNullOrEmpty(selectedAttribute)) {
-                return; // Не обновлять, если атрибут не определен
+                return;
             }
 
             string script;
@@ -332,11 +365,11 @@ namespace ImagoAdmin {
 
         private async Task UpdateWebViewStyles(string key, TextStyle style) {
             if (string.IsNullOrEmpty(selectedAttribute)) {
-                return; // Не обновлять, если атрибут не определен
+                return; 
             }
 
             var fontFamily = style?.FontFamily ?? "Arial, sans-serif";
-            var fontSize = $"{style?.FontSize ?? "16"}px"; // Добавляем "px" к размеру шрифта
+            var fontSize = $"{style?.FontSize ?? "16"}px";
             var fontWeight = style?.FontWeight ?? "normal";
             var fontStyle = style?.FontStyle ?? "normal";
             var textDecoration = style?.TextDecoration ?? "none";
@@ -395,17 +428,18 @@ namespace ImagoAdmin {
 
             await webView.CoreWebView2.ExecuteScriptAsync(script);
 
-            // Принудительное обновление WebView
             await webView.CoreWebView2.ExecuteScriptAsync("");
         }
 
+        
         private async void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FontFamilyComboBox.SelectedItem is ComboBoxItem selectedItem) {
                 TextEditor.FontFamily = new FontFamily(selectedItem.Content.ToString());
 
-                var style = await SaveCurrentStyles(currentEntryKey); 
-
-                await UpdateWebViewStyles(currentEntryKey, style);
+                if (!string.IsNullOrEmpty(currentEntryKey)) {
+                    var style = await SaveCurrentStyles(currentEntryKey);
+                    await UpdateWebViewStyles(currentEntryKey, style);
+                }
             }
         }
 
@@ -413,34 +447,38 @@ namespace ImagoAdmin {
             if (FontSizeComboBox.SelectedItem is ComboBoxItem selectedItem && double.TryParse(selectedItem.Content.ToString(), out double newSize)) {
                 TextEditor.FontSize = newSize;
 
-                var style = await SaveCurrentStyles(currentEntryKey); 
-
-                await UpdateWebViewStyles(currentEntryKey, style); 
+                if (!string.IsNullOrEmpty(currentEntryKey)) {
+                    var style = await SaveCurrentStyles(currentEntryKey);
+                    await UpdateWebViewStyles(currentEntryKey, style);
+                }
             }
         }
 
         private async void BoldButton_Click(object sender, RoutedEventArgs e) {
             TextEditor.FontWeight = TextEditor.FontWeight == FontWeights.Bold ? FontWeights.Normal : FontWeights.Bold;
 
-            var style = await SaveCurrentStyles(currentEntryKey); 
-
-            await UpdateWebViewStyles(currentEntryKey, style);
+            if (!string.IsNullOrEmpty(currentEntryKey)) {
+                var style = await SaveCurrentStyles(currentEntryKey);
+                await UpdateWebViewStyles(currentEntryKey, style);
+            }
         }
 
         private async void ItalicButton_Click(object sender, RoutedEventArgs e) {
             TextEditor.FontStyle = TextEditor.FontStyle == FontStyles.Italic ? FontStyles.Normal : FontStyles.Italic;
 
-            var style = await SaveCurrentStyles(currentEntryKey);
-
-            await UpdateWebViewStyles(currentEntryKey, style);
+            if (!string.IsNullOrEmpty(currentEntryKey)) {
+                var style = await SaveCurrentStyles(currentEntryKey);
+                await UpdateWebViewStyles(currentEntryKey, style);
+            }
         }
 
         private async void UnderlineButton_Click(object sender, RoutedEventArgs e) {
             TextEditor.TextDecorations = TextEditor.TextDecorations == TextDecorations.Underline ? null : TextDecorations.Underline;
 
-            var style = await SaveCurrentStyles(currentEntryKey);
-
-            await UpdateWebViewStyles(currentEntryKey, style);
+            if (!string.IsNullOrEmpty(currentEntryKey)) {
+                var style = await SaveCurrentStyles(currentEntryKey);
+                await UpdateWebViewStyles(currentEntryKey, style);
+            }
         }
 
         private void TextColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -565,7 +603,6 @@ namespace ImagoAdmin {
                 DictionaryEntryForImages.SaveEntry(entry);
             }
 
-            // Обновляем PhotoList
             PhotoList.ItemsSource = DictionaryEntryForImages.GetEntriesForEditing(pageId);
             PhotoList.Items.Refresh();
 
