@@ -19,11 +19,11 @@ namespace ImagoAdmin {
         private bool isContentModified = false;
         public int pageId;
         public string pageName;
-        private string selectedAttribute = "data-key"; // По умолчанию редактируем data-key
+        private string selectedAttribute = "data-key";
         public string currentEntryKey;
         private DictionaryEntryForText previousEntry = null;
-        private bool _isTransitionCancelled = false; // Флаг для отслеживания отмены перехода
-        private bool _isProcessingSelectionChange = false; // Флаг для предотвращения двойного вызова
+        private bool _isTransitionCancelled = false;
+        private bool _isProcessingSelectionChange = false;
 
         public MainWindow() {
             InitializeComponent();
@@ -55,8 +55,33 @@ namespace ImagoAdmin {
 
             isContentModified = false;
             TextEditor.Clear();
+
+
             string script = $"document.documentElement.innerHTML = `{pageHtml.Replace("`", "\\`")}`;";
             await webView.CoreWebView2.ExecuteScriptAsync(script);
+
+
+
+            string disableNavScript = @"
+                var nav = document.querySelector('.navbar-custom');
+                if (nav) {
+                    nav.style.pointerEvents = 'none';
+                }
+            ";
+            await webView.CoreWebView2.ExecuteScriptAsync(disableNavScript);
+
+
+
+            string disableFooterScript = @"
+                var footer = document.getElementById('box-bottom-container');
+                if (footer) {
+                    footer.style.pointerEvents = 'none';
+                }
+            ";
+            await webView.CoreWebView2.ExecuteScriptAsync(disableFooterScript);
+
+
+
             var entriesFoto = DictionaryEntryForImages.GetEntriesForEditing(pageId);
             PhotoList.ItemsSource = entriesFoto;
         }
@@ -196,19 +221,21 @@ namespace ImagoAdmin {
             if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
                 TextEditor.Text = selectedEntry.ContentText;
 
-                // Определяем selectedAttribute в зависимости от ключа
+                // Обновляем selectedAttribute
                 if (selectedEntry.EntryKey.EndsWith("_Label")) {
                     selectedAttribute = "data-key";
                 }
                 else if (selectedEntry.EntryKey.EndsWith("_Value")) {
                     selectedAttribute = "data-value";
                 }
+                else {
+                    selectedAttribute = "data-key"; // По умолчанию, если атрибут не определен
+                }
 
+                // Обновляем стили и контент
                 var style = TextStyle.GetTextStyle(selectedEntry.EntryKey);
-
-                // Устанавливаем значения по умолчанию, если стиль не найден
                 TextEditor.FontFamily = new FontFamily(style?.FontFamily ?? "Arial, sans-serif");
-                TextEditor.FontSize = double.Parse(style?.FontSize ?? "16");
+                TextEditor.FontSize = double.Parse(style?.FontSize?.Replace("px", "") ?? "16"); // Убираем "px" при загрузке
                 TextEditor.FontWeight = (FontWeight)new FontWeightConverter().ConvertFromString(style?.FontWeight ?? "Normal");
                 TextEditor.FontStyle = (FontStyle)new FontStyleConverter().ConvertFromString(style?.FontStyle ?? "Normal");
                 TextEditor.TextDecorations = style?.TextDecoration == "Underline" ? TextDecorations.Underline : null;
@@ -216,7 +243,6 @@ namespace ImagoAdmin {
                 currentEntryKey = selectedEntry.EntryKey;
                 previousEntry = selectedEntry;
 
-                // Обновляем содержимое и стили в WebView
                 await UpdateWebViewContent(selectedEntry.EntryKey, selectedEntry.ContentText);
                 await UpdateWebViewStyles(selectedEntry.EntryKey, style);
             }
@@ -255,32 +281,44 @@ namespace ImagoAdmin {
                 TextDecoration = TextEditor.TextDecorations == TextDecorations.Underline ? "Underline" : "None",
             };
 
-            await TextStyle.SaveTextStyleAsync(style); 
+            await TextStyle.SaveTextStyleAsync(style);
 
             return style;
         }
 
         private async Task UpdateWebViewContent(string key, string newText) {
+            if (string.IsNullOrEmpty(selectedAttribute)) {
+                return; // Не обновлять, если атрибут не определен
+            }
+
             string script;
 
             if (selectedAttribute == "data-key") {
                 script = $@"
-            var element = document.querySelector('li[data-key=""{key}""]');
+            var element = document.querySelector('[data-key=""{key}""]');
             if (element) {{
-                var strongElement = element.querySelector('strong[data-key]');
-                if (strongElement) {{
-                    strongElement.innerHTML = `{newText.Replace("`", "\\`")}`;
+                if (element.tagName === 'LI') {{
+                    var strongElement = element.querySelector('strong[data-key]');
+                    if (strongElement) {{
+                        strongElement.innerHTML = `{newText.Replace("`", "\\`")}`;
+                    }}
+                }} else {{
+                    element.innerHTML = `{newText.Replace("`", "\\`")}`;
                 }}
             }}
         ";
             }
             else if (selectedAttribute == "data-value") {
                 script = $@"
-            var element = document.querySelector('li[data-value=""{key}""]');
+            var element = document.querySelector('[data-value=""{key}""]');
             if (element) {{
-                var valueElement = element.querySelector('span[data-value]');
-                if (valueElement) {{
-                    valueElement.innerHTML = `{newText.Replace("`", "\\`")}`;
+                if (element.tagName === 'LI') {{
+                    var valueElement = element.querySelector('span[data-value]');
+                    if (valueElement) {{
+                        valueElement.innerHTML = `{newText.Replace("`", "\\`")}`;
+                    }}
+                }} else {{
+                    element.innerHTML = `{newText.Replace("`", "\\`")}`;
                 }}
             }}
         ";
@@ -293,9 +331,12 @@ namespace ImagoAdmin {
         }
 
         private async Task UpdateWebViewStyles(string key, TextStyle style) {
-            // Если стиль не найден, используем значения по умолчанию
+            if (string.IsNullOrEmpty(selectedAttribute)) {
+                return; // Не обновлять, если атрибут не определен
+            }
+
             var fontFamily = style?.FontFamily ?? "Arial, sans-serif";
-            var fontSize = style?.FontSize ?? "16px";
+            var fontSize = $"{style?.FontSize ?? "16"}px"; // Добавляем "px" к размеру шрифта
             var fontWeight = style?.FontWeight ?? "normal";
             var fontStyle = style?.FontStyle ?? "normal";
             var textDecoration = style?.TextDecoration ?? "none";
@@ -304,30 +345,46 @@ namespace ImagoAdmin {
 
             if (selectedAttribute == "data-key") {
                 script = $@"
-            var element = document.querySelector('li[data-key=""{key}""]');
+            var element = document.querySelector('[data-key=""{key}""]');
             if (element) {{
-                var strongElement = element.querySelector('strong[data-key]');
-                if (strongElement) {{
-                    strongElement.style.fontFamily = '{fontFamily}';
-                    strongElement.style.fontSize = '{fontSize}';
-                    strongElement.style.fontWeight = '{fontWeight}';
-                    strongElement.style.fontStyle = '{fontStyle}';
-                    strongElement.style.textDecoration = '{textDecoration}';
+                if (element.tagName === 'LI') {{
+                    var strongElement = element.querySelector('strong[data-key]');
+                    if (strongElement) {{
+                        strongElement.style.fontFamily = '{fontFamily}';
+                        strongElement.style.fontSize = '{fontSize}';
+                        strongElement.style.fontWeight = '{fontWeight}';
+                        strongElement.style.fontStyle = '{fontStyle}';
+                        strongElement.style.textDecoration = '{textDecoration}';
+                    }}
+                }} else {{
+                    element.style.fontFamily = '{fontFamily}';
+                    element.style.fontSize = '{fontSize}';
+                    element.style.fontWeight = '{fontWeight}';
+                    element.style.fontStyle = '{fontStyle}';
+                    element.style.textDecoration = '{textDecoration}';
                 }}
             }}
         ";
             }
             else if (selectedAttribute == "data-value") {
                 script = $@"
-            var element = document.querySelector('li[data-value=""{key}""]');
+            var element = document.querySelector('[data-value=""{key}""]');
             if (element) {{
-                var valueElement = element.querySelector('span[data-value]');
-                if (valueElement) {{
-                    valueElement.style.fontFamily = '{fontFamily}';
-                    valueElement.style.fontSize = '{fontSize}';
-                    valueElement.style.fontWeight = '{fontWeight}';
-                    valueElement.style.fontStyle = '{fontStyle}';
-                    valueElement.style.textDecoration = '{textDecoration}';
+                if (element.tagName === 'LI') {{
+                    var valueElement = element.querySelector('span[data-value]');
+                    if (valueElement) {{
+                        valueElement.style.fontFamily = '{fontFamily}';
+                        valueElement.style.fontSize = '{fontSize}';
+                        valueElement.style.fontWeight = '{fontWeight}';
+                        valueElement.style.fontStyle = '{fontStyle}';
+                        valueElement.style.textDecoration = '{textDecoration}';
+                    }}
+                }} else {{
+                    element.style.fontFamily = '{fontFamily}';
+                    element.style.fontSize = '{fontSize}';
+                    element.style.fontWeight = '{fontWeight}';
+                    element.style.fontStyle = '{fontStyle}';
+                    element.style.textDecoration = '{textDecoration}';
                 }}
             }}
         ";
@@ -337,15 +394,18 @@ namespace ImagoAdmin {
             }
 
             await webView.CoreWebView2.ExecuteScriptAsync(script);
+
+            // Принудительное обновление WebView
+            await webView.CoreWebView2.ExecuteScriptAsync("");
         }
 
         private async void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FontFamilyComboBox.SelectedItem is ComboBoxItem selectedItem) {
                 TextEditor.FontFamily = new FontFamily(selectedItem.Content.ToString());
 
-                var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+                var style = await SaveCurrentStyles(currentEntryKey); 
 
-                await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+                await UpdateWebViewStyles(currentEntryKey, style);
             }
         }
 
@@ -353,34 +413,34 @@ namespace ImagoAdmin {
             if (FontSizeComboBox.SelectedItem is ComboBoxItem selectedItem && double.TryParse(selectedItem.Content.ToString(), out double newSize)) {
                 TextEditor.FontSize = newSize;
 
-                var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+                var style = await SaveCurrentStyles(currentEntryKey); 
 
-                await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+                await UpdateWebViewStyles(currentEntryKey, style); 
             }
         }
 
         private async void BoldButton_Click(object sender, RoutedEventArgs e) {
             TextEditor.FontWeight = TextEditor.FontWeight == FontWeights.Bold ? FontWeights.Normal : FontWeights.Bold;
 
-            var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+            var style = await SaveCurrentStyles(currentEntryKey); 
 
-            await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+            await UpdateWebViewStyles(currentEntryKey, style);
         }
 
         private async void ItalicButton_Click(object sender, RoutedEventArgs e) {
             TextEditor.FontStyle = TextEditor.FontStyle == FontStyles.Italic ? FontStyles.Normal : FontStyles.Italic;
 
-            var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+            var style = await SaveCurrentStyles(currentEntryKey);
 
-            await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+            await UpdateWebViewStyles(currentEntryKey, style);
         }
 
         private async void UnderlineButton_Click(object sender, RoutedEventArgs e) {
             TextEditor.TextDecorations = TextEditor.TextDecorations == TextDecorations.Underline ? null : TextDecorations.Underline;
 
-            var style = await SaveCurrentStyles(currentEntryKey); // Используем await
+            var style = await SaveCurrentStyles(currentEntryKey);
 
-            await UpdateWebViewStyles(currentEntryKey, style); // Используем await
+            await UpdateWebViewStyles(currentEntryKey, style);
         }
 
         private void TextColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -420,7 +480,6 @@ namespace ImagoAdmin {
             }
         }
 
-
         private void UpdatePhotosButton_Click_1(object sender, RoutedEventArgs e) {
             if (PhotoList.SelectedItem is DictionaryEntryForImages selectedPhoto) {
                 OpenFileDialog openFileDialog = new OpenFileDialog {
@@ -447,7 +506,6 @@ namespace ImagoAdmin {
                 MessageBox.Show("Vyberte fotografii k nahrazení!", "Upozornění", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-
 
         public static byte[] ResizeImage(byte[] imageBytes, int width, int height) {
             using (var original = SKBitmap.Decode(imageBytes)) {
@@ -534,8 +592,6 @@ namespace ImagoAdmin {
         private void AddDeviceButton_Click(object sender, RoutedEventArgs e) {
 
         }
-
-
 
         private void AddNovinyButton_Click(object sender, RoutedEventArgs e) {
             AddNovinyWindow addNovinyWindow = new AddNovinyWindow();

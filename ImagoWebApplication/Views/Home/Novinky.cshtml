@@ -16,12 +16,7 @@
 
 <section id="content" class="py-5">
     <div class="container" style="width:1100px;">
-        <h1 class="page-title" style="margin-bottom:30px; text-align:center;">Novinky</h1>
-
-        <form action="/cs/news/" method="post" id="frm-periodForm" class="d-none">
-            <input type="hidden" name="period" id="frm-periodForm-period" value="">
-            <input type="hidden" name="do" value="periodForm-submit">
-        </form>
+        <h1 class="page-title" style="margin-bottom:30px; margin-top:-30px; text-align:center;">Novinky</h1>
 
         <div class="row">
             <div class="col-lg-9">
@@ -57,11 +52,17 @@
                 </div>
             </div>
 
-            <!-- Правый блок с календарем -->
             <div class="col-lg-3">
                 <div class="card p-3" style="width:340px;">
                     <h5 class="text-center">Vyberte období</h5>
                     <input type="text" id="news-calendar" class="form-control">
+
+                    <form id="frm-periodForm" method="get" action="/Home/Novinky">
+                        <input type="hidden" name="period" id="frm-periodForm-period">
+                    </form>
+
+                    <!-- Кнопка сброса фильтра -->
+                    <button id="reset-filter" class="btn btn-danger mt-3 w-100">Zobrazit vše</button>
                 </div>
             </div>
         </div>
@@ -74,13 +75,22 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        flatpickr("#news-calendar", {
-            inline: true,  // Календарь всегда открыт
+        let calendar = flatpickr("#news-calendar", {
+            mode: "range",
+            inline: true,
             dateFormat: "Y-m-d",
-            onChange: function (selectedDates, dateStr) {
-                document.getElementById("frm-periodForm-period").value = dateStr;
-                document.getElementById("frm-periodForm").submit();
+            onClose: function (selectedDates, dateStr) {
+                if (dateStr) {
+                    document.getElementById("frm-periodForm-period").value = dateStr;
+                    document.getElementById("frm-periodForm").submit();
+                }
             }
+        });
+
+        document.getElementById("reset-filter").addEventListener("click",function(){
+            calendar.clear();
+            document.getElementById("frm-periodForm-period").value = "";
+            document.getElementById("frm-periodForm").submit();
         });
     });
 </script>

@@ -142,12 +142,12 @@
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                         <TextBlock Text="Formátování:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="BoldButton" Content="B" FontWeight="Bold" Width="40" Click="BoldButton_Click" Margin="0,0,5,0"/>
-                            <Button x:Name="ItalicButton" Content="I" FontStyle="Italic" Width="40" Click="ItalicButton_Click" Margin="0,0,5,0"/>
-                            <Button x:Name="UnderlineButton" Click="UnderlineButton_Click" Width="40"  Margin="0,0,5,0">
-                                <TextBlock Text="U" TextDecorations="Underline"/>
-                            </Button>
-                        </StackPanel>
+                                <Button x:Name="BoldButton" Content="B" FontWeight="Bold" Width="40" Click="BoldButton_Click" Margin="0,0,5,0" Tag="False"/>
+                                <Button x:Name="ItalicButton" Content="I" FontStyle="Italic" Width="40" Click="ItalicButton_Click" Margin="0,0,5,0" Tag="False"/>
+                                <Button x:Name="UnderlineButton" Click="UnderlineButton_Click" Width="40" Margin="0,0,5,0" Tag="False">
+                                    <TextBlock Text="U" TextDecorations="Underline"/>
+                                </Button>
+                            </StackPanel>
                     </StackPanel>
 
                     <!-- Цвет текста -->

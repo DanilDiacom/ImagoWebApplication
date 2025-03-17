@@ -27,12 +27,26 @@ namespace ImagoLib.Models {
             };
         }
 
-        public static ObservableCollection<Noviny> GetNoviny() {
+        public static ObservableCollection<Noviny> GetNoviny(DateTime? startDate = null, DateTime? endDate = null) {
             var allNoviny = new List<Noviny>();
 
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
                 cmd.CommandText = "SELECT Id, PostedDate, Title, Comment, Description, IconPhoto FROM Noviny";
+
+                if (startDate.HasValue && endDate.HasValue) {
+                    cmd.CommandText += " WHERE PostedDate BETWEEN @StartDate AND @EndDate";
+                    var startParam = cmd.CreateParameter();
+                    startParam.ParameterName = "@StartDate";
+                    startParam.Value = startDate.Value.Date;
+                    cmd.Parameters.Add(startParam);
+
+                    var endParam = cmd.CreateParameter();
+                    endParam.ParameterName = "@EndDate";
+                    endParam.Value = endDate.Value.Date;
+                    cmd.Parameters.Add(endParam);
+                }
+
                 using (var dr = cmd.ExecuteReader()) {
                     while (dr.Read()) {
                         allNoviny.Add(FromDataReader(dr));

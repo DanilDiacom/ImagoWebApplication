@@ -130,11 +130,21 @@ public class HomeController : BaseController {
         return View();
     }
 
-    public IActionResult Novinky() {
+    public IActionResult Novinky(string period) {
         SetViewHomeBagEntries();
-        var novinkyList = Noviny.GetNoviny().OrderByDescending(m => m.Id).ToList();
 
-        foreach (var item in novinkyList) { 
+        DateTime? startDate = null;
+        DateTime? endDate = null;
+
+        if (!string.IsNullOrEmpty(period)) {
+            var dates = period.Split(" to ");
+            startDate = DateTime.Parse(dates[0]);
+            endDate = dates.Length > 1 ? DateTime.Parse(dates[1]) : startDate;
+        }
+
+        var novinkyList = Noviny.GetNoviny(startDate, endDate).OrderByDescending(m => m.Id).ToList();
+
+        foreach (var item in novinkyList) {
             item.Photos = NovinyFoto.GetPhotosForRequest(item.Id);
         }
 

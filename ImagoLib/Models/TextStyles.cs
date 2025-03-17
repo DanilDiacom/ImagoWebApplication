@@ -56,16 +56,24 @@ namespace ImagoLib.Models {
         public static TextStyle GetTextStyle(string entryKey) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT Id, EntryKey, FontFamily, FontSize, FontWeight, FontStyle, TextDecoration FROM TextStyles WHERE EntryKey = @EntryKey";
+                cmd.CommandText = "SELECT FontFamily, FontSize, FontWeight, FontStyle, TextDecoration FROM TextStyles WHERE EntryKey = @EntryKey";
                 Db.SetParam(cmd, "@EntryKey", entryKey);
 
-                using (var dr = cmd.ExecuteReader()) {
-                    if (dr.Read()) {
-                        return FromDataReader(dr);
+                using (var reader = cmd.ExecuteReader()) {
+                    if (reader.Read()) {
+                        return new TextStyle {
+                            EntryKey = entryKey,
+                            FontFamily = reader["FontFamily"]?.ToString(),
+                            FontSize = reader["FontSize"]?.ToString(),
+                            FontWeight = reader["FontWeight"]?.ToString(),
+                            FontStyle = reader["FontStyle"]?.ToString(),
+                            TextDecoration = reader["TextDecoration"]?.ToString()
+                        };
                     }
                 }
             }
-            return null;
+
+            return null; // Если стили не найдены
         }
 
         public static List<TextStyle> GetAllStyles() {
