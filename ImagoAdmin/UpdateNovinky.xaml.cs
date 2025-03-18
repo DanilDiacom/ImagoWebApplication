@@ -163,68 +163,115 @@ namespace ImagoAdmin {
         }
 
         private void Save_Click(object sender, RoutedEventArgs e) {
-            var title = TitleTextBox.Text;
-            var comment = CommentTextBox.Text;
-            var description = DescriptionTextBox.Text;
-            var createdAt = DateTime.Now;
+            try {
+                // Получаем значения из текстовых полей
+                var title = TitleTextBox.Text;
+                var comment = CommentTextBox.Text;
+                var description = DescriptionTextBox.Text;
+                var createdAt = DateTime.Now;
 
-            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(comment)) {
-                MessageBox.Show("Musíte zadat název nového produktu a přidat k němu komentář.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                // Проверка на null или пустые значения для обязательных полей
+                if (string.IsNullOrWhiteSpace(title)) {
+                    MessageBox.Show("Musíte zadat název nového produktu.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-            if (string.IsNullOrWhiteSpace(description)) {
-                MessageBox.Show("Musíte poskytnout popis nového produktu.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(comment)) {
+                    MessageBox.Show("Musíte přidat komentář k novému produktu.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-            byte[] iconPhoto = null;
-            if (Icon.Count > 0 && Icon[0].ImageIcon != null) {
-                iconPhoto = ConvertImageToByteArray(Icon[0].ImageIcon);
-            }
+                if (string.IsNullOrWhiteSpace(description)) {
+                    MessageBox.Show("Musíte poskytnout popis nového produktu.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-            Noviny newDitales = new Noviny {
-                Title = title,
-                Description = description,
-                Comment = comment,
-                PostedDate = createdAt,
-                IconPhoto = iconPhoto
-            };
+                // Проверка на null или пустую коллекцию иконок
+                byte[] iconPhoto = null;
+                if (Icon != null && Icon.Count > 0 && Icon[0].ImageIcon != null) {
+                    iconPhoto = ConvertImageToByteArray(Icon[0].ImageIcon);
+                }
 
-            Noviny.UpdateNoviny(newDitales, id);
-
-            NovinyFoto.DeletePhotosForRequest(id);
-
-            // Сохранение новых фотографий
-            foreach (var photo in Photos) {
-                var photoName = photo.FileName ?? "uploaded_photo.jpg";
-                var photoData = ConvertImageToByteArray(photo.Image);
-
-                NovinyFoto newPhoto = new NovinyFoto {
-                    NovinyId = id,
-                    PhotoName = photoName,
-                    PhotoData = photoData
+                // Создание объекта Noviny
+                Noviny newDitales = new Noviny {
+                    Title = title,
+                    Description = description,
+                    Comment = comment,
+                    PostedDate = createdAt,
+                    IconPhoto = iconPhoto
                 };
 
-                NovinyFoto.InsertPhoto(newPhoto, id);
+                // Обновление записи в базе данных
+                Noviny.UpdateNoviny(newDitales, id);
+
+                // Удаление старых фотографий
+                NovinyFoto.DeletePhotosForRequest(id);
+
+                // Сохранение новых фотографий (если они есть)
+                if (Photos != null && Photos.Count > 0) {
+                    foreach (var photo in Photos) {
+                        if (photo?.Image == null) {
+                            MessageBox.Show("Některé fotografie jsou neplatné.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            continue;
+                        }
+
+                        var photoName = photo.FileName ?? "uploaded_photo.jpg";
+                        var photoData = ConvertImageToByteArray(photo.Image);
+
+                        NovinyFoto newPhoto = new NovinyFoto {
+                            NovinyId = id,
+                            PhotoName = photoName,
+                            PhotoData = photoData
+                        };
+
+                        NovinyFoto.InsertPhoto(newPhoto, id);
+                    }
+                }
+                else {
+                    MessageBox.Show("Nebyly přidány žádné fotografie.", "Upozornění", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                // Удаление старых параметров
+                NovinyParameter.DeleteParametersForNoviny(id);
+
+                // Проверка параметров: хотя бы один параметр должен быть заполнен
+                if (Parameters != null && Parameters.Count > 0) {
+                    bool isAnyParameterFilled = false;
+                    foreach (var parameter in Parameters) {
+                        if (!string.IsNullOrWhiteSpace(parameter.Name) && !string.IsNullOrWhiteSpace(parameter.Value)) {
+                            isAnyParameterFilled = true;
+                            break; // Если хотя бы один параметр заполнен, прерываем цикл
+                        }
+                    }
+
+                    if (!isAnyParameterFilled) {
+                        MessageBox.Show("Vyplňte alespoň jeden parametr (název a hodnotu).", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    // Сохранение новых параметров (только заполненных)
+                    foreach (var parameter in Parameters) {
+                        if (!string.IsNullOrWhiteSpace(parameter.Name) && !string.IsNullOrWhiteSpace(parameter.Value)) {
+                            var novinyParameter = new NovinyParameter {
+                                NovinyId = id,
+                                ParameterName = parameter.Name,
+                                ParameterValue = parameter.Value
+                            };
+                            NovinyParameter.InsertParameter(novinyParameter);
+                        }
+                    }
+                }
+                else {
+                    MessageBox.Show("Nebyly přidány žádné parametry.", "Upozornění", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                MessageBox.Show("Upravené údaje o novém produktu byly uloženy!", "Hotovo", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.DialogResult = true;
+                this.Close();
             }
-
-            // Удаление старых параметров
-            NovinyParameter.DeleteParametersForNoviny(id);
-
-            // Сохранение новых параметров
-            foreach (var parameter in Parameters) {
-                var novinyParameter = new NovinyParameter {
-                    NovinyId = id,
-                    ParameterName = parameter.Name,
-                    ParameterValue = parameter.Value
-                };
-                NovinyParameter.InsertParameter(novinyParameter);
+            catch (Exception ex) {
+                MessageBox.Show($"Došlo k chybě při ukládání dat: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            MessageBox.Show("Upravené údaje o novém produktu byly uloženy!", "Hotovo", MessageBoxButton.OK, MessageBoxImage.Information);
-            this.DialogResult = true;
-            this.Close();
         }
 
 

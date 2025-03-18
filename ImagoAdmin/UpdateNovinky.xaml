@@ -6,8 +6,8 @@
       xmlns:local="clr-namespace:ImagoAdmin"
       Icon="favicon.ico"
       Title="Opravit novy produkt" 
-      Height="1000" Width="800"
-      MinHeight="1000" MinWidth="800"
+      Height="1010" Width="810"
+      MinHeight="1010" MinWidth="810"
       WindowStartupLocation="CenterScreen">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -24,14 +24,14 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Row="0" Margin="0 0 0 10">
-                <TextBlock Text="Název:"/>
-                <TextBox x:Name="TitleTextBox" Width="Auto" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+                <TextBlock FontWeight="Bold" Text="Název:"/>
+                <TextBox x:Name="TitleTextBox" TextWrapping="Wrap" AcceptsReturn="True" MaxWidth="760"/>
 
-                <TextBlock Text="Komentář:" Margin="0 10 0 0"/>
-                <TextBox x:Name="CommentTextBox" Width="Auto" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+                <TextBlock Text="Komentář:" FontWeight="Bold" Margin="0 10 0 0"/>
+                <TextBox x:Name="CommentTextBox" TextWrapping="Wrap" AcceptsReturn="True" MaxWidth="760"/>
 
-                <TextBlock Text="Popis:" Margin="0 10 0 0"/>
-                <TextBox x:Name="DescriptionTextBox" Width="Auto" Height="150" TextWrapping="Wrap" AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto"/>
+                <TextBlock Text="Popis:" FontWeight="Bold" Margin="0 10 0 0"/>
+                <TextBox x:Name="DescriptionTextBox" Height="150" TextWrapping="Wrap" AcceptsReturn="True" MaxWidth="760"/>
             </StackPanel>
 
             <GroupBox Header="Ikona produktu" Grid.Row="1" Margin="0 10 0 10">

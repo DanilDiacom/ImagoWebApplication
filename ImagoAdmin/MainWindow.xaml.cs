@@ -630,10 +630,14 @@ namespace ImagoAdmin {
 
         }
 
-        private void AddNovinyButton_Click(object sender, RoutedEventArgs e) {
+        private async void AddNovinyButton_Click(object sender, RoutedEventArgs e) {
             AddNovinyWindow addNovinyWindow = new AddNovinyWindow();
-            addNovinyWindow.ShowDialog();
-            LoadNovinkyList();
+            bool? result = addNovinyWindow.ShowDialog();
+
+            if (result == true) {
+                LoadNovinkyList();
+                await LoadPageFromDatabase(pageId);
+            }
         }
 
         private void EditNovinyButton_Click(object sender, RoutedEventArgs e) {

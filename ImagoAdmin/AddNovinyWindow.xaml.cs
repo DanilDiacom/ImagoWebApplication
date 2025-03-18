@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using ImagoLib.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.Win32;
 
 namespace ImagoAdmin {
@@ -77,27 +78,76 @@ namespace ImagoAdmin {
 
         private void Save_Click(object sender, RoutedEventArgs e) {
             try {
+                // Проверка на null или пустые значения для обязательных полей
+                if (string.IsNullOrWhiteSpace(TitleTextBox.Text)) {
+                    MessageBox.Show("Vyplňte název novinky.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(CommentTextBox.Text)) {
+                    MessageBox.Show("Vyplňte komentář k novince.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(DescriptionTextBox.Text)) {
+                    MessageBox.Show("Vyplňte popis novinky.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(SelectedIconPath)) {
+                    MessageBox.Show("Vyberte ikonu pro novinku.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Проверка параметров: хотя бы один параметр должен быть заполнен
+                if (Parameters == null || Parameters.Count == 0) {
+                    MessageBox.Show("Zapomněli jste zadat parametry pro novinku.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                bool isAnyParameterFilled = false;
+                foreach (var parameter in Parameters) {
+                    if (!string.IsNullOrWhiteSpace(parameter.Name) && !string.IsNullOrWhiteSpace(parameter.Value)) {
+                        isAnyParameterFilled = true;
+                        break; // Если хотя бы один параметр заполнен, прерываем цикл
+                    }
+                }
+
+                if (!isAnyParameterFilled) {
+                    MessageBox.Show("Vyplňte alespoň jeden parametr (název a hodnotu).", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Проверка фотографий
+                if (Photos == null || Photos.Count == 0) {
+                    MessageBox.Show("Přidejte alespoň jednu fotografii pro novinku.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Создание объекта Noviny
                 var noviny = new Noviny {
                     PostedDate = DateTime.Now,
                     Title = TitleTextBox.Text,
                     Comment = CommentTextBox.Text,
                     Description = DescriptionTextBox.Text,
-                    IconPhoto = SelectedIconPath != null ? File.ReadAllBytes(SelectedIconPath) : null
+                    IconPhoto = File.ReadAllBytes(SelectedIconPath)
                 };
 
                 int novinyId = Noviny.InsertNoviny(noviny);
 
-                // Сохраняем параметры
+                // Сохранение параметров (только заполненных)
                 foreach (var parameter in Parameters) {
-                    var novinyParameter = new NovinyParameter {
-                        NovinyId = novinyId,
-                        ParameterName = parameter.Name,
-                        ParameterValue = parameter.Value
-                    };
-                    NovinyParameter.InsertParameter(novinyParameter);
+                    if (!string.IsNullOrWhiteSpace(parameter.Name) && !string.IsNullOrWhiteSpace(parameter.Value)) {
+                        var novinyParameter = new NovinyParameter {
+                            NovinyId = novinyId,
+                            ParameterName = parameter.Name,
+                            ParameterValue = parameter.Value
+                        };
+                        NovinyParameter.InsertParameter(novinyParameter);
+                    }
                 }
 
-                // Сохраняем фотографии
+                // Сохранение фотографий
                 foreach (var photo in Photos) {
                     var photoInfo = new NovinyFoto {
                         NovinyId = novinyId,
