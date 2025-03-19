@@ -12,6 +12,14 @@
         background-color: #1d4f99;
         font-size: 16px;
     }
+
+    .btn-info-custom {
+        color: #fff; /* Цвет текста */
+        font-family: 'Arial', sans-serif; /* Шрифт */
+        font-size: 14px; /* Размер шрифта */
+        padding: 5px 15px; /* Отступы внутри кнопки */
+    }
+  
 </style>
 
 <section id="content" class="py-5">
@@ -40,7 +48,7 @@
                                     <span class="badge bg-secondary">@novinky.PostedDate.ToString("yyyy-MM-dd")</span>
                                     <h5 class="mt-2">@novinky.Title</h5>
                                     <p>@novinky.Comment</p>
-                                    <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@novinky.Id" class="btn btn-info btn-sm">Číst více »</a>
+                                    <a asp-controller="Home" asp-action="ProductDetails" asp-route-id="@novinky.Id" class="btn btn-info-custom btn-sm">Číst více »</a>
                                 </div>
                             </div>
                         }
