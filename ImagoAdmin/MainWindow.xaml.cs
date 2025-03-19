@@ -185,7 +185,7 @@ namespace ImagoAdmin {
                     else {
                         url = selectedPage.Url;
                     }
-                    await SavePageHtmlToDatabase("https://localhost:7090" + url, selectedPage.Id);
+                    await SavePageHtmlToDatabase("http://test.imagodt.cz" + url, selectedPage.Id);
 
                     var entries = DictionaryEntryForText.GetEntriesForEditind(selectedPage.Id);
                     EntryList.ItemsSource = entries;
