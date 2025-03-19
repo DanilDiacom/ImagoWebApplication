@@ -53,6 +53,9 @@ namespace ImagoWebApplication.Controllers {
             var styles = TextStyle.GetAllStyles();
             ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
         }
+
+
+
         public IActionResult DeviceDiacom(int id)
         {
             SetViewBagEntrie(id);

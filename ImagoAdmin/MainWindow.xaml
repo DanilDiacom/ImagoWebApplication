@@ -69,7 +69,9 @@
         </StackPanel>
 
         <!-- Центральная панель (WebView2) -->
-        <wv2:WebView2 Name="webView" Grid.Column="1" Source="http://test.imagodt.cz/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+        <wv2:WebView2 Name="webView" Grid.Column="1" Source="https://localhost:7090/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+
+        <!--<wv2:WebView2 Name="webView" Grid.Column="1" Source="http://test.imagodt.cz/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>-->
 
         <!-- Правая панель -->
         <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">

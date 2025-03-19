@@ -31,10 +31,20 @@
                         <div class="box-in-logo-container">
                             <div class="contact-items">
                                 <div class="contact-item phone">
-                                    <span>+420 602 411 872</span>
+                                    @if (ViewBag.GlobalEntries.ContainsKey("uvod_PhoneNumber"))
+                                    {
+                                        <span data-key="uvod_PhoneNumber">
+                                            @ViewBag.GlobalEntries["uvod_PhoneNumber"]
+                                        </span>
+                                    }
                                 </div>
                                 <div class="contact-item email">
-                                    <a href="mailto:imagodt@imagodt.cz" title="imagodt@imagodt.cz">imagodt@imagodt.cz</a>
+                                    @if (ViewBag.GlobalEntries.ContainsKey("uvod_Email"))
+                                    {
+                                        <a href="mailto:imagodt@imagodt.cz" data-key="uvod_Email">
+                                            @ViewBag.GlobalEntries["uvod_Email"]
+                                        </a>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -122,11 +132,22 @@
                 <!-- Контактная информация -->
                 <div class="col-md-8 col-12 contact-info" style="margin-left:5px;">
                     <div class="contact-items">
+
                         <div class="contact-item phone">
-                            <span>+420 602 411 872</span>
+                            @if (ViewBag.GlobalEntries.ContainsKey("uvod_PhoneNumber"))
+                            {
+                                <span data-key="uvod_PhoneNumber">
+                                    @ViewBag.GlobalEntries["uvod_PhoneNumber"]
+                                </span>
+                            }
                         </div>
                         <div class="contact-item email">
-                            <a href="mailto:imagodt@imagodt.cz" title="imagodt@imagodt.cz" style="color: #fff;">imagodt@imagodt.cz</a>
+                            @if (ViewBag.GlobalEntries.ContainsKey("uvod_Email"))
+                            {
+                                <a href="mailto:imagodt@imagodt.cz" style="color: #fff;" data-key="uvod_Email">
+                                    @ViewBag.GlobalEntries["uvod_Email"]
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
