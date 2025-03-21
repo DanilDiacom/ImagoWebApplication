@@ -1,0 +1,6 @@
+﻿<Project Sdk="WixToolset.Sdk/5.0.2">
+	<PropertyGroup>
+		<!-- Указываем путь к директории с файлами -->
+		<DefineConstants>Path_CMP_Root=$(ProjectDir)../ImagoAdmin/bin/Release/net6.0-windows/</DefineConstants>
+	</PropertyGroup>
+</Project>

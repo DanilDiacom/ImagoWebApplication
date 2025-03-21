@@ -6,8 +6,26 @@ body {
     min-height: 100vh;
 }
 
+/* ”бедитесь, что html и body занимают 100% высоты */
 html, body {
     height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ќсновной контент должен раст€гиватьс€ */
+.main-content {
+    flex: 1;
+}
+
+/* ‘утер остаетс€ внизу */
+#box-footer {
+    background-color: #1d4f99;
+    color: #fff;
+    padding: 16px 0;
+    width: 100%;
+    margin-top: auto; /* Ёто важно дл€ Flexbox */
 }
 
 #content {

@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+	<!-- Определение переменных -->
+	<?define ProductUpgradeCode="e5439534-3536-4aa5-8ba6-5e2ed6c47d57" ?>
+	<?define ProductLanguage=1033 ?>
+	<?define ProductName="ImagoAdmin" ?>
+	<?define ProductManufacturer="DC Tech" ?>
+	<?define Icon="favicon.ico" ?>
+	<?define InfoURL="https://yourcompany.com/" ?>
+	<?define VersionNumber="!(bind.FileVersion.F_ImagoAdmin.exe)" ?>
+	<?define Path_CMP_Root="../ImagoAdmin/bin/Release/net6.0-windows/" ?>
+
+	<!-- Основной пакет -->
+	<Package Name="ImagoMSI" Language="$(var.ProductLanguage)" Version="$(var.VersionNumber)" Manufacturer="$(var.ProductManufacturer)" UpgradeCode="$(var.ProductUpgradeCode)" InstallerVersion="400">
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+		<!-- Иконка для Add/Remove Programs -->
+		<Icon Id="icon.exe" SourceFile="$(var.Icon)" />
+		<Property Id="ARPPRODUCTICON" Value="icon.exe" />
+		<Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
+		<Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />
+		<Property Id="ARPHELPLINK" Value="$(var.InfoURL)" />
+
+		<!-- Основной функционал -->
+		<Feature Id="ProductFeature" Title="Imago admin" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Package>
+
+	<!-- Структура директорий -->
+	<Fragment>
+		<StandardDirectory Id="ProgramFiles6432Folder">
+			<Directory Id="INSTALLFOLDER" Name="!(bind.Property.Manufacturer) !(bind.Property.ProductName)" />
+		</StandardDirectory>
+
+		<StandardDirectory Id="DesktopFolder" />
+		<StandardDirectory Id="ProgramMenuFolder">
+			<Directory Id="HealthycomMenuFolder" Name="Healthycom">
+				<Directory Id="ProductMenuFolder" Name="hcAdmin" />
+			</Directory>
+		</StandardDirectory>
+	</Fragment>
+
+	<!-- Компоненты и файлы -->
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="CMP_Root" Guid="E98D7552-EEEB-4EEC-BE1A-3E5680C77943">
+				<File Id="F_ImagoAdmin.exe" Source="$(var.Path_CMP_Root)ImagoAdmin.exe" />
+				<File Id="F_ImagoAdmin.dll" Source="$(var.Path_CMP_Root)ImagoAdmin.dll" />
+				<File Id="F_ImagoAdmin.deps.json" Source="$(var.Path_CMP_Root)ImagoAdmin.deps.json" />
+				<File Id="F_ImagoAdmin.runtimeconfig.json" Source="$(var.Path_CMP_Root)ImagoAdmin.runtimeconfig.json" />
+
+				<!-- Ярлыки -->
+				<Shortcut Id="SHORTCUT_Desktop_ImagoAdmin" Directory="DesktopFolder" Name="Imago admin"
+						  WorkingDirectory="INSTALLFOLDER" Target="[#F_ImagoAdmin.exe]" />
+				<Shortcut Id="SHORTCUT_Menu_ImagoAdmin" Directory="ProductMenuFolder" Name="Imago admin"
+						  WorkingDirectory="INSTALLFOLDER" Target="[#F_ImagoAdmin.exe]" />
+
+				<!-- Регистрация программы в реестре -->
+				<RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.ProductName)"
+							   Name="installed" Type="integer" Value="1" KeyPath="yes" />
+				<RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.ProductName)"
+							   Name="InstallPath" Type="string" Value="[INSTALLFOLDER]" />
+
+				<!-- Удаление папок при деинсталляции -->
+				<RemoveFolder Id="RemoveProductMenuFolder" Directory="ProductMenuFolder" On="uninstall" />
+				<RemoveFolder Id="RemoveHealthycomMenuFolder" Directory="HealthycomMenuFolder" On="uninstall" />
+			</Component>
+
+			<!-- Добавьте здесь другие компоненты, если у вас есть дополнительные файлы -->
+		</ComponentGroup>
+	</Fragment>
+
+</Wix>

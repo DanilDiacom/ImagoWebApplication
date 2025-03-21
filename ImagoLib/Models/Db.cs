@@ -19,9 +19,9 @@ namespace ImagoLib.Models {
             conString.TrustServerCertificate = true;
 #else
             conString.DataSource = "diacom.technology";
-            conString.UserID = "healthycom";
-            conString.Password = "5a~oAG@MiD@w";
-            conString.InitialCatalog = "healthycom";
+            conString.UserID = "imagodt";
+            conString.Password = "C9uUR28bRV";
+            conString.InitialCatalog = "imagodt";
             conString.TrustServerCertificate = true;
 #endif
             var db = new SqlConnection(conString.ConnectionString);
