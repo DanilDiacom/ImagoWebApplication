@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace ImagoLib.Models {

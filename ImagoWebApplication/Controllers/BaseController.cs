@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.ObjectModel;
+using Microsoft.Data.SqlClient;
 
 public abstract class BaseController : Controller {
     public override void OnActionExecuting(ActionExecutingContext context) {

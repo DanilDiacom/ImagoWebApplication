@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace ImagoLib.Models {
     public partial class NovinyFoto : ObservableObject {

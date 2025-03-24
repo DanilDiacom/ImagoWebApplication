@@ -144,12 +144,11 @@
         <div class="container-contact">
             <div class="contact-form">
                 <h2 class="form-title">Napište nám</h2>
-                <form id="contactForm" method="post" action="/Contact/SendEmail" novalidate>
+
+                <form id="contactForm" novalidate>
                     <div class="alert alert-info">
                         Pole označená <span class="star">*</span> jsou povinná.
                     </div>
-
-                    <input type="hidden" name="do" value="contactForm-submit">
 
                     <div class="form-row">
                         <label for="frm-contactForm-name">Kontaktní osoba <span class="star">*</span></label>
@@ -175,58 +174,116 @@
                     </div>
 
                     <div class="form-row form-submit">
-                        <input type="submit" name="_submit" class="btn-contact" id="frm-contactForm-submit" value="Odeslat">
+                        <button type="submit" class="btn-contact">Odeslat</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <script>
-            document.getElementById('contactForm').addEventListener('submit', function(event) {
+                document.getElementById('contactForm').addEventListener('submit', function(event) {event.preventDefault();
+
+                // Очистка предыдущих ошибок
+                document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+                // Проверка полей
+                const name = document.getElementById('frm-contactForm-name').value.trim();
+                const email = document.getElementById('frm-contactForm-email').value.trim();
+                const text = document.getElementById('frm-contactForm-text').value.trim();
                 let isValid = true;
 
-                // Очистить предыдущие ошибки
-                document.getElementById('name-error').textContent = '';
-                document.getElementById('email-error').textContent = '';
-                document.getElementById('text-error').textContent = '';
-
-                // Проверка полей на пустоту
-                let nameField = document.getElementById('frm-contactForm-name');
-                let emailField = document.getElementById('frm-contactForm-email');
-                let textField = document.getElementById('frm-contactForm-text');
-
                 // Проверка имени
-                if (!nameField.value.trim()) {
+                if (!name) {
                     document.getElementById('name-error').textContent = 'Kontaktní osoba je povinná.';
-                    nameField.classList.add('is-invalid');
+                    document.getElementById('frm-contactForm-name').classList.add('is-invalid');
                     isValid = false;
-                } else {
-                    nameField.classList.remove('is-invalid');
                 }
 
                 // Проверка email
-                if (!emailField.value.trim()) {
-                        document.getElementById('email-error').textContent = 'E-mailová adresa je povinná.';
-                        emailField.classList.add('is-invalid');
-                        isValid = false;
-                } else {
-                        emailField.classList.remove('is-invalid');
-                }
-
-                // Проверка сообщения
-                if (!textField.value.trim()) {
-                    document.getElementById('text-error').textContent = 'Zpráva je povinná.';
-                    textField.classList.add('is-invalid');
+                const emailRegex = new RegExp('^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+                if (!email) {
+                    document.getElementById('email-error').textContent = 'E-mailová adresa je povinná.';
+                    document.getElementById('frm-contactForm-email').classList.add('is-invalid');
                     isValid = false;
-                } else {
-                    textField.classList.remove('is-invalid');
+                } else if (!emailRegex.test(email)) {
+                    document.getElementById('email-error').textContent = 'Zadejte platnou e-mailovou adresu.';
+                    document.getElementById('frm-contactForm-email').classList.add('is-invalid');
+                    isValid = false;
                 }
 
-                // Если форма невалидна, не отправляем
-                if (!isValid) {
-                    event.preventDefault();
+                // Проверка текста сообщения
+                if (!text) {
+                    document.getElementById('text-error').textContent = 'Zpráva je povinná.';
+                    document.getElementById('frm-contactForm-text').classList.add('is-invalid');
+                    isValid = false;
                 }
+
+                if (!isValid) {
+                    return;
+                }
+
+                const formData = new FormData(this);
+
+                fetch('/Contact/SendEmail', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(result => {
+                    if (result === "true") {
+                        showTopNotification('success', 'Úspěch!', 'Vaše zpráva byla úspěšně odeslána!');
+                        this.reset();
+                    } else {
+                        showTopNotification('error', 'Chyba', 'Nastala chyba při odesílání zprávy.');
+                    }
+                })
+                .catch(error => {
+                    showTopNotification('error', 'Chyba', 'Nastala neočekávaná chyba: ' + error.message);
+                });
             });
+
+            // Функция для показа уведомлений
+            function showTopNotification(type, title, message) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                  
+                    <div class="notification-content">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <div class="notification-progress"></div>
+                `;
+
+                document.body.appendChild(notification);
+
+                // Анимация появления
+                setTimeout(() => notification.classList.add('show'), 10);
+
+                // Автоматическое закрытие через 5 секунд
+                const timer = setTimeout(() => {
+                    closeNotification();
+                }, 6500);
+
+                // // Закрытие по клику на крестик
+                // notification.querySelector('.notification-close').addEventListener('click', closeNotification);
+
+                // Закрытие при клике в любом месте уведомления
+                notification.addEventListener('click', (e) => {
+                    if (e.target === notification) {
+                        closeNotification();
+                    }
+                });
+
+                function closeNotification() {
+                    clearTimeout(timer);
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }
+            }
         </script>
 
         <div class="map-container">
@@ -242,6 +299,7 @@
                 overflow: hidden;
                 border-radius: 10px;
             }
+
         </style>
     </div>
 </section>

@@ -17,6 +17,7 @@ public class HomeController : BaseController {
         ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
 
     }
+
     private void SetViewHomeBagStyles() {
         var styles = TextStyle.GetAllStyles();
         ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
@@ -32,7 +33,6 @@ public class HomeController : BaseController {
 
         ViewBag.Images = images;
     }
-
 
     public IActionResult Index() {
         SetViewHomeBagEntries();

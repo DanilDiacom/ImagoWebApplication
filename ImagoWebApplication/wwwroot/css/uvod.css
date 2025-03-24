@@ -413,3 +413,83 @@ textarea.form-control {
     .btn-contact:hover {
         background-color: #2980b9;
     }
+
+
+.notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    .notification.show {
+        top: 20px;
+        opacity: 1;
+        border: 2px solid #0000
+    }
+
+    .notification.success {
+        border-left: 4px solid #4CAF50;
+    }
+
+    .notification.error {
+        border-left: 4px solid #F44336;
+    }
+
+.notification-content {
+    padding: 16px 24px;
+}
+
+.notification-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.notification-message {
+    font-size: 14px;
+    color: #666;
+}
+
+.notification-progress {
+    height: 4px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+    .notification-progress::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: #4CAF50;
+        animation: progress 5s linear forwards;
+    }
+
+.notification.error .notification-progress::after {
+    background: #F44336;
+}
+
+@keyframes progress {
+    0% {
+        width: 100%;
+    }
+
+    100% {
+        width: 0%;
+    }
+}
