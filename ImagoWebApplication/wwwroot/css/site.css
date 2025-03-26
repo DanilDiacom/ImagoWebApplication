@@ -294,9 +294,20 @@ html, body {
     }
 
     .footer-menu ul {
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: column; /* Элементы в столбик */
+        align-items: center; /* Центрирование по горизонтали */
+        gap: 10px; /* Уменьшаем расстояние между пунктами */
     }
+
+        .footer-menu ul li {
+            display: block; /* Каждый пункт на новой строке */
+            margin: 5px 0; /* Отступы между пунктами */
+        }
+
+            .footer-menu ul li a {
+                padding: 5px 0; /* Уменьшаем отступы для ссылок */
+                font-size: 15px; /* Уменьшаем размер шрифта */
+            }
 
         
     .contact-items {

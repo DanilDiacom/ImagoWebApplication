@@ -1,137 +1,82 @@
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 	<!-- Project defines -->
-	<?define ProductUpgradeCode="ce94df53-0e8e-4909-8137-cb8e788c63b7" ?>
-	<?define ProductLanguage=1033 ?>
-	<?define ProductName="ImagoAdmin" ?>
-	<?define ProductManufacturer="ImagoDT s.r.o" ?>
-	<?define InfoURL="http://test.imagodt.cz/" ?>
-	<?define Icon="../ImagoAdmin/bin/Release/net6.0-windows/win-x64/publish/favicon.ico" ?>
+	<?define ProductUpgradeCode="ce94df53-0e8e-4909-8137-cb8e788c63b7"?>
+	<?define ProductLanguage=1033?>
+	<?define ProductName="ImagoAdmin"?>
+	<?define ProductManufacturer="ImagoDT s.r.o"?>
+	<?define InfoURL="http://test.imagodt.cz/"?>
+	<?define Icon="../ImagoAdmin/bin/Release/net6.0-windows/favicon.ico"?>
+	<?define PublishDir="../ImagoAdmin/bin/Release/net6.0-windows/"?>
 
-	<?define PublishDir ="../ImagoAdmin/bin/Release/net6.0-windows/"?>
+	<Package Name="ImagoInstaller" Language="1033" Version="1.0.0.0"
+             Manufacturer="$(var.ProductManufacturer)" UpgradeCode="$(var.ProductUpgradeCode)"
+             InstallerVersion="400">
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
+		<MediaTemplate EmbedCab="yes" CompressionLevel="high"/>
 
-
-	<Package Name="ImagoInstaller" Language="1033" Version="1.0.0.0" Manufacturer="$(var.ProductManufacturer)" UpgradeCode="$(var.ProductUpgradeCode)" InstallerVersion="400">
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+		<!-- Добавляем условие для проверки WebView2 -->
+		<Property Id="WEBVIEW2INSTALLED">
+			<RegistrySearch Id="WebView2Installed"
+                           Root="HKLM"
+                           Key="SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+                           Name="pv"
+                           Type="raw" />
+		</Property>
 
 		<Feature Id="ProductFeature" Title="Imago admin" Level="1">
-			<ComponentGroupRef Id="ApplicationComponents" />
+			<ComponentGroupRef Id="ApplicationComponents"/>
+			<ComponentRef Id="DesktopShortcutComponent" />
+			<ComponentRef Id="StartMenuShortcutComponent" />
 		</Feature>
 
-		<Icon Id="icon.exe" SourceFile="$(var.Icon)" />
+		<Icon Id="icon.exe" SourceFile="$(var.Icon)"/>
 
-		<!-- Set properties for add/remove programs -->
-		<Property Id="ARPPRODUCTICON" Value="icon.exe" />
-		<Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
-		<Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />
-		<Property Id="ARPHELPLINK" Value="$(var.InfoURL)" />
+		<Property Id="ARPPRODUCTICON" Value="icon.exe"/>
+		<Property Id="ARPNOREPAIR" Value="yes" Secure="yes"/>
+		<Property Id="ARPNOMODIFY" Value="yes" Secure="yes"/>
+		<Property Id="ARPHELPLINK" Value="$(var.InfoURL)"/>
 	</Package>
 
 	<Fragment>
-		<StandardDirectory Id="DesktopFolder" />
-		<StandardDirectory Id="ProgramMenuFolder">
-			<Directory Id="ImagoMenuFolder" Name="ImagoDT">
-				<Directory Id="ImagoProductMenuFolder" Name="ImagoAdmin" />
-			</Directory>
-		</StandardDirectory>
+		<!-- Основные директории -->
 		<StandardDirectory Id="ProgramFiles64Folder">
-			<Directory Id="ImagoProgramFilesFolder" Name="ImagoDT">
-				<Directory Id="INSTALLFOLDER" Name="ImagoAdmin">
-					<Directory Id="dir_cs" Name="cs" />
-					<Directory Id="dir_de" Name="de" />
-					<Directory Id="dir_es" Name="es" />
-					<Directory Id="dir_fr" Name="fr" />
-					<Directory Id="dir_it" Name="it" />
-					<Directory Id="dir_ja" Name="ja" />
-					<Directory Id="dir_ko" Name="ko" />
-					<Directory Id="dir_pl" Name="pl" />
-					<Directory Id="dir_ptBR" Name="pt-BR" />
-					<Directory Id="dir_ru" Name="ru" />
-					<Directory Id="dir_tr" Name="tr" />
-					<Directory Id="dir_zhHans" Name="zh-Hans" />
-					<Directory Id="dir_zhHant" Name="zh-Hant" />
-					<Directory Name="runtimes">
-						<Directory Name="unix">
-							<Directory Name="lib">
-								<Directory Id="runtimes_unix_lib_net6" Name="net6.0" />
-							</Directory>
-						</Directory>
-						<Directory Name="win">
-							<Directory Name="lib">
-								<Directory Id="runtimes_win_lib_net6" Name="net6.0" />
-							</Directory>
-						</Directory>
-						<Directory Name="win-arm">
-							<Directory Id="runtimes_winarm_native" Name="native" />
-						</Directory>
-						<Directory Name="win-arm64">
-							<Directory Id="runtimes_winarm64_native" Name="native" />
-						</Directory>
-						<Directory Name="win-x64">
-							<Directory Id="runtimes_win64_native" Name="native" />
-						</Directory>
-						<Directory Name="win-x86">
-							<Directory Id="runtimes_win86_native" Name="native" />
-						</Directory>
-					</Directory>
-				</Directory>
-			</Directory>
+			<Directory Id="INSTALLFOLDER" Name="$(var.ProductName)"/>
 		</StandardDirectory>
+
+		<!-- Директория для меню Пуск -->
+		<StandardDirectory Id="ProgramMenuFolder">
+			<Directory Id="ProgramMenuDir" Name="$(var.ProductName)"/>
+		</StandardDirectory>
+
+		<!-- Директория рабочего стола -->
+		<StandardDirectory Id="DesktopFolder"/>
 	</Fragment>
 
-
 	<Fragment>
-		<ComponentGroup Id="ApplicationComponents">
+		<!-- Ярлык на рабочем столе -->
+		<Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="*">
+			<Shortcut Id="DesktopShortcut"
+                      Name="$(var.ProductName)"
+                      Description="$(var.ProductName)"
+                      Target="[INSTALLFOLDER]ImagoAdmin.exe"
+                      WorkingDirectory="INSTALLFOLDER"
+                      Icon="icon.exe"/>
+			<RegistryValue Root="HKCU" Key="Software\$(var.ProductManufacturer)\$(var.ProductName)"
+                          Name="DesktopShortcutInstalled" Type="integer" Value="1" KeyPath="yes"/>
+		</Component>
 
-			<Component Id="CMP_runtimes_unix_lib_net6" Guid="214CDCB4-E9B1-456D-A2FC-3DC6AC3B90BC" Directory="runtimes_unix_lib_net6">
-				<File Id="F_runtimes_unix_lib_net6_System.Data.SqlClient.dll" Source="$(var.PublishDir)runtimes/unix/lib/net6.0/System.Data.SqlClient.dll" />
-			</Component>
-
-			<Component Id="CMP_runtimes_win_lib_net6" Guid="A66E90CF-B43B-4F9B-9903-A848AFB748E6" Directory="runtimes_win_lib_net6">
-				<File Id="F_runtimes_win_lib_net6_System.Data.SqlClient.dll" Source="$(var.PublishDir)runtimes/win/lib/net6.0/System.Data.SqlClient.dll" />
-				<File Id="F_runtimes_win_lib_net6_System.Text.Encoding.CodePages.dll" Source="$(var.PublishDir)runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.dll" />
-			</Component>
-
-			<Component Id="CMP_runtimes_winarm64_native" Guid="E26BAA89-47CF-40D8-93D8-CCA617DAD506" Directory="runtimes_winarm64_native">
-				<File Id="F_runtimes_winarm64_native_WebView2Loader.dll" Source="$(var.PublishDir)runtimes/win-arm64/native/WebView2Loader.dll" />
-			</Component>
-
-			<Component Id="CMP_runtimes_win64_native" Guid="6B9A23A5-6258-460B-B5DB-7237464870FD" Directory="runtimes_win64_native">
-				<File Id="F_runtimes_winx64_native_WebView2Loader.dll" Source="$(var.PublishDir)runtimes/win-x64/native/WebView2Loader.dll" />
-			</Component>
-
-			<Component Id="CMP_runtimes_win86_native" Guid="1160085B-4BFF-4443-B061-369A2117B2C7" Directory="runtimes_win86_native">
-				<File Id="F_runtimes_winx86_native_WebView2Loader.dll" Source="$(var.PublishDir)runtimes/win-x86/native/WebView2Loader.dll" />
-			</Component>
-
-
-			<Component Id="CMP_ImagoAdmin" Guid="E98D7552-EEEB-4EEC-BE1A-3E5680C77943" Directory="INSTALLFOLDER">
-				<File Id="F_ImagoAdmin.exe" Source="$(var.PublishDir)ImagoAdmin.exe"/>
-				<File Id="F_ImagoAdmin.dll" Source="$(var.PublishDir)ImagoAdmin.dll" />
-				<File Id="F_ImagoLib.dll" Source="$(var.PublishDir)ImagoLib.dll" />
-				<File Id="F_ImagoLib.pdb" Source="$(var.PublishDir)ImagoLib.pdb" />
-				<File Id="F_ImagoAdmin.pdb" Source="$(var.PublishDir)ImagoAdmin.pdb" />
-				<File Id="F_ImagoAdmin.runtimeconfig.json" Source="$(var.PublishDir)ImagoAdmin.runtimeconfig.json" />
-				<File Id="F_ImagoAdmin.deps.json" Source="$(var.PublishDir)ImagoAdmin.deps.json" />
-				<File Id="F_Microsoft.Web.WebView2.Core.dll" Source="$(var.PublishDir)Microsoft.Web.WebView2.Core.dll" />
-				<File Id="F_Microsoft.Web.WebView2.Wpf.dll" Source="$(var.PublishDir)Microsoft.Web.WebView2.Wpf.dll" />
-				<File Id="F_Microsoft.Web.WebView2.Core.xml" Source="$(var.PublishDir)Microsoft.Web.WebView2.Core.xml" />
-				<File Id="F_Microsoft.Web.WebView2.Wpf.xml" Source="$(var.PublishDir)Microsoft.Web.WebView2.Wpf.xml" />
-
-				<File Id="F_System.Data.SqlClient.dll" Source="$(var.PublishDir)System.Data.SqlClient.dll" />
-				
-				<File Id="F_Azure.Core.dll" Source="$(var.PublishDir)Azure.Core.dll" />
-				<File Id="F_Azure.Identity.dll" Source="$(var.PublishDir)Azure.Identity.dll" />
-				<Shortcut Id="SHORTCUT_Desktop_ImagoAdmin" Directory="DesktopFolder" Name="ImagoAdmin" WorkingDirectory="INSTALLFOLDER" Target="[#F_ImagoAdmin.exe]" />
-				<Shortcut Id="SHORTCUT_Menu_ImagoAdmin" Directory="ImagoProductMenuFolder" Name="ImagoAdmin" WorkingDirectory="INSTALLFOLDER" Target="[#F_ImagoAdmin.exe]" />
-
-				<RegistryValue Root="HKCU" Key="Software\Microsoft\[ProductName]" Name="installed" Type="integer" Value="1" KeyPath="yes" />
-				<RegistryValue Root="HKCU" Key="Software\Microsoft\[ProductName]" Name="InstallPath" Type="string" Value="[INSTALLFOLDER]" />
-
-				<RemoveFolder Id="ImagoProductMenuFolder" Directory="ImagoProductMenuFolder" On="uninstall" />
-				<RemoveFolder Id="ImagoMenuFolder" Directory="ImagoMenuFolder" On="uninstall" />
-			</Component>
-		</ComponentGroup>
+		<!-- Ярлык в меню Пуск -->
+		<Component Id="StartMenuShortcutComponent" Directory="ProgramMenuDir" Guid="*">
+			<Shortcut Id="StartMenuShortcut"
+                      Name="$(var.ProductName)"
+                      Description="$(var.ProductName)"
+                      Target="[INSTALLFOLDER]ImagoAdmin.exe"
+                      WorkingDirectory="INSTALLFOLDER"
+                      Icon="icon.exe"/>
+			<RemoveFolder Id="RemoveProgramMenuDir" Directory="ProgramMenuDir" On="uninstall"/>
+			<RegistryValue Root="HKCU" Key="Software\$(var.ProductManufacturer)\$(var.ProductName)"
+                          Name="StartMenuShortcutInstalled" Type="integer" Value="1" KeyPath="yes"/>
+		</Component>
 	</Fragment>
 </Wix>

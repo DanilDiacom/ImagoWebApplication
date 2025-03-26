@@ -27,92 +27,70 @@ namespace ImagoAdmin {
         private bool _isProcessingSelectionChange = false;
 
         public MainWindow() {
-            try {
-                InitializeComponent();
-                PagesList = Pages.GetPagesHierarchy() ?? new ObservableCollection<Pages>();
-                DataContext = this;
+            InitializeComponent();
+            PagesList = Pages.GetPagesHierarchy();
+            DataContext = this;
 
-                TextEditor.TextChanged += (s, args) => {
-                    try {
-                        if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
-                            var task = UpdateWebViewContent(selectedEntry.EntryKey, TextEditor.Text);
-                            isContentModified = true;
-                        }
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при изменении текста: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                };
+            TextEditor.TextChanged += (s, args) => {
+                if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
+                    Task task = UpdateWebViewContent(selectedEntry.EntryKey, TextEditor.Text);
+                    isContentModified = true;
+                }
+            };
 
-                DictionaryEntryForText.SyncEditingDictionary();
-                DictionaryEntryForImages.SyncEditingDictionary();
-            }
-            catch (Exception ex) {
-                MessageBox.Show($"Ошибка при инициализации: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            DictionaryEntryForText.SyncEditingDictionary();
+            DictionaryEntryForImages.SyncEditingDictionary();
         }
 
         private async Task LoadPageFromDatabase(int pageId) {
-            try {
-                var pageContent = ContentForPage.GetPageContent(pageId);
-                if (pageContent == null) {
-                    MessageBox.Show("Содержимое страницы не найдено", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+            var pageContent = ContentForPage.GetPageContent(pageId);
+            if (pageContent == null) return;
 
-                string pageHtml = pageContent.ContentText;
-                var entries = DictionaryEntryForText.GetEntriesForEditind(pageId);
+            string pageHtml = pageContent.ContentText;
 
-                if (entries == null) {
-                    MessageBox.Show("Не удалось загрузить записи для редактирования", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+            var entries = DictionaryEntryForText.GetEntriesForEditind(pageId);
 
-                foreach (var entry in entries) {
-                    pageHtml = pageHtml.Replace($"data-key=\"{entry.EntryKey}\"></", $"data-key=\"{entry.EntryKey}\">{entry.ContentText}</");
-                }
-
-                isContentModified = false;
-                TextEditor.Clear();
-
-                if (webView?.CoreWebView2 == null) {
-                    MessageBox.Show("WebView не инициализирован", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                string script = $"document.documentElement.innerHTML = `{pageHtml.Replace("`", "\\`")}`;";
-                await webView.CoreWebView2.ExecuteScriptAsync(script);
-
-                string disableNavScript = @"var nav = document.querySelector('.navbar-custom');
-                    if (nav) { nav.style.pointerEvents = 'none'; }";
-                await webView.CoreWebView2.ExecuteScriptAsync(disableNavScript);
-
-                string disableFooterScript = @"var footer = document.getElementById('box-bottom-container');
-                    if (footer) { footer.style.pointerEvents = 'none'; }";
-                await webView.CoreWebView2.ExecuteScriptAsync(disableFooterScript);
-
-                var entriesFoto = DictionaryEntryForImages.GetEntriesForEditing(pageId);
-                if (entriesFoto != null) {
-                    PhotoList.ItemsSource = entriesFoto;
-                }
+            foreach (var entry in entries) {
+                pageHtml = pageHtml.Replace($"data-key=\"{entry.EntryKey}\"></", $"data-key=\"{entry.EntryKey}\">{entry.ContentText}</");
             }
-            catch (Exception ex) {
-                MessageBox.Show($"Ошибка при загрузке страницы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+
+            isContentModified = false;
+            TextEditor.Clear();
+
+
+            string script = $"document.documentElement.innerHTML = `{pageHtml.Replace("`", "\\`")}`;";
+            await webView.CoreWebView2.ExecuteScriptAsync(script);
+
+
+
+            string disableNavScript = @"
+                var nav = document.querySelector('.navbar-custom');
+                if (nav) {
+                    nav.style.pointerEvents = 'none';
+                }
+            ";
+            await webView.CoreWebView2.ExecuteScriptAsync(disableNavScript);
+
+
+
+            string disableFooterScript = @"
+                var footer = document.getElementById('box-bottom-container');
+                if (footer) {
+                    footer.style.pointerEvents = 'none';
+                }
+            ";
+            await webView.CoreWebView2.ExecuteScriptAsync(disableFooterScript);
+
+
+
+            var entriesFoto = DictionaryEntryForImages.GetEntriesForEditing(pageId);
+            PhotoList.ItemsSource = entriesFoto;
         }
 
         private async Task SavePageHtmlToDatabase(string pageUrl, int pageId) {
-            try {
-                using (HttpClient client = new HttpClient()) {
-                    string pageHtml = await client.GetStringAsync(pageUrl);
-                    if (!string.IsNullOrEmpty(pageHtml)) {
-                        ContentForPage.SaveContent(pageId, pageHtml);
-                    }
-                }
-            }
-            catch (Exception ex) {
-                MessageBox.Show($"Ошибка при сохранении страницы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            HttpClient client = new HttpClient();
+            string pageHtml = await client.GetStringAsync(pageUrl);
+            ContentForPage.SaveContent(pageId, pageHtml);
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e) {
@@ -138,29 +116,14 @@ namespace ImagoAdmin {
 
 
         private async Task<string> GetWebViewHtmlAsync() {
-            try {
-                if (webView?.CoreWebView2 == null) {
-                    MessageBox.Show("WebView не инициализирован 2", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return string.Empty;
-                }
+            string script = $"document.documentElement.innerHTML";
+            var htmlContent = await webView.CoreWebView2.ExecuteScriptAsync(script);
 
-                string script = "document.documentElement.innerHTML";
-                var htmlContent = await webView.CoreWebView2.ExecuteScriptAsync(script);
+            htmlContent = htmlContent.Trim('"');
 
-                if (string.IsNullOrEmpty(htmlContent)) {
-                    MessageBox.Show("Не удалось получить содержимое страницы", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return string.Empty;
-                }
+            var unescapedHtml = System.Text.RegularExpressions.Regex.Unescape(htmlContent);
 
-                htmlContent = htmlContent.Trim('"');
-                var unescapedHtml = System.Text.RegularExpressions.Regex.Unescape(htmlContent);
-
-                return unescapedHtml;
-            }
-            catch (Exception ex) {
-                MessageBox.Show($"Ошибка при получении HTML: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return string.Empty;
-            }
+            return unescapedHtml;
         }
 
         private void PublishButton_Click(object sender, RoutedEventArgs e) {
@@ -186,85 +149,47 @@ namespace ImagoAdmin {
 
             try {
                 if (isContentModified) {
-                    var result = MessageBox.Show(
-                        "Máte neuložené změny na této stránce. Pokud se rozhodnete přejít na jinou stránku, vaše změny nebudou uloženy. Chcete pokračovat?",
-                        "Varování",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Warning);
+                    var result = MessageBox.Show("Máte neuložené změny na této stránce. Pokud se rozhodnete přejít na jinou stránku, vaše změny nebudou uloženy. Chcete pokračovat?", "Varování", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-                    if (result == MessageBoxResult.No) {
-                        _isTransitionCancelled = true;
-                        return;
-                    }
+                    if (result == MessageBoxResult.No) { _isTransitionCancelled = true; return; }
                 }
 
                 if (e.NewValue is Pages selectedPage && selectedPage.Url != "#") {
                     pageId = selectedPage.Id;
                     pageName = selectedPage.Title;
 
-                    // Установка видимости элементов управления
-                    try {
-                        AddMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
-                        lv_Meeting.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
-                        EditMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
-                        DeleteMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+                    AddMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+                    lv_Meeting.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+                    EditMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+                    DeleteMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
 
-                        AddNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                        lv_Noviny.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                        EditNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                        DeleteNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при обновлении интерфейса: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AddNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                    lv_Noviny.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                    EditNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                    DeleteNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+
+                    if (selectedPage.Id == 38) {
+                        LoadMeetingList();
                     }
 
-                    try {
-                        if (selectedPage.Id == 38) {
-                            LoadMeetingList();
-                        }
-
-                        if (selectedPage.Id == 8) {
-                            LoadNovinkyList();
-                        }
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    if (selectedPage.Id == 8) {
+                        LoadNovinkyList();
                     }
 
-                    try {
-                        await LoadPageFromDatabase(selectedPage.Id);
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при загрузке страницы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    await LoadPageFromDatabase(selectedPage.Id);
 
-                    try {
-                        string url;
-                        if (selectedPage.ParentId == 5 || selectedPage.Id == 5) {
-                            url = $"{selectedPage.Url}?id={selectedPage.Id}";
-                        }
-                        else {
-                            url = selectedPage.Url;
-                        }
+                    string url;
+                    if (selectedPage.ParentId == 5 || selectedPage.Id == 5) {
+                        url = $"{selectedPage.Url}?id={selectedPage.Id}";
+                    }
+                    else {
+                        url = selectedPage.Url;
+                    }
+                    //await SavePageHtmlToDatabase("https://localhost:7090" + url, selectedPage.Id);
+                    await SavePageHtmlToDatabase("http://test.imagodt.cz" + url, selectedPage.Id);
 
-                        await SavePageHtmlToDatabase("http://imagodt.cz" + url, selectedPage.Id);
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при сохранении HTML: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-
-                    try {
-                        var entries = DictionaryEntryForText.GetEntriesForEditind(selectedPage.Id);
-                        if (entries != null) {
-                            EntryList.ItemsSource = entries;
-                        }
-                        else {
-                            MessageBox.Show("Не удалось загрузить записи для редактирования", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        }
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при загрузке записей: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
+                    var entries = DictionaryEntryForText.GetEntriesForEditind(selectedPage.Id);
+                    EntryList.ItemsSource = entries;
 
                     previousEntry = null;
                     isContentModified = false;
