@@ -7,6 +7,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
+	  <WebView2LoaderPreference>embedded</WebView2LoaderPreference>
+	  <SelfContained>false</SelfContained>
+	  <PublishSingleFile>false</PublishSingleFile>
+	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	  <PlatformTarget>x64</PlatformTarget>
+	  <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,10 +29,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="squirrel.windows" Version="2.0.1" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.3" />
     <PackageReference Include="System.Security.Permissions" Version="9.0.3" />
-    <PackageReference Include="WebView2.Runtime.X64" Version="134.0.3124.72" />
+    <PackageReference Include="WebView2.Runtime.X64" Version="134.0.3124.93" />
     <PackageReference Include="WiX.Toolset.2015" Version="3.10.0.1503" />
   </ItemGroup>
 
@@ -39,5 +46,11 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+	
+	<ItemGroup>
+		<Content Include="runtimes\win-x64\native\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>

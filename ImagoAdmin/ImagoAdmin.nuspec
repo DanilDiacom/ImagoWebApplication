@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ImagoAdmin</id>
+    <version>1.0.0</version> <!-- Меняй при каждом обновлении! -->
+    <authors>ImagoDT s.r.o</authors>
+    <description>ImagoAdmin</description>
+    <icon>favicon.png</icon>
+     <packageTypes>
+    <packageType name="Squirrel" />
+  </packageTypes>
+  </metadata>
+ <files>
+  <file src="bin\Release\net6.0-windows\win-x64\*.exe" target="lib\net45\" />
+  <file src="bin\Release\net6.0-windows\win-x64\*.dll" target="lib\net45\" />
+
+   <file src="favicon.png" target="" />
+
+ <file src="tools\*.ps1" target="tools\" />
+  <file src="tools\*.cmd" target="tools\" />
+
+  <file src="bin\Release\net6.0-windows\win-x64\*.json" target="lib\net45\" />
+  <file src="bin\Release\net6.0-windows\win-x64\*.xml" target="lib\net45\" />
+  <file src="bin\Release\net6.0-windows\win-x64\runtimes\**" target="lib\net45\runtimes\" />
+</files>
+</package>

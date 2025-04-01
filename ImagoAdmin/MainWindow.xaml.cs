@@ -9,6 +9,7 @@ using System.Windows.Media;
 using SkiaSharp;
 using System.Security.Policy;
 using System.Diagnostics;
+using Microsoft.Web.WebView2.Core;
 
 namespace ImagoAdmin {
     public partial class MainWindow : Window {
@@ -29,6 +30,7 @@ namespace ImagoAdmin {
         public MainWindow() {
             try {
                 InitializeComponent();
+                InitializeAsync();
                 PagesList = Pages.GetPagesHierarchy() ?? new ObservableCollection<Pages>();
                 DataContext = this;
 
@@ -49,6 +51,39 @@ namespace ImagoAdmin {
             }
             catch (Exception ex) {
                 MessageBox.Show($"Ошибка при инициализации: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void InitializeAsync() {
+            try {
+                string webView2DataPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "ImagoAdmin",
+                    "WebView2Data"
+                );
+
+                if (!Directory.Exists(webView2DataPath)) {
+                    Directory.CreateDirectory(webView2DataPath);
+                }
+
+                var env = await CoreWebView2Environment.CreateAsync(
+                    browserExecutableFolder: null,
+                    userDataFolder: webView2DataPath
+                );
+
+                await webView.EnsureCoreWebView2Async(env);
+                // Явная загрузка начальной страницы
+                webView.CoreWebView2.Navigate("https://imagodt.cz");
+
+                if (webView.CoreWebView2 != null) {
+                    webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+                    webView.CoreWebView2.Settings.IsZoomControlEnabled = false;
+                    webView.CoreWebView2.Settings.AreDevToolsEnabled = false;
+
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"Ошибка инициализации WebView2: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -247,7 +282,7 @@ namespace ImagoAdmin {
                             url = selectedPage.Url;
                         }
 
-                        await SavePageHtmlToDatabase("http://imagodt.cz" + url, selectedPage.Id);
+                        await SavePageHtmlToDatabase("https://imagodt.cz" + url, selectedPage.Id);
                     }
                     catch (Exception ex) {
                         MessageBox.Show($"Ошибка при сохранении HTML: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);

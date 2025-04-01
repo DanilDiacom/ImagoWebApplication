@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagoLib", "ImagoLib\ImagoL
 EndProject
 Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "ImagoInstaller", "ImagoInstaller\ImagoInstaller.wixproj", "{38E6D0C9-4A44-431B-8C06-72EE11F2149D}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ImagoAdmin.Installer", "ImagoAdminInstaller\ImagoAdminInstaller.vdproj", "{CC89EA79-150D-43BA-8595-7C06296BB2E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,14 @@ Global
 		{38E6D0C9-4A44-431B-8C06-72EE11F2149D}.Release|x64.Build.0 = Release|x64
 		{38E6D0C9-4A44-431B-8C06-72EE11F2149D}.Release|x86.ActiveCfg = Release|x86
 		{38E6D0C9-4A44-431B-8C06-72EE11F2149D}.Release|x86.Build.0 = Release|x86
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Debug|Any CPU.ActiveCfg = Debug
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Debug|ARM64.ActiveCfg = Debug
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Debug|x64.ActiveCfg = Debug
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Debug|x86.ActiveCfg = Debug
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Release|Any CPU.ActiveCfg = Release
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Release|ARM64.ActiveCfg = Release
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Release|x64.ActiveCfg = Release
+		{CC89EA79-150D-43BA-8595-7C06296BB2E9}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
