@@ -2,25 +2,27 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>ImagoAdmin</id>
-    <version>1.0.0</version> <!-- Меняй при каждом обновлении! -->
+    <version>1.0.0</version>
+    <title>Imago Admin</title>
     <authors>ImagoDT s.r.o</authors>
-    <description>ImagoAdmin</description>
+    <owners>ImagoDT s.r.o</owners>
+    <description>Imago Administration Application</description>
     <icon>favicon.png</icon>
-     <packageTypes>
-    <packageType name="Squirrel" />
-  </packageTypes>
+    <copyright>Copyright © 2025 ImagoDT</copyright>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <packageTypes>
+      <packageType name="Squirrel" />
+    </packageTypes>
+    <releaseNotes>Initial release</releaseNotes>
   </metadata>
- <files>
-  <file src="bin\Release\net6.0-windows\win-x64\*.exe" target="lib\net45\" />
-  <file src="bin\Release\net6.0-windows\win-x64\*.dll" target="lib\net45\" />
-
-   <file src="favicon.png" target="" />
-
- <file src="tools\*.ps1" target="tools\" />
-  <file src="tools\*.cmd" target="tools\" />
-
-  <file src="bin\Release\net6.0-windows\win-x64\*.json" target="lib\net45\" />
-  <file src="bin\Release\net6.0-windows\win-x64\*.xml" target="lib\net45\" />
-  <file src="bin\Release\net6.0-windows\win-x64\runtimes\**" target="lib\net45\runtimes\" />
-</files>
+  <files>
+    <file src="bin\Release\net6.0-windows\win-x64\*.exe" target="lib\net6.0\" />
+    <file src="bin\Release\net6.0-windows\win-x64\*.dll" target="lib\net6.0\" />
+    <file src="bin\Release\net6.0-windows\win-x64\*.json" target="lib\net6.0\" />
+    <file src="bin\Release\net6.0-windows\win-x64\*.xml" target="lib\net6.0\" />
+    <file src="bin\Release\net6.0-windows\win-x64\runtimes\**" target="lib\net6.0\runtimes\" />
+    <file src="favicon.png" target="" />
+    <file src="tools\Uninstall.ps1" target="tools\" />
+    <file src="tools\Install.ps1" target="tools\" />
+  </files>
 </package>
