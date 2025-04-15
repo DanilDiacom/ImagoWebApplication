@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<item>
+	<version>1.1.0</version>
+	<url>https://github.com/DanilDiacom/ImagoWebApplication/releases/download/v1.1.0/ImagoAdminInstaller.msi</url>
+	<changelog>https://github.com/DanilDiacom/ImagoWebApplication/releases/tag/v1.1.0</changelog>
+	<mandatory>false</mandatory>
+</item>

@@ -134,6 +134,42 @@ namespace ImagoLib.Models {
             }
         }
 
+        public static void InsertEntryIfNotExists(DictionaryEntryForImages entry) {
+            using (var db = Db.Get()) {
+                var cmd = db.CreateCommand();
+                cmd.CommandText = @"
+            IF NOT EXISTS (
+                SELECT 1 FROM DictionaryEntriesImages WHERE PageId = @pageId AND [EntryKey] = @key
+            )
+            BEGIN
+                INSERT INTO DictionaryEntriesImages (PageId, [EntryKey], ImageUrl, ImageName)
+                VALUES (@pageId, @key, @imageData, @imageName)
+            END";
+
+                Db.SetParam(cmd, "@pageId", entry.PageId);
+                Db.SetParam(cmd, "@key", entry.EntryKey);
+                Db.SetParam(cmd, "@imageData", entry.ImageData);
+                Db.SetParam(cmd, "@imageName", entry.ImageName);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void DeleteEntriesImageByPageId(int pageId) {
+            using (var db = Db.Get()) {
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "DELETE FROM DictionaryEntriesImages WHERE PageId = @pageId";
+                Db.SetParam(cmd, "@pageId", pageId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+
+
+
+
         public static void UpdateImageForEditing(int pageId, string entryKey, byte[] imageData, string imageName) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();

@@ -13,6 +13,9 @@
 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	  <PlatformTarget>x64</PlatformTarget>
 	  <Prefer32Bit>false</Prefer32Bit>
+
+	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
+	  <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autoupdater.NET.Official" Version="1.9.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="9.0.30" />

@@ -8,7 +8,7 @@
         d:DataContext="{d:DesignInstance Type=models:Pages}"
         mc:Ignorable="d"
         Icon="favicon.ico"
-        Title="IMAGO Admin" Height="1000" Width="1200"
+        Height="1000" Width="1200"
         WindowState="Maximized" Background="#f0f0f0">
 
     <Window.Resources>
@@ -41,6 +41,8 @@
                 </TreeView.ItemTemplate>
             </TreeView>
             <Button Name="AddDeviceButton" Content="➕ Přidat přístroj" Click="AddDeviceButton_Click"/>
+            <Button Name="DeleteDeviceButton" Content="Odstranit přístroj" Click="DeleteDeviceButton_Click"/>
+
 
             <ListView Name="lv_Meeting" ItemsSource="{Binding MeetingList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
                 <ListView.View>

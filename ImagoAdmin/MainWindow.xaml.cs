@@ -10,6 +10,12 @@ using SkiaSharp;
 using System.Security.Policy;
 using System.Diagnostics;
 using Microsoft.Web.WebView2.Core;
+using System.Reflection;
+using System.Net;
+using NuGet.Common;
+using System.Text.Json;
+using System.Windows.Threading;
+using System.Text;
 
 namespace ImagoAdmin {
     public partial class MainWindow : Window {
@@ -27,12 +33,17 @@ namespace ImagoAdmin {
         private bool _isTransitionCancelled = false;
         private bool _isProcessingSelectionChange = false;
 
+        private readonly Dictionary<int, string> _pageCache = new();
+        private bool _isWebViewNavigating;
+
         public MainWindow() {
             try {
                 InitializeComponent();
                 InitializeAsync();
                 PagesList = Pages.GetPagesHierarchy() ?? new ObservableCollection<Pages>();
                 DataContext = this;
+
+                this.Title = $"IMAGO Admin v{Assembly.GetExecutingAssembly().GetName().Version}";
 
                 TextEditor.TextChanged += (s, args) => {
                     try {
@@ -48,9 +59,168 @@ namespace ImagoAdmin {
 
                 DictionaryEntryForText.SyncEditingDictionary();
                 DictionaryEntryForImages.SyncEditingDictionary();
+
+                CheckForUpdatesAsync().ConfigureAwait(false);
+                AddDeviceButton.Visibility = Visibility.Collapsed;
+                DeleteDeviceButton.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex) {
                 MessageBox.Show($"Ошибка при инициализации: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+        private const string GitHubRepo = "DanilDiacom/ImagoWebApplication";
+
+        public async Task CheckForUpdatesAsync() {
+            try {
+                if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()) {
+                    MessageBox.Show("Není připojení k internetu. Zkontrolujte síť.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                (string latestTag, string downloadUrl) = await GetLatestReleaseInfoAsync();
+
+                if (latestTag == null || downloadUrl == null) {
+                    return;
+                }
+
+                Version latestVersion = new Version(latestTag.TrimStart('v') + ".0");
+
+                if (latestVersion > currentVersion) {
+                    var result = MessageBox.Show(
+                        $"Je k dispozici nová verze {latestVersion}. Nainstalovat aktualizaci?",
+                        "Aktualizace",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes) {
+                        await DownloadAndInstallUpdate(downloadUrl);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"Chyba při kontrole aktualizací: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task<(string latestTag, string downloadUrl)> GetLatestReleaseInfoAsync() {
+            string apiUrl = $"https://api.github.com/repos/{GitHubRepo}/releases/latest";
+
+            using (var client = new HttpClient()) {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("ImagoAdmin-Updater/1.0");
+
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+                if (!response.IsSuccessStatusCode) return (null, null);
+
+                if (response.StatusCode == HttpStatusCode.NotFound) {
+                    return (null, null); // Нет релизов
+                }
+
+                string json = await response.Content.ReadAsStringAsync();
+                using (JsonDocument doc = JsonDocument.Parse(json)) {
+                    string tag = doc.RootElement.GetProperty("tag_name").GetString();
+                    foreach (var asset in doc.RootElement.GetProperty("assets").EnumerateArray()) {
+                        string fileName = asset.GetProperty("name").GetString();
+                        if (fileName.EndsWith(".msi")) return (tag, asset.GetProperty("browser_download_url").GetString());
+                    }
+                }
+            }
+            return (null, null);
+        }
+
+        public class DownloadProgressWindow : Window {
+            public ProgressBar ProgressBar { get; } = new ProgressBar { Minimum = 0, Maximum = 100, Height = 20 };
+            public TextBlock StatusText { get; } = new TextBlock { Margin = new Thickness(0, 10, 0, 0) };
+
+            public DownloadProgressWindow() {
+                Title = "Stahování aktualizace";
+                Width = 350;
+                Height = 160;
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+                var stackPanel = new StackPanel { Margin = new Thickness(10) };
+                stackPanel.Children.Add(ProgressBar);
+                stackPanel.Children.Add(StatusText);
+
+                Content = stackPanel;
+            }
+        }
+
+        private async Task DownloadAndInstallUpdate(string url) {
+            string tempFile = Path.Combine(Path.GetTempPath(), "ImagoAdmin_Update.msi");
+
+            try {
+                // Создаем окно прогресса
+                var progressWindow = new DownloadProgressWindow();
+                progressWindow.StatusText.Text = "Příprava stahování...";
+                progressWindow.Show();
+
+                using (var client = new HttpClient()) {
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("ImagoAdmin-Updater/1.0");
+
+                    using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead)) {
+                        response.EnsureSuccessStatusCode();
+
+                        var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+                        var receivedBytes = 0L;
+                        var buffer = new byte[8192];
+
+                        using (var contentStream = await response.Content.ReadAsStreamAsync())
+                        using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write)) {
+                            progressWindow.StatusText.Text = "Stahování aktualizace...";
+
+                            int bytesRead;
+                            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0) {
+                                await fs.WriteAsync(buffer, 0, bytesRead);
+
+                                receivedBytes += bytesRead;
+                                if (totalBytes > 0) {
+                                    var progressPercentage = (int)((double)receivedBytes / totalBytes * 100);
+                                    progressWindow.ProgressBar.Value = progressPercentage;
+                                    progressWindow.StatusText.Text = $"Staženo: {progressPercentage}% ({receivedBytes / 1024} KB / {totalBytes / 1024} KB)";
+                                }
+
+                                // Даем возможность обработать сообщения UI
+                                await Task.Delay(1);
+                                Application.Current.Dispatcher.Invoke(() => { }, DispatcherPriority.Background);
+                            }
+                        }
+                    }
+                }
+
+                progressWindow.StatusText.Text = "Instalace aktualizace...";
+                progressWindow.ProgressBar.IsIndeterminate = true;
+
+                Process process = new Process {
+                    StartInfo = new ProcessStartInfo {
+                        FileName = "msiexec",
+                        Arguments = $"/i \"{tempFile}\" /quiet",
+                        Verb = "runas",
+                        UseShellExecute = true
+                    }
+                };
+
+                process.Start();
+                await Task.Run(() => process.WaitForExit());
+
+                if (process.ExitCode == 0) {
+                    progressWindow.Close();
+                    Application.Current.Shutdown();
+                }
+                else {
+                    progressWindow.Close();
+                    MessageBox.Show($"Chyba instalace. Kód: {process.ExitCode}", "Chyba instalace", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"Chyba při stahování aktualizace: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally {
+                if (File.Exists(tempFile)) {
+                    try { File.Delete(tempFile); } catch { }
+                }
             }
         }
 
@@ -62,9 +232,7 @@ namespace ImagoAdmin {
                     "WebView2Data"
                 );
 
-                if (!Directory.Exists(webView2DataPath)) {
-                    Directory.CreateDirectory(webView2DataPath);
-                }
+                Directory.CreateDirectory(webView2DataPath);
 
                 var env = await CoreWebView2Environment.CreateAsync(
                     browserExecutableFolder: null,
@@ -72,68 +240,128 @@ namespace ImagoAdmin {
                 );
 
                 await webView.EnsureCoreWebView2Async(env);
-                // Явная загрузка начальной страницы
+
+                webView.CoreWebView2.NavigationCompleted += (s, e) =>
+                {
+                    _isWebViewNavigating = false;
+                };
+
                 webView.CoreWebView2.Navigate("https://imagodt.cz");
 
-                if (webView.CoreWebView2 != null) {
-                    webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
-                    webView.CoreWebView2.Settings.IsZoomControlEnabled = false;
-                    webView.CoreWebView2.Settings.AreDevToolsEnabled = false;
-
-                }
+                webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+                webView.CoreWebView2.Settings.IsZoomControlEnabled = false;
+                webView.CoreWebView2.Settings.AreDevToolsEnabled = false;
             }
             catch (Exception ex) {
-                MessageBox.Show($"Ошибка инициализации WebView2: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка инициализации WebView2: {ex.Message}");
             }
         }
 
         private async Task LoadPageFromDatabase(int pageId) {
             try {
-                var pageContent = ContentForPage.GetPageContent(pageId);
-                if (pageContent == null) {
-                    MessageBox.Show("Содержимое страницы не найдено", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                // 1. Проверяем кэш
+                if (!_pageCache.TryGetValue(pageId, out string pageHtml)) {
+                    var pageContent = await Task.Run(() => ContentForPage.GetPageContent(pageId));
+                    if (pageContent == null) {
+                        await Dispatcher.InvokeAsync(() =>
+                            MessageBox.Show("Содержимое страницы не найдено"));
+                        return;
+                    }
+                    pageHtml = pageContent.ContentText;
+                    _pageCache[pageId] = pageHtml;
                 }
 
-                string pageHtml = pageContent.ContentText;
-                var entries = DictionaryEntryForText.GetEntriesForEditind(pageId);
-
-                if (entries == null) {
-                    MessageBox.Show("Не удалось загрузить записи для редактирования", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                // 2. Обрабатываем HTML
+                var entries = await Task.Run(() => DictionaryEntryForText.GetEntriesForEditind(pageId));
+                if (entries != null) {
+                    pageHtml = ProcessHtmlWithEntries(pageHtml, entries);
                 }
 
-                foreach (var entry in entries) {
-                    pageHtml = pageHtml.Replace($"data-key=\"{entry.EntryKey}\"></", $"data-key=\"{entry.EntryKey}\">{entry.ContentText}</");
-                }
+                // 3. Обновляем UI
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    isContentModified = false;
+                    TextEditor.Clear();
+                });
 
-                isContentModified = false;
-                TextEditor.Clear();
-
-                if (webView?.CoreWebView2 == null) {
-                    MessageBox.Show("WebView не инициализирован", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                string script = $"document.documentElement.innerHTML = `{pageHtml.Replace("`", "\\`")}`;";
-                await webView.CoreWebView2.ExecuteScriptAsync(script);
-
-                string disableNavScript = @"var nav = document.querySelector('.navbar-custom');
-                    if (nav) { nav.style.pointerEvents = 'none'; }";
-                await webView.CoreWebView2.ExecuteScriptAsync(disableNavScript);
-
-                string disableFooterScript = @"var footer = document.getElementById('box-bottom-container');
-                    if (footer) { footer.style.pointerEvents = 'none'; }";
-                await webView.CoreWebView2.ExecuteScriptAsync(disableFooterScript);
-
-                var entriesFoto = DictionaryEntryForImages.GetEntriesForEditing(pageId);
-                if (entriesFoto != null) {
-                    PhotoList.ItemsSource = entriesFoto;
-                }
+                // 4. Загружаем в WebView с ожиданием стилей
+                await LoadHtmlToWebView(pageHtml, pageId);
             }
             catch (Exception ex) {
-                MessageBox.Show($"Ошибка при загрузке страницы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                await Dispatcher.InvokeAsync(() =>
+                    MessageBox.Show($"Ошибка при загрузке страницы: {ex.Message}"));
             }
+        }
+
+        private string ProcessHtmlWithEntries(string html, IEnumerable<DictionaryEntryForText> entries) {
+            var sb = new StringBuilder(html);
+            foreach (var entry in entries) {
+                sb.Replace(
+                    $"data-key=\"{entry.EntryKey}\"></",
+                    $"data-key=\"{entry.EntryKey}\">{entry.ContentText}</");
+            }
+            return sb.ToString();
+        }
+
+        private async Task LoadHtmlToWebView(string html, int pageId) {
+            if (webView?.CoreWebView2 == null) return;
+
+            // 1. Создаем временный файл HTML с полной структурой
+            string tempHtml = $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <base href='https://imagodt.cz/' />
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+</head>
+<body>
+    {html}
+</body>
+</html>";
+
+            // 2. Сохраняем во временный файл
+            string tempFile = Path.GetTempFileName() + ".html";
+            File.WriteAllText(tempFile, tempHtml, Encoding.UTF8);
+
+            // 3. Загружаем через Navigate
+            webView.CoreWebView2.Navigate($"file://{tempFile.Replace("\\", "/")}");
+
+            // 4. Ждем завершения загрузки
+            await WaitForPageLoad();
+
+            // 5. Блокируем навигационные элементы
+            string disableScript = @"
+        const disableElements = ['.navbar-custom', '#box-bottom-container'];
+        disableElements.forEach(selector => {
+            const el = document.querySelector(selector);
+            if (el) el.style.pointerEvents = 'none';
+        });";
+            await webView.CoreWebView2.ExecuteScriptAsync(disableScript);
+
+            // 6. Загружаем фото для редактирования
+            var entriesFoto = await Task.Run(() => DictionaryEntryForImages.GetEntriesForEditing(pageId));
+            await Dispatcher.InvokeAsync(() => PhotoList.ItemsSource = entriesFoto);
+        }
+
+        private async Task WaitForPageLoad() {
+            var tcs = new TaskCompletionSource<bool>();
+            EventHandler<CoreWebView2NavigationCompletedEventArgs> handler = null;
+
+            handler = (s, e) =>
+            {
+                webView.CoreWebView2.NavigationCompleted -= handler;
+                tcs.SetResult(e.IsSuccess);
+            };
+
+            webView.CoreWebView2.NavigationCompleted += handler;
+            await tcs.Task;
+        }
+
+        private string EscapeForJavascript(string str) {
+            return str.Replace("`", "\\`")
+                     .Replace("$", "\\$");
         }
 
         private async Task SavePageHtmlToDatabase(string pageUrl, int pageId) {
@@ -210,104 +438,94 @@ namespace ImagoAdmin {
         }
 
         private async void TreeView_SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-            if (e.NewValue == null)
-                return;
-
-            if (_isProcessingSelectionChange)
+            if (e.NewValue == null || _isProcessingSelectionChange || _isWebViewNavigating)
                 return;
 
             _isProcessingSelectionChange = true;
             _isTransitionCancelled = false;
-
             try {
-                if (isContentModified) {
-                    var result = MessageBox.Show(
-                        "Máte neuložené změny na této stránce. Pokud se rozhodnete přejít na jinou stránku, vaše změny nebudou uloženy. Chcete pokračovat?",
-                        "Varování",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Warning);
-
-                    if (result == MessageBoxResult.No) {
-                        _isTransitionCancelled = true;
-                        return;
-                    }
-                }
+                if (isContentModified && !await ConfirmDiscardChangesAsync())
+                    return;
 
                 if (e.NewValue is Pages selectedPage && selectedPage.Url != "#") {
-                    pageId = selectedPage.Id;
-                    pageName = selectedPage.Title;
-
-                    // Установка видимости элементов управления
-                    try {
-                        AddMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
-                        lv_Meeting.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
-                        EditMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
-                        DeleteMeetingButton.Visibility = selectedPage.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
-
-                        AddNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                        lv_Noviny.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                        EditNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                        DeleteNovinyButton.Visibility = selectedPage.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при обновлении интерфейса: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-
-                    try {
-                        if (selectedPage.Id == 38) {
-                            LoadMeetingList();
-                        }
-
-                        if (selectedPage.Id == 8) {
-                            LoadNovinkyList();
-                        }
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-
-                    try {
-                        await LoadPageFromDatabase(selectedPage.Id);
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при загрузке страницы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-
-                    try {
-                        string url;
-                        if (selectedPage.ParentId == 5 || selectedPage.Id == 5) {
-                            url = $"{selectedPage.Url}?id={selectedPage.Id}";
-                        }
-                        else {
-                            url = selectedPage.Url;
-                        }
-
-                        await SavePageHtmlToDatabase("https://imagodt.cz" + url, selectedPage.Id);
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при сохранении HTML: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-
-                    try {
-                        var entries = DictionaryEntryForText.GetEntriesForEditind(selectedPage.Id);
-                        if (entries != null) {
-                            EntryList.ItemsSource = entries;
-                        }
-                        else {
-                            MessageBox.Show("Не удалось загрузить записи для редактирования", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        }
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show($"Ошибка при загрузке записей: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-
-                    previousEntry = null;
-                    isContentModified = false;
+                    await LoadPageAsync(selectedPage);
                 }
             }
             finally {
                 _isProcessingSelectionChange = false;
             }
+        }
+
+        private async Task<bool> ConfirmDiscardChangesAsync() {
+            return await Dispatcher.InvokeAsync(() =>
+            {
+                var result = MessageBox.Show(
+                    "Máte neuložené změny na této stránce. Pokud se rozhodnete přejít na jinou stránku, vaše změny nebudou uloženy. Chcete pokračovat?",
+                    "Varování",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                return result == MessageBoxResult.Yes;
+            });
+        }
+
+        private async Task LoadPageAsync(Pages page) {
+            // 1. Обновляем UI элементов управления
+            UpdatePageControls(page);
+
+            // 2. Параллельно загружаем данные и контент
+            await Task.WhenAll(
+                LoadPageContentAsync(page),
+                LoadAdditionalDataAsync(page)
+            );
+        }
+
+        private void UpdatePageControls(Pages page) {
+            Dispatcher.Invoke(() =>
+            {
+                pageId = page.Id;
+                pageName = page.Title;
+
+                AddMeetingButton.Visibility = page.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+                lv_Meeting.Visibility = page.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+                EditMeetingButton.Visibility = page.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+                DeleteMeetingButton.Visibility = page.Id == 38 ? Visibility.Visible : Visibility.Collapsed;
+
+                AddNovinyButton.Visibility = page.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                lv_Noviny.Visibility = page.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                EditNovinyButton.Visibility = page.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+                DeleteNovinyButton.Visibility = page.Id == 8 ? Visibility.Visible : Visibility.Collapsed;
+
+                AddDeviceButton.Visibility = page.ParentId == 5 ? Visibility.Visible : Visibility.Collapsed;
+                DeleteDeviceButton.Visibility = page.ParentId == 5 ? Visibility.Visible : Visibility.Collapsed;
+
+
+                if (page.Id == 38) LoadMeetingList();
+                if (page.Id == 8) LoadNovinkyList();
+            });
+        }
+
+        private async Task LoadPageContentAsync(Pages page) {
+            // 1. Загружаем из БД
+            await LoadPageFromDatabase(page.Id);
+
+            // 2. Сохраняем резервную копию с сайта
+            try {
+                string url = (page.ParentId == 5 || page.Id == 5)
+                    ? $"{page.Url}?id={page.Id}"
+                    : page.Url;
+
+                await SavePageHtmlToDatabase($"https://imagodt.cz{url}", page.Id);
+            }
+            catch {
+                Debug.WriteLine("Не удалось сохранить резервную копию страницы");
+            }
+        }
+
+        private async Task LoadAdditionalDataAsync(Pages page) {
+            // Загружаем записи для редактирования
+            var entries = await Task.Run(() => DictionaryEntryForText.GetEntriesForEditind(page.Id));
+            await Dispatcher.InvokeAsync(() => EntryList.ItemsSource = entries);
         }
 
         private void LoadMeetingList() {
@@ -366,7 +584,7 @@ namespace ImagoAdmin {
         }
 
         private void ApplyStylesToControls(TextStyle style) {
-            if (style == null) return; 
+            if (style == null) return;
 
             if (FontFamilyComboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == style.FontFamily) is ComboBoxItem fontFamilyItem) {
                 FontFamilyComboBox.SelectedItem = fontFamilyItem;
@@ -439,33 +657,33 @@ namespace ImagoAdmin {
 
             if (selectedAttribute == "data-key") {
                 script = $@"
-            var element = document.querySelector('[data-key=""{key}""]');
-            if (element) {{
-                if (element.tagName === 'LI') {{
-                    var strongElement = element.querySelector('strong[data-key]');
-                    if (strongElement) {{
-                        strongElement.innerHTML = `{newText.Replace("`", "\\`")}`;
-                    }}
-                }} else {{
-                    element.innerHTML = `{newText.Replace("`", "\\`")}`;
+        var element = document.querySelector('[data-key=""{key}""]');
+        if (element) {{
+            if (element.tagName === 'LI') {{
+                var strongElement = element.querySelector('strong[data-key]');
+                if (strongElement) {{
+                    strongElement.innerHTML = `{newText.Replace("`", "\\`")}`;
                 }}
+            }} else {{
+                element.innerHTML = `{newText.Replace("`", "\\`")}`;
             }}
-        ";
+        }}
+    ";
             }
             else if (selectedAttribute == "data-value") {
                 script = $@"
-            var element = document.querySelector('[data-value=""{key}""]');
-            if (element) {{
-                if (element.tagName === 'LI') {{
-                    var valueElement = element.querySelector('span[data-value]');
-                    if (valueElement) {{
-                        valueElement.innerHTML = `{newText.Replace("`", "\\`")}`;
-                    }}
-                }} else {{
-                    element.innerHTML = `{newText.Replace("`", "\\`")}`;
+        var element = document.querySelector('[data-value=""{key}""]');
+        if (element) {{
+            if (element.tagName === 'LI') {{
+                var valueElement = element.querySelector('span[data-value]');
+                if (valueElement) {{
+                    valueElement.innerHTML = `{newText.Replace("`", "\\`")}`;
                 }}
+            }} else {{
+                element.innerHTML = `{newText.Replace("`", "\\`")}`;
             }}
-        ";
+        }}
+    ";
             }
             else {
                 return;
@@ -476,7 +694,7 @@ namespace ImagoAdmin {
 
         private async Task UpdateWebViewStyles(string key, TextStyle style) {
             if (string.IsNullOrEmpty(selectedAttribute)) {
-                return; 
+                return;
             }
 
             var fontFamily = style?.FontFamily ?? "Arial, sans-serif";
@@ -489,49 +707,49 @@ namespace ImagoAdmin {
 
             if (selectedAttribute == "data-key") {
                 script = $@"
-            var element = document.querySelector('[data-key=""{key}""]');
-            if (element) {{
-                if (element.tagName === 'LI') {{
-                    var strongElement = element.querySelector('strong[data-key]');
-                    if (strongElement) {{
-                        strongElement.style.fontFamily = '{fontFamily}';
-                        strongElement.style.fontSize = '{fontSize}';
-                        strongElement.style.fontWeight = '{fontWeight}';
-                        strongElement.style.fontStyle = '{fontStyle}';
-                        strongElement.style.textDecoration = '{textDecoration}';
-                    }}
-                }} else {{
-                    element.style.fontFamily = '{fontFamily}';
-                    element.style.fontSize = '{fontSize}';
-                    element.style.fontWeight = '{fontWeight}';
-                    element.style.fontStyle = '{fontStyle}';
-                    element.style.textDecoration = '{textDecoration}';
+        var element = document.querySelector('[data-key=""{key}""]');
+        if (element) {{
+            if (element.tagName === 'LI') {{
+                var strongElement = element.querySelector('strong[data-key]');
+                if (strongElement) {{
+                    strongElement.style.fontFamily = '{fontFamily}';
+                    strongElement.style.fontSize = '{fontSize}';
+                    strongElement.style.fontWeight = '{fontWeight}';
+                    strongElement.style.fontStyle = '{fontStyle}';
+                    strongElement.style.textDecoration = '{textDecoration}';
                 }}
+            }} else {{
+                element.style.fontFamily = '{fontFamily}';
+                element.style.fontSize = '{fontSize}';
+                element.style.fontWeight = '{fontWeight}';
+                element.style.fontStyle = '{fontStyle}';
+                element.style.textDecoration = '{textDecoration}';
             }}
-        ";
+        }}
+    ";
             }
             else if (selectedAttribute == "data-value") {
                 script = $@"
-            var element = document.querySelector('[data-value=""{key}""]');
-            if (element) {{
-                if (element.tagName === 'LI') {{
-                    var valueElement = element.querySelector('span[data-value]');
-                    if (valueElement) {{
-                        valueElement.style.fontFamily = '{fontFamily}';
-                        valueElement.style.fontSize = '{fontSize}';
-                        valueElement.style.fontWeight = '{fontWeight}';
-                        valueElement.style.fontStyle = '{fontStyle}';
-                        valueElement.style.textDecoration = '{textDecoration}';
-                    }}
-                }} else {{
-                    element.style.fontFamily = '{fontFamily}';
-                    element.style.fontSize = '{fontSize}';
-                    element.style.fontWeight = '{fontWeight}';
-                    element.style.fontStyle = '{fontStyle}';
-                    element.style.textDecoration = '{textDecoration}';
+        var element = document.querySelector('[data-value=""{key}""]');
+        if (element) {{
+            if (element.tagName === 'LI') {{
+                var valueElement = element.querySelector('span[data-value]');
+                if (valueElement) {{
+                    valueElement.style.fontFamily = '{fontFamily}';
+                    valueElement.style.fontSize = '{fontSize}';
+                    valueElement.style.fontWeight = '{fontWeight}';
+                    valueElement.style.fontStyle = '{fontStyle}';
+                    valueElement.style.textDecoration = '{textDecoration}';
                 }}
+            }} else {{
+                element.style.fontFamily = '{fontFamily}';
+                element.style.fontSize = '{fontSize}';
+                element.style.fontWeight = '{fontWeight}';
+                element.style.fontStyle = '{fontStyle}';
+                element.style.textDecoration = '{textDecoration}';
             }}
-        ";
+        }}
+    ";
             }
             else {
                 return;
@@ -542,7 +760,6 @@ namespace ImagoAdmin {
             await webView.CoreWebView2.ExecuteScriptAsync("");
         }
 
-        
         private async void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FontFamilyComboBox.SelectedItem is ComboBoxItem selectedItem) {
                 TextEditor.FontFamily = new FontFamily(selectedItem.Content.ToString());
@@ -737,8 +954,14 @@ namespace ImagoAdmin {
             }
         }
 
-        private void AddDeviceButton_Click(object sender, RoutedEventArgs e) {
+        private async void AddDeviceButton_Click(object sender, RoutedEventArgs e) {
+            AddNewDevice addNovinyWindow = new AddNewDevice();
+            bool? result = addNovinyWindow.ShowDialog();
 
+            if (result == true) {
+                PagesList = Pages.GetPagesHierarchy() ?? new ObservableCollection<Pages>();
+                await LoadPageFromDatabase(pageId);
+            }
         }
 
         private async void AddNovinyButton_Click(object sender, RoutedEventArgs e) {
@@ -771,6 +994,50 @@ namespace ImagoAdmin {
                 MessageBox.Show("Informace o novém produktu byly odstraněny", "Dokončeno", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 LoadNovinkyList();
+            }
+        }
+
+        private void DeleteDeviceButton_Click(object sender, RoutedEventArgs e) {
+            if (tvPageList.SelectedItem is Pages selectedPage) {
+                if (selectedPage.ParentId == 5) {
+                    var result = MessageBox.Show($"Opravdu chcete smazat vybraný přístroj '{selectedPage.Title}'?",
+                                              "Potvrzení smazání",
+                                              MessageBoxButton.YesNo,
+                                              MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes) {
+                        try {
+                            bool success = Pages.DeletePageWithDependencies(selectedPage.Id);
+
+                            if (success) {
+                                PagesList = Pages.GetPagesHierarchy() ?? new ObservableCollection<Pages>();
+                                tvPageList.ItemsSource = PagesList;
+                                MessageBox.Show("Vybraný přístroj byl úspěšně odstraněn.", "Hotovo",
+                                              MessageBoxButton.OK,
+                                              MessageBoxImage.Information);
+                            }
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show($"Nastala chyba při odstraňování: {ex.Message}",
+                                          "Chyba",
+                                          MessageBoxButton.OK,
+                                          MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else {
+                    MessageBox.Show("Tuto stránku nelze odstranit, protože není v seznamu přístrojů.\n" +
+                                  "Lze mazat pouze přístroje označené speciální kategorií (ParentId = 5).",
+                                  "Nelze smazat",
+                                  MessageBoxButton.OK,
+                                  MessageBoxImage.Warning);
+                }
+            }
+            else {
+                MessageBox.Show("Pro odstranění musíte nejprve vybrat přístroj ze seznamu.",
+                               "Není vybrán přístroj",
+                               MessageBoxButton.OK,
+                               MessageBoxImage.Exclamation);
             }
         }
     }

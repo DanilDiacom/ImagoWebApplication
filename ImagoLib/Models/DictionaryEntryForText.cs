@@ -99,6 +99,38 @@ namespace ImagoLib.Models {
             return null;
         }
 
+        public static void InsertEntryIfNotExists(DictionaryEntryForText entry) {
+            using (var db = Db.Get()) {
+                var cmd = db.CreateCommand();
+                cmd.CommandText = @"
+            IF NOT EXISTS (
+                SELECT 1 FROM DictionaryEntries WHERE PageId = @pageId AND [EntryKey] = @key
+            )
+            BEGIN
+                INSERT INTO DictionaryEntries (PageId, [EntryKey], ContentText)
+                VALUES (@pageId, @key, @textValue)
+            END";
+
+                Db.SetParam(cmd, "@pageId", entry.PageId);
+                Db.SetParam(cmd, "@key", entry.EntryKey);
+                Db.SetParam(cmd, "@textValue", entry.ContentText);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void DeleteEntriesByPageId(int pageId) {
+            using (var db = Db.Get()) {
+                var cmd = db.CreateCommand();
+                cmd.CommandText = "DELETE FROM DictionaryEntries WHERE PageId = @pageId";
+                Db.SetParam(cmd, "@pageId", pageId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+
 
 
 
