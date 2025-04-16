@@ -154,21 +154,22 @@
                     </StackPanel>
 
                     <!-- Цвет текста -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Barva textu:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
-                        <ComboBox Name="TextColorComboBox" Width="200" SelectionChanged="TextColorComboBox_SelectionChanged">
-                            <ComboBoxItem Content="Černá"/>
-                            <ComboBoxItem Content="Červená"/>
-                            <ComboBoxItem Content="Zelená"/>
-                            <ComboBoxItem Content="Modrá"/>
-                            <ComboBoxItem Content="Žlutá"/>
-                            <ComboBoxItem Content="Oranžová"/>
-                            <ComboBoxItem Content="Fialová"/>
-                            <ComboBoxItem Content="Šedá"/>
-                        </ComboBox>
-                    </StackPanel>
-
-                    <!-- Кнопки сохранения и публикации -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBlock Text="Barva textu:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                            <ComboBox Name="TextColorComboBox" Width="200" SelectionChanged="TextColorComboBox_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="20" Height="20" Margin="0,0,5,0" CornerRadius="10"
+                        Background="{Binding ColorBrush}"/>
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    
+                        <!-- Кнопки сохранения и публикации -->
                     <Button Name="SaveButton" Content="💾 Uložit změny" Click="SaveButton_Click" Margin="0,10,0,5"/>
                     <Button Name="PublishButton" Content="📤 Publikovat" Click="PublishButton_Click" Margin="0,5,0,10"/>
                 </StackPanel>

@@ -62,7 +62,8 @@
            font-size: @(headerStyle?.FontSize ?? "inherit")px;
            font-weight: @(headerStyle?.FontWeight ?? "normal");
            font-style: @(headerStyle?.FontStyle ?? "normal");
-           text-decoration: @(headerStyle?.TextDecoration ?? "none");">
+           text-decoration: @(headerStyle?.TextDecoration ?? "none");
+            color: @(headerStyle?.TextColor ?? "#000000");">
                         @ViewBag.Entries["uvod_header"]
                     </h2>
                 }
@@ -76,7 +77,8 @@
         font-size: @(textStyle?.FontSize ?? "inherit")px;
         font-weight: @(textStyle?.FontWeight ?? "normal");
         font-style: @(textStyle?.FontStyle ?? "normal");
-        text-decoration: @(textStyle?.TextDecoration ?? "none");">
+        text-decoration: @(textStyle?.TextDecoration ?? "none");
+        color: @(textStyle?.TextColor ?? "#000000");">
                         <p>
                             @ViewBag.Entries["uvod_text"]
                         </p>
@@ -133,7 +135,8 @@
         font-size: @(textStyle?.FontSize ?? "inherit")px;
         font-weight: @(textStyle?.FontWeight ?? "normal");
         font-style: @(textStyle?.FontStyle ?? "normal");
-        text-decoration: @(textStyle?.TextDecoration ?? "none");">
+        text-decoration: @(textStyle?.TextDecoration ?? "none");
+        color: @(textStyle?.TextColor ?? "#000000");">
                     <p>
                         @ViewBag.Entries["uvod_secondText"]
                     </p>

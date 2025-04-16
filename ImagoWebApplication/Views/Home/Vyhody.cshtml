@@ -8,13 +8,13 @@
             @if (ViewBag.Entries.ContainsKey("DiacomClub_Benefits_Title"))
             {
                 var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Benefits_Title") ? ViewBag.TextStyles["DiacomClub_Benefits_Title"] : null;
-                <h1 class="page-title" style="text-align:center; margin-top: 20px;
+                <h1 class="page-title" data-key="DiacomClub_Benefits_Title" style="text-align:center; margin-top: 20px;
                     font-family: @(titleStyle?.FontFamily ?? "Arial");
-                    font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                    font-size: @(titleStyle?.FontSize ?? "2.5rem")px;
                     font-weight: @(titleStyle?.FontWeight ?? "600");
                     font-style: @(titleStyle?.FontStyle ?? "normal");
-                    text-decoration: @(titleStyle?.TextDecoration ?? "none");"
-                    data-key="DiacomClub_Benefits_Title">
+                    text-decoration: @(titleStyle?.TextDecoration ?? "none");
+                    color: @(titleStyle?.TextColor ?? "#333");">
                     @ViewBag.Entries["DiacomClub_Benefits_Title"]
                 </h1>
             }
@@ -29,19 +29,22 @@
                         <div>
                             <h3 style="
                                 font-family: @(benefit1TitleStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit1TitleStyle?.FontSize ?? "1.2rem");
+                                font-size: @(benefit1TitleStyle?.FontSize ?? "1.2rem")px;
                                 font-weight: @(benefit1TitleStyle?.FontWeight ?? "600");
                                 font-style: @(benefit1TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit1TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit1TitleStyle?.TextDecoration ?? "none");
+                                color: @(benefit1TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit1_Title">
                                 @ViewBag.Entries["DiacomClub_Benefit1_Title"]
                             </h3>
                             <p style="
                                 font-family: @(benefit1DescStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit1DescStyle?.FontSize ?? "1rem");
+                                font-size: @(benefit1DescStyle?.FontSize ?? "1rem")px;
                                 font-weight: @(benefit1DescStyle?.FontWeight ?? "400");
                                 font-style: @(benefit1DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit1DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit1DescStyle?.TextDecoration ?? "none");
+                                color: @(benefit1DescStyle?.TextColor ?? "#333");"
+
                                data-key="DiacomClub_Benefit1_Desc">
                                 @ViewBag.Entries["DiacomClub_Benefit1_Desc"]
                             </p>
@@ -58,19 +61,21 @@
                         <div>
                             <h3 style="
                                 font-family: @(benefit2TitleStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit2TitleStyle?.FontSize ?? "1.2rem");
+                                font-size: @(benefit2TitleStyle?.FontSize ?? "1.2rem")px;
                                 font-weight: @(benefit2TitleStyle?.FontWeight ?? "600");
                                 font-style: @(benefit2TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit2TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit2TitleStyle?.TextDecoration ?? "none");
+color: @(benefit2TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit2_Title">
                                 @ViewBag.Entries["DiacomClub_Benefit2_Title"]
                             </h3>
                             <p style="
                                 font-family: @(benefit2DescStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit2DescStyle?.FontSize ?? "1rem");
+                                font-size: @(benefit2DescStyle?.FontSize ?? "1rem")px;
                                 font-weight: @(benefit2DescStyle?.FontWeight ?? "400");
                                 font-style: @(benefit2DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit2DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit2DescStyle?.TextDecoration ?? "none");
+color: @(benefit2DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit2_Desc">
                                 @ViewBag.Entries["DiacomClub_Benefit2_Desc"]
                             </p>
@@ -87,19 +92,21 @@
                         <div>
                             <h3 style="
                                 font-family: @(benefit3TitleStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit3TitleStyle?.FontSize ?? "1.2rem");
+                                font-size: @(benefit3TitleStyle?.FontSize ?? "1.2rem")px;
                                 font-weight: @(benefit3TitleStyle?.FontWeight ?? "600");
                                 font-style: @(benefit3TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit3TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit3TitleStyle?.TextDecoration ?? "none");
+                                color: @(benefit3TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit3_Title">
                                 @ViewBag.Entries["DiacomClub_Benefit3_Title"]
                             </h3>
                             <p style="
                                 font-family: @(benefit3DescStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit3DescStyle?.FontSize ?? "1rem");
+                                font-size: @(benefit3DescStyle?.FontSize ?? "1rem")px;
                                 font-weight: @(benefit3DescStyle?.FontWeight ?? "400");
                                 font-style: @(benefit3DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit3DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit3DescStyle?.TextDecoration ?? "none");
+color: @(benefit3DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit3_Desc">
                                 @ViewBag.Entries["DiacomClub_Benefit3_Desc"]
                             </p>
@@ -116,19 +123,21 @@
                         <div>
                             <h3 style="
                                 font-family: @(benefit4TitleStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit4TitleStyle?.FontSize ?? "1.2rem");
+                                font-size: @(benefit4TitleStyle?.FontSize ?? "1.2rem")px;
                                 font-weight: @(benefit4TitleStyle?.FontWeight ?? "600");
                                 font-style: @(benefit4TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit4TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit4TitleStyle?.TextDecoration ?? "none");
+                                color: @(benefit4TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit4_Title">
                                 @ViewBag.Entries["DiacomClub_Benefit4_Title"]
                             </h3>
                             <p style="
                                 font-family: @(benefit4DescStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit4DescStyle?.FontSize ?? "1rem");
+                                font-size: @(benefit4DescStyle?.FontSize ?? "1rem")px;
                                 font-weight: @(benefit4DescStyle?.FontWeight ?? "400");
                                 font-style: @(benefit4DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit4DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit4DescStyle?.TextDecoration ?? "none");
+color: @(benefit4DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit4_Desc">
                                 @ViewBag.Entries["DiacomClub_Benefit4_Desc"]
                             </p>
@@ -145,19 +154,21 @@
                         <div>
                             <h3 style="
                                 font-family: @(benefit5TitleStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit5TitleStyle?.FontSize ?? "1.2rem");
+                                font-size: @(benefit5TitleStyle?.FontSize ?? "1.2rem")px;
                                 font-weight: @(benefit5TitleStyle?.FontWeight ?? "600");
                                 font-style: @(benefit5TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit5TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit5TitleStyle?.TextDecoration ?? "none");
+                                color: @(benefit5TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit5_Title">
                                 @ViewBag.Entries["DiacomClub_Benefit5_Title"]
                             </h3>
                             <p style="
                                 font-family: @(benefit5DescStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit5DescStyle?.FontSize ?? "1rem");
+                                font-size: @(benefit5DescStyle?.FontSize ?? "1rem")px;
                                 font-weight: @(benefit5DescStyle?.FontWeight ?? "400");
                                 font-style: @(benefit5DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit5DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit5DescStyle?.TextDecoration ?? "none");
+color: @(benefit5DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit5_Desc">
                                 @ViewBag.Entries["DiacomClub_Benefit5_Desc"]
                             </p>
@@ -174,19 +185,21 @@
                         <div>
                             <h3 style="
                                 font-family: @(benefit6TitleStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit6TitleStyle?.FontSize ?? "1.2rem");
-                                font-weight: @(benefit6TitleStyle?.FontWeight ?? "600");
+                                font-size: @(benefit6TitleStyle?.FontSize ?? "1.2rem")px;
+                                font-weight: @(benefit6TitleStyle?.FontWeight ?? "600")px;
                                 font-style: @(benefit6TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit6TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit6TitleStyle?.TextDecoration ?? "none");
+                                color: @(benefit6TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit6_Title">
                                 @ViewBag.Entries["DiacomClub_Benefit6_Title"]
                             </h3>
                             <p style="
                                 font-family: @(benefit6DescStyle?.FontFamily ?? "Arial");
-                                font-size: @(benefit6DescStyle?.FontSize ?? "1rem");
+                                font-size: @(benefit6DescStyle?.FontSize ?? "1rem")px;
                                 font-weight: @(benefit6DescStyle?.FontWeight ?? "400");
                                 font-style: @(benefit6DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(benefit6DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(benefit6DescStyle?.TextDecoration ?? "none");
+                                color: @(benefit6DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit6_Desc">
                                 @ViewBag.Entries["DiacomClub_Benefit6_Desc"]
                             </p>

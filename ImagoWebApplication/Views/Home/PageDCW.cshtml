@@ -11,10 +11,11 @@
                 <header class="page-header">
                     <h1 class="page-title text-center" style="
                         font-family: @(titleStyle?.FontFamily ?? "Arial");
-                        font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                        font-size: @(titleStyle?.FontSize ?? "2.5rem")px;
                         font-weight: @(titleStyle?.FontWeight ?? "600");
                         font-style: @(titleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(titleStyle?.TextDecoration ?? "none");
+                        color: @(titleStyle?.TextColor ?? "#212529");"
                         data-key="DiacomClub_DCW_Title">
                         @ViewBag.Entries["DiacomClub_DCW_Title"]
                     </h1>
@@ -28,19 +29,21 @@
                 <article class="experience-block">
                     <h2 class="experience-title" style="
                         font-family: @(firstTitleStyle?.FontFamily ?? "Arial");
-                        font-size: @(firstTitleStyle?.FontSize ?? "2rem");
+                        font-size: @(firstTitleStyle?.FontSize ?? "2rem")px;
                         font-weight: @(firstTitleStyle?.FontWeight ?? "600");
                         font-style: @(firstTitleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(firstTitleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(firstTitleStyle?.TextDecoration ?? "none");
+                        color: @(firstTitleStyle?.TextColor ?? "#007bff");"
                         data-key="DiacomClub_DCW_Content_First">
                         @ViewBag.Entries["DiacomClub_DCW_Content_First"]
                     </h2>
                     <p style="
                         font-family: @(firstNameStyle?.FontFamily ?? "Arial");
-                        font-size: @(firstNameStyle?.FontSize ?? "1rem");
+                        font-size: @(firstNameStyle?.FontSize ?? "1rem")px;
                         font-weight: @(firstNameStyle?.FontWeight ?? "400");
                         font-style: @(firstNameStyle?.FontStyle ?? "normal");
-                        text-decoration: @(firstNameStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(firstNameStyle?.TextDecoration ?? "none");
+color: @(firstNameStyle?.TextColor ?? "#212529");"
                        data-key="DiacomClub_DCW_Content_First_Name">
                         @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_First_Name"])
                     </p>
@@ -54,19 +57,21 @@
                 <article class="experience-block">
                     <h2 class="experience-title" style="
                         font-family: @(secondTitleStyle?.FontFamily ?? "Arial");
-                        font-size: @(secondTitleStyle?.FontSize ?? "2rem");
+                        font-size: @(secondTitleStyle?.FontSize ?? "2rem")px;
                         font-weight: @(secondTitleStyle?.FontWeight ?? "600");
                         font-style: @(secondTitleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(secondTitleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(secondTitleStyle?.TextDecoration ?? "none");
+ color: @(secondTitleStyle?.TextColor ?? "#007bff");"
                         data-key="DiacomClub_DCW_Content_Second">
                         @ViewBag.Entries["DiacomClub_DCW_Content_Second"]
                     </h2>
                     <p style="
                         font-family: @(secondNameStyle?.FontFamily ?? "Arial");
-                        font-size: @(secondNameStyle?.FontSize ?? "1rem");
+                        font-size: @(secondNameStyle?.FontSize ?? "1rem")px;
                         font-weight: @(secondNameStyle?.FontWeight ?? "400");
                         font-style: @(secondNameStyle?.FontStyle ?? "normal");
-                        text-decoration: @(secondNameStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(secondNameStyle?.TextDecoration ?? "none");
+color: @(secondNameStyle?.TextColor ?? "#212529");"
                        data-key="DiacomClub_DCW_Content_Second_Name">
                         @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Second_Name"])
                     </p>
@@ -80,19 +85,21 @@
                 <article class="experience-block">
                     <h2 class="experience-title" style="
                         font-family: @(thirdTitleStyle?.FontFamily ?? "Arial");
-                        font-size: @(thirdTitleStyle?.FontSize ?? "2rem");
+                        font-size: @(thirdTitleStyle?.FontSize ?? "2rem")px;
                         font-weight: @(thirdTitleStyle?.FontWeight ?? "600");
                         font-style: @(thirdTitleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(thirdTitleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(thirdTitleStyle?.TextDecoration ?? "none");
+ color: @(thirdTitleStyle?.TextColor ?? "#007bff");"
                         data-key="DiacomClub_DCW_Content_Third">
                         @ViewBag.Entries["DiacomClub_DCW_Content_Third"]
                     </h2>
                     <p style="
                         font-family: @(thirdTextStyle?.FontFamily ?? "Arial");
-                        font-size: @(thirdTextStyle?.FontSize ?? "1rem");
+                        font-size: @(thirdTextStyle?.FontSize ?? "1rem")px;
                         font-weight: @(thirdTextStyle?.FontWeight ?? "400");
                         font-style: @(thirdTextStyle?.FontStyle ?? "normal");
-                        text-decoration: @(thirdTextStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(thirdTextStyle?.TextDecoration ?? "none");
+color: @(thirdTextStyle?.TextColor ?? "#212529");"
                        data-key="DiacomClub_DCW_Content_Third_Text">
                         @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Third_Text"])
                     </p>
@@ -106,19 +113,21 @@
                 <article class="experience-block">
                     <h2 class="experience-title" style="
                         font-family: @(fourthTitleStyle?.FontFamily ?? "Arial");
-                        font-size: @(fourthTitleStyle?.FontSize ?? "2rem");
+                        font-size: @(fourthTitleStyle?.FontSize ?? "2rem")px;
                         font-weight: @(fourthTitleStyle?.FontWeight ?? "600");
                         font-style: @(fourthTitleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(fourthTitleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(fourthTitleStyle?.TextDecoration ?? "none");
+color: @(fourthTitleStyle?.TextColor ?? "#007bff");"
                         data-key="DiacomClub_DCW_Content_Fourth">
                         @ViewBag.Entries["DiacomClub_DCW_Content_Fourth"]
                     </h2>
                     <p style="
                         font-family: @(fourthTextStyle?.FontFamily ?? "Arial");
-                        font-size: @(fourthTextStyle?.FontSize ?? "1rem");
+                        font-size: @(fourthTextStyle?.FontSize ?? "1rem")px;
                         font-weight: @(fourthTextStyle?.FontWeight ?? "400");
                         font-style: @(fourthTextStyle?.FontStyle ?? "normal");
-                        text-decoration: @(fourthTextStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(fourthTextStyle?.TextDecoration ?? "none");
+color: @(fourthTextStyle?.TextColor ?? "#212529");"
                        data-key="DiacomClub_DCW_Content_Fourth_Text">
                         @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fourth_Text"])
                     </p>
@@ -132,19 +141,21 @@
                 <article class="experience-block">
                     <h2 class="experience-title" style="
                         font-family: @(fifthTitleStyle?.FontFamily ?? "Arial");
-                        font-size: @(fifthTitleStyle?.FontSize ?? "2rem");
+                        font-size: @(fifthTitleStyle?.FontSize ?? "2rem")px;
                         font-weight: @(fifthTitleStyle?.FontWeight ?? "600");
                         font-style: @(fifthTitleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(fifthTitleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(fifthTitleStyle?.TextDecoration ?? "none");
+color: @(fifthTitleStyle?.TextColor ?? "#007bff");"
                         data-key="DiacomClub_DCW_Content_Fifth">
                         @ViewBag.Entries["DiacomClub_DCW_Content_Fifth"]
                     </h2>
                     <p style="
                         font-family: @(fifthTextStyle?.FontFamily ?? "Arial");
-                        font-size: @(fifthTextStyle?.FontSize ?? "1rem");
+                        font-size: @(fifthTextStyle?.FontSize ?? "1rem")px;
                         font-weight: @(fifthTextStyle?.FontWeight ?? "400");
                         font-style: @(fifthTextStyle?.FontStyle ?? "normal");
-                        text-decoration: @(fifthTextStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(fifthTextStyle?.TextDecoration ?? "none");
+color: @(fifthTextStyle?.TextColor ?? "#212529");"
                        data-key="DiacomClub_DCW_Content_Fifth_Text">
                         @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Fifth_Text"])
                     </p>
@@ -158,19 +169,21 @@
                 <article class="experience-block">
                     <h2 class="experience-title" style="
                         font-family: @(sixthTitleStyle?.FontFamily ?? "Arial");
-                        font-size: @(sixthTitleStyle?.FontSize ?? "2rem");
+                        font-size: @(sixthTitleStyle?.FontSize ?? "2rem")px;
                         font-weight: @(sixthTitleStyle?.FontWeight ?? "600");
                         font-style: @(sixthTitleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(sixthTitleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(sixthTitleStyle?.TextDecoration ?? "none");
+color: @(sixthTitleStyle?.TextColor ?? "#007bff");"
                         data-key="DiacomClub_DCW_Content_Sixth">
                         @ViewBag.Entries["DiacomClub_DCW_Content_Sixth"]
                     </h2>
                     <p style="
                         font-family: @(sixthTextStyle?.FontFamily ?? "Arial");
-                        font-size: @(sixthTextStyle?.FontSize ?? "1rem");
+                        font-size: @(sixthTextStyle?.FontSize ?? "1rem")px;
                         font-weight: @(sixthTextStyle?.FontWeight ?? "400");
                         font-style: @(sixthTextStyle?.FontStyle ?? "normal");
-                        text-decoration: @(sixthTextStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(sixthTextStyle?.TextDecoration ?? "none");
+color: @(sixthTextStyle?.TextColor ?? "#212529");"
                        data-key="DiacomClub_DCW_Content_Sixth_Text">
                         @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Sixth_Text"])
                     </p>
@@ -184,19 +197,21 @@
                 <article class="experience-block">
                     <h2 class="experience-title" style="
                         font-family: @(seventhTitleStyle?.FontFamily ?? "Arial");
-                        font-size: @(seventhTitleStyle?.FontSize ?? "2rem");
+                        font-size: @(seventhTitleStyle?.FontSize ?? "2rem")px;
                         font-weight: @(seventhTitleStyle?.FontWeight ?? "600");
                         font-style: @(seventhTitleStyle?.FontStyle ?? "normal");
-                        text-decoration: @(seventhTitleStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(seventhTitleStyle?.TextDecoration ?? "none");
+color: @(seventhTitleStyle?.TextColor ?? "#007bff");"
                         data-key="DiacomClub_DCW_Content_Seventh">
                         @ViewBag.Entries["DiacomClub_DCW_Content_Seventh"]
                     </h2>
                     <p style="
                         font-family: @(seventhTextStyle?.FontFamily ?? "Arial");
-                        font-size: @(seventhTextStyle?.FontSize ?? "1rem");
+                        font-size: @(seventhTextStyle?.FontSize ?? "1rem")px;
                         font-weight: @(seventhTextStyle?.FontWeight ?? "400");
                         font-style: @(seventhTextStyle?.FontStyle ?? "normal");
-                        text-decoration: @(seventhTextStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(seventhTextStyle?.TextDecoration ?? "none");
+color: @(seventhTextStyle?.TextColor ?? "#212529");"
                        data-key="DiacomClub_DCW_Content_Seventh_Text">
                         @Html.Raw(ViewBag.Entries["DiacomClub_DCW_Content_Seventh_Text"])
                     </p>

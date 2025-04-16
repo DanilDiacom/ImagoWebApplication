@@ -16,6 +16,7 @@ using NuGet.Common;
 using System.Text.Json;
 using System.Windows.Threading;
 using System.Text;
+using System.Windows.Documents;
 
 namespace ImagoAdmin {
     public partial class MainWindow : Window {
@@ -23,6 +24,12 @@ namespace ImagoAdmin {
         public ObservableCollection<Meeting> MeetingList { get; set; } = new ObservableCollection<Meeting>();
         public ObservableCollection<Noviny> NovinkyList { get; set; } = new ObservableCollection<Noviny>();
 
+        public class ColorInfo {
+            public string Name { get; set; }
+            public string Hex { get; set; }
+            public Color Color => (Color)ColorConverter.ConvertFromString(Hex);
+            public SolidColorBrush Brush => new SolidColorBrush(Color);
+        }
 
         private bool isContentModified = false;
         public int pageId;
@@ -59,6 +66,19 @@ namespace ImagoAdmin {
 
                 DictionaryEntryForText.SyncEditingDictionary();
                 DictionaryEntryForImages.SyncEditingDictionary();
+
+                TextColorComboBox.ItemsSource = new List<ColorInfo>
+{
+    new ColorInfo { Name = "Černá", Hex = "#FF000000" }, // Полностью непрозрачный черный
+    new ColorInfo { Name = "Červená", Hex = "#FFFF0000" },
+    new ColorInfo { Name = "Zelená", Hex = "#FF008000" },
+    new ColorInfo { Name = "Modrá", Hex = "#FF0000FF" },
+    new ColorInfo { Name = "Žlutá", Hex = "#FFFFFF00" },
+    new ColorInfo { Name = "Oranžová", Hex = "#FFFFA500" },
+    new ColorInfo { Name = "Fialová", Hex = "#FF800080" },
+    new ColorInfo { Name = "Šedá", Hex = "#FF808080" },
+    new ColorInfo { Name = "Bílá", Hex = "#FFFFFFFF" }
+};
 
                 CheckForUpdatesAsync().ConfigureAwait(false);
                 AddDeviceButton.Visibility = Visibility.Collapsed;
@@ -246,7 +266,7 @@ namespace ImagoAdmin {
                     _isWebViewNavigating = false;
                 };
 
-                webView.CoreWebView2.Navigate("https://imagodt.cz");
+                webView.CoreWebView2.Navigate("https://imagodt.cz/");
 
                 webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
                 webView.CoreWebView2.Settings.IsZoomControlEnabled = false;
@@ -549,61 +569,98 @@ namespace ImagoAdmin {
             }
 
             if (EntryList.SelectedItem is DictionaryEntryForText selectedEntry) {
-                // Устанавливаем currentEntryKey
                 currentEntryKey = selectedEntry.EntryKey;
-
                 var style = TextStyle.GetTextStyle(selectedEntry.EntryKey);
 
-                if (style != null) {
-                    TextEditor.FontFamily = new FontFamily(style.FontFamily ?? "Arial, sans-serif");
-                    TextEditor.FontSize = double.Parse(style.FontSize?.Replace("px", "") ?? "16");
-                    TextEditor.FontWeight = (FontWeight)new FontWeightConverter().ConvertFromString(style.FontWeight ?? "Normal");
-                    TextEditor.FontStyle = (FontStyle)new FontStyleConverter().ConvertFromString(style.FontStyle ?? "Normal");
-                    TextEditor.TextDecorations = style.TextDecoration == "Underline" ? TextDecorations.Underline : null;
+                // Применение стилей
+                TextEditor.FontFamily = new FontFamily(style?.FontFamily ?? "Arial, sans-serif");
+                TextEditor.FontSize = double.Parse(style?.FontSize?.Replace("px", "") ?? "16");
+                TextEditor.FontWeight = (FontWeight)new FontWeightConverter().ConvertFromString(style?.FontWeight ?? "Normal");
+                TextEditor.FontStyle = (FontStyle)new FontStyleConverter().ConvertFromString(style?.FontStyle ?? "Normal");
+                TextEditor.TextDecorations = style?.TextDecoration == "Underline" ? TextDecorations.Underline : null;
 
-                    ApplyStylesToControls(style);
+                // Обработка цвета - только если он явно задан и корректен
+                if (!string.IsNullOrEmpty(style?.TextColor)) {
+                    try {
+                        TextEditor.Foreground = new SolidColorBrush(
+                            (Color)ColorConverter.ConvertFromString(style.TextColor));
+                    }
+                    catch {
+                        TextEditor.ClearValue(TextElement.ForegroundProperty);
+                    }
+                }
+                else {
+                    TextEditor.ClearValue(TextElement.ForegroundProperty);
                 }
 
                 TextEditor.Text = selectedEntry.ContentText;
 
-                if (selectedEntry.EntryKey.EndsWith("_Label")) {
-                    selectedAttribute = "data-key";
-                }
-                else if (selectedEntry.EntryKey.EndsWith("_Value")) {
-                    selectedAttribute = "data-value";
-                }
-                else {
-                    selectedAttribute = "data-key";
-                }
-
+                // Определяем атрибут (data-key или data-value)
+                selectedAttribute = selectedEntry.EntryKey.EndsWith("_Value") ? "data-value" : "data-key";
                 previousEntry = selectedEntry;
 
+                // Обновляем UI
+                ApplyStylesToControls(style);
                 await UpdateWebViewContent(selectedEntry.EntryKey, selectedEntry.ContentText);
                 await UpdateWebViewStyles(selectedEntry.EntryKey, style);
             }
         }
 
         private void ApplyStylesToControls(TextStyle style) {
+            // Сбрасываем все контролы стилей
+            FontFamilyComboBox.SelectedItem = null;
+            FontSizeComboBox.SelectedItem = null;
+            TextColorComboBox.SelectedItem = null;
+            BoldButton.FontWeight = FontWeights.Normal;
+            ItalicButton.FontStyle = FontStyles.Normal;
+            if (UnderlineButton.Content is TextBlock underlineTextBlock) {
+                underlineTextBlock.TextDecorations = null;
+            }
+
             if (style == null) return;
 
-            if (FontFamilyComboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == style.FontFamily) is ComboBoxItem fontFamilyItem) {
-                FontFamilyComboBox.SelectedItem = fontFamilyItem;
+            // Восстанавливаем шрифт
+            var fontFamilyItem = FontFamilyComboBox.Items.Cast<ComboBoxItem>()
+                .FirstOrDefault(item => item.Content.ToString() == style.FontFamily);
+            FontFamilyComboBox.SelectedItem = fontFamilyItem;
+
+            // Восстанавливаем размер
+            var fontSizeItem = FontSizeComboBox.Items.Cast<ComboBoxItem>()
+                .FirstOrDefault(item => item.Content.ToString() == style.FontSize?.Replace("px", ""));
+            FontSizeComboBox.SelectedItem = fontSizeItem;
+
+            // Восстанавливаем цвет ТОЛЬКО если он явно задан и корректен
+            if (!string.IsNullOrEmpty(style.TextColor)) {
+                try {
+                    var color = (Color)ColorConverter.ConvertFromString(style.TextColor);
+                    var colorItem = TextColorComboBox.Items.Cast<ColorInfo>()
+                        .FirstOrDefault(c => c.Color == color);
+                    TextColorComboBox.SelectedItem = colorItem;
+                }
+                catch {
+                    // Оставляем выбор цвета пустым при ошибке
+                    TextColorComboBox.SelectedItem = null;
+                }
             }
 
-            if (FontSizeComboBox.Items.Cast<ComboBoxItem>().FirstOrDefault(item => item.Content.ToString() == style.FontSize?.Replace("px", "")) is ComboBoxItem fontSizeItem) {
-                FontSizeComboBox.SelectedItem = fontSizeItem;
-            }
-
-            BoldButton.Tag = style.FontWeight == "Bold" ? "True" : "False";
+            // Восстанавливаем остальные стили
             BoldButton.FontWeight = style.FontWeight == "Bold" ? FontWeights.Bold : FontWeights.Normal;
-
-            ItalicButton.Tag = style.FontStyle == "Italic" ? "True" : "False";
             ItalicButton.FontStyle = style.FontStyle == "Italic" ? FontStyles.Italic : FontStyles.Normal;
 
-            UnderlineButton.Tag = style.TextDecoration == "Underline" ? "True" : "False";
-            if (UnderlineButton.Content is TextBlock underlineTextBlock) {
-                underlineTextBlock.TextDecorations = style.TextDecoration == "Underline" ? TextDecorations.Underline : null;
+            if (UnderlineButton.Content is TextBlock underlineTb) {
+                underlineTb.TextDecorations = style.TextDecoration == "Underline" ? TextDecorations.Underline : null;
             }
+        }
+
+        private Color ParseColor(string colorString) {
+            if (colorString.StartsWith("#")) {
+                // Добавляем альфа-канал, если его нет
+                if (colorString.Length == 7)
+                    return (Color)ColorConverter.ConvertFromString("#FF" + colorString.Substring(1));
+                if (colorString.Length == 9)
+                    return (Color)ColorConverter.ConvertFromString(colorString);
+            }
+            return Colors.Black; // По умолчанию
         }
 
         private async Task SaveChanched(DictionaryEntryForText entry) {
@@ -630,9 +687,7 @@ namespace ImagoAdmin {
         }
 
         private async Task<TextStyle> SaveCurrentStyles(string entryKey) {
-            if (string.IsNullOrEmpty(entryKey)) {
-                return null;
-            }
+            if (string.IsNullOrEmpty(entryKey)) return null;
 
             var style = new TextStyle {
                 EntryKey = entryKey,
@@ -641,125 +696,119 @@ namespace ImagoAdmin {
                 FontWeight = TextEditor.FontWeight.ToString(),
                 FontStyle = TextEditor.FontStyle.ToString(),
                 TextDecoration = TextEditor.TextDecorations == TextDecorations.Underline ? "Underline" : "None",
+                // Сохраняем цвет только если он явно выбран
+                TextColor = TextEditor.Foreground is SolidColorBrush brush? $"#{brush.Color.R:X2}{brush.Color.G:X2}{brush.Color.B:X2}" : "#000000"
             };
 
-            await TextStyle.SaveTextStyleAsync(style);
-
+            TextStyle.SaveTextStyleAsync(style);
             return style;
         }
 
         private async Task UpdateWebViewContent(string key, string newText) {
-            if (string.IsNullOrEmpty(selectedAttribute)) {
-                return;
-            }
+            if (string.IsNullOrEmpty(selectedAttribute)) return;
 
-            string script;
-
-            if (selectedAttribute == "data-key") {
-                script = $@"
-        var element = document.querySelector('[data-key=""{key}""]');
-        if (element) {{
-            if (element.tagName === 'LI') {{
-                var strongElement = element.querySelector('strong[data-key]');
-                if (strongElement) {{
-                    strongElement.innerHTML = `{newText.Replace("`", "\\`")}`;
+            string script = selectedAttribute switch {
+                "data-key" => $@"
+            // Обновляем все элементы с data-key
+            document.querySelectorAll('[data-key=""{key}""]').forEach(el => {{
+                if (el.tagName === 'STRONG') {{
+                    el.innerHTML = `{EscapeJsString(newText)}`;
+                }} else if (el.tagName === 'LI') {{
+                    const strong = el.querySelector('strong[data-key=""{key}""]');
+                    if (strong) strong.innerHTML = `{EscapeJsString(newText)}`;
+                }} else {{
+                    el.innerHTML = `{EscapeJsString(newText)}`;
                 }}
-            }} else {{
-                element.innerHTML = `{newText.Replace("`", "\\`")}`;
-            }}
-        }}
-    ";
-            }
-            else if (selectedAttribute == "data-value") {
-                script = $@"
-        var element = document.querySelector('[data-value=""{key}""]');
-        if (element) {{
-            if (element.tagName === 'LI') {{
-                var valueElement = element.querySelector('span[data-value]');
-                if (valueElement) {{
-                    valueElement.innerHTML = `{newText.Replace("`", "\\`")}`;
+            }});
+        ",
+                "data-value" => $@"
+            // Обновляем все элементы с data-value
+            document.querySelectorAll('[data-value=""{key}""]').forEach(el => {{
+                if (el.tagName === 'SPAN') {{
+                    el.innerHTML = `{EscapeJsString(newText)}`;
+                }} else if (el.tagName === 'LI') {{
+                    const span = el.querySelector('span[data-value=""{key}""]');
+                    if (span) span.innerHTML = `{EscapeJsString(newText)}`;
+                }} else {{
+                    el.innerHTML = `{EscapeJsString(newText)}`;
                 }}
-            }} else {{
-                element.innerHTML = `{newText.Replace("`", "\\`")}`;
-            }}
-        }}
-    ";
-            }
-            else {
-                return;
-            }
+            }});
+        ",
+                _ => null
+            };
 
-            await webView.CoreWebView2.ExecuteScriptAsync(script);
+            if (script != null) await webView.CoreWebView2.ExecuteScriptAsync(script);
+        }
+
+        private string EscapeJsString(string input) {
+            return input.Replace("\\", "\\\\")
+                        .Replace("`", "\\`")
+                        .Replace("$", "\\$")
+                        .Replace("\"", "\\\"")
+                        .Replace("'", "\\'");
         }
 
         private async Task UpdateWebViewStyles(string key, TextStyle style) {
-            if (string.IsNullOrEmpty(selectedAttribute)) {
-                return;
-            }
+            if (string.IsNullOrEmpty(selectedAttribute)) return;
 
             var fontFamily = style?.FontFamily ?? "Arial, sans-serif";
             var fontSize = $"{style?.FontSize ?? "16"}px";
             var fontWeight = style?.FontWeight ?? "normal";
             var fontStyle = style?.FontStyle ?? "normal";
             var textDecoration = style?.TextDecoration ?? "none";
+            var textColor = NormalizeColor(style?.TextColor ?? "#000000");
 
-            string script;
-
-            if (selectedAttribute == "data-key") {
-                script = $@"
-        var element = document.querySelector('[data-key=""{key}""]');
-        if (element) {{
-            if (element.tagName === 'LI') {{
-                var strongElement = element.querySelector('strong[data-key]');
-                if (strongElement) {{
-                    strongElement.style.fontFamily = '{fontFamily}';
-                    strongElement.style.fontSize = '{fontSize}';
-                    strongElement.style.fontWeight = '{fontWeight}';
-                    strongElement.style.fontStyle = '{fontStyle}';
-                    strongElement.style.textDecoration = '{textDecoration}';
+            string script = selectedAttribute switch {
+                "data-key" => $@"
+            // Обновляем стили для data-key
+            document.querySelectorAll('[data-key=""{key}""]').forEach(el => {{
+                if (el.tagName === 'STRONG') {{
+                    applyStyles(el);
+                }} else if (el.tagName === 'LI') {{
+                    const strong = el.querySelector('strong[data-key=""{key}""]');
+                    if (strong) applyStyles(strong);
+                }} else {{
+                    applyStyles(el);
                 }}
-            }} else {{
+            }});
+        ",
+                "data-value" => $@"
+            // Обновляем стили для data-value
+            document.querySelectorAll('[data-value=""{key}""]').forEach(el => {{
+                if (el.tagName === 'SPAN') {{
+                    applyStyles(el);
+                }} else if (el.tagName === 'LI') {{
+                    const span = el.querySelector('span[data-value=""{key}""]');
+                    if (span) applyStyles(span);
+                }} else {{
+                    applyStyles(el);
+                }}
+            }});
+        ",
+                _ => null
+            };
+
+            // Добавляем функцию applyStyles в скрипт
+            if (script != null) {
+                script += $@"
+            function applyStyles(element) {{
                 element.style.fontFamily = '{fontFamily}';
                 element.style.fontSize = '{fontSize}';
                 element.style.fontWeight = '{fontWeight}';
                 element.style.fontStyle = '{fontStyle}';
                 element.style.textDecoration = '{textDecoration}';
+                element.style.color = '{textColor}';
             }}
-        }}
-    ";
+        ";
+                await webView.CoreWebView2.ExecuteScriptAsync(script);
             }
-            else if (selectedAttribute == "data-value") {
-                script = $@"
-        var element = document.querySelector('[data-value=""{key}""]');
-        if (element) {{
-            if (element.tagName === 'LI') {{
-                var valueElement = element.querySelector('span[data-value]');
-                if (valueElement) {{
-                    valueElement.style.fontFamily = '{fontFamily}';
-                    valueElement.style.fontSize = '{fontSize}';
-                    valueElement.style.fontWeight = '{fontWeight}';
-                    valueElement.style.fontStyle = '{fontStyle}';
-                    valueElement.style.textDecoration = '{textDecoration}';
-                }}
-            }} else {{
-                element.style.fontFamily = '{fontFamily}';
-                element.style.fontSize = '{fontSize}';
-                element.style.fontWeight = '{fontWeight}';
-                element.style.fontStyle = '{fontStyle}';
-                element.style.textDecoration = '{textDecoration}';
-            }}
-        }}
-    ";
-            }
-            else {
-                return;
-            }
-
-            await webView.CoreWebView2.ExecuteScriptAsync(script);
-
-            await webView.CoreWebView2.ExecuteScriptAsync("");
         }
 
+        private string NormalizeColor(string color) {
+            if (string.IsNullOrEmpty(color)) return "#000000";
+            if (color.Length == 9 && color.StartsWith("#")) return "#" + color.Substring(3);
+            return color;
+        }
         private async void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FontFamilyComboBox.SelectedItem is ComboBoxItem selectedItem) {
                 TextEditor.FontFamily = new FontFamily(selectedItem.Content.ToString());
@@ -809,8 +858,16 @@ namespace ImagoAdmin {
             }
         }
 
-        private void TextColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private async void TextColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (TextColorComboBox.SelectedItem is ColorInfo colorInfo) {
+                // Убедимся, что цвет применяется правильно
+                TextEditor.Foreground = new SolidColorBrush(colorInfo.Color);
 
+                if (!string.IsNullOrEmpty(currentEntryKey)) {
+                    var style = await SaveCurrentStyles(currentEntryKey);
+                    await UpdateWebViewStyles(currentEntryKey, style);
+                }
+            }
         }
 
         private void AddPhotoButton_Click(object sender, RoutedEventArgs e) {

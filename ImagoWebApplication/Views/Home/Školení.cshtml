@@ -13,7 +13,9 @@
                     font-size: @(titleStyle?.FontSize ?? "inherit")px;
                     font-weight: @(titleStyle?.FontWeight ?? "normal");
                     font-style: @(titleStyle?.FontStyle ?? "normal");
-                    text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                    text-decoration: @(titleStyle?.TextDecoration ?? "none");
+                    color: @(titleStyle?.TextColor ?? "#212529");"
+
                     data-key="DiacomClub_Skoleni_Title">
                     @ViewBag.Entries["DiacomClub_Skoleni_Title"]
                 </h1>
@@ -28,7 +30,8 @@
                         font-size: @(headerStyle?.FontSize ?? "inherit")px;
                         font-weight: @(headerStyle?.FontWeight ?? "normal");
                         font-style: @(headerStyle?.FontStyle ?? "normal");
-                        text-decoration: @(headerStyle?.TextDecoration ?? "none");"
+                        text-decoration: @(headerStyle?.TextDecoration ?? "none");
+                        color: @(headerStyle?.TextColor ?? "#2c3e50");
                         data-key="DiacomClub_Skoleni_Header">
                         @ViewBag.Entries["DiacomClub_Skoleni_Header"]
                     </h2>
@@ -46,7 +49,8 @@
                                 font-size: @(step1TitleStyle?.FontSize ?? "24")px;
                                 font-weight: @(step1TitleStyle?.FontWeight ?? "Bold");
                                 font-style: @(step1TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(step1TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(step1TitleStyle?.TextDecoration ?? "none");
+ color: @(step1TitleStyle?.TextColor ?? "#34495e");"
                                     data-key="DiacomClub_Step1_Title">
                                 @ViewBag.Entries["DiacomClub_Step1_Title"]
                             </strong><br>
@@ -55,7 +59,8 @@
                                 font-size: @(step1DescStyle?.FontSize ?? "inherit")px;
                                 font-weight: @(step1DescStyle?.FontWeight ?? "normal");
                                 font-style: @(step1DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(step1DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(step1DescStyle?.TextDecoration ?? "none");
+ color: @(step1DescStyle?.TextColor ?? "#34495e");"
                                   data-key="DiacomClub_Step1_Desc">
                                 @ViewBag.Entries["DiacomClub_Step1_Desc"]
                             </span>
@@ -77,7 +82,8 @@
                                 font-size: @(step2TitleStyle?.FontSize ?? "24")px;
                                 font-weight: @(step2TitleStyle?.FontWeight ?? "Bold");
                                 font-style: @(step2TitleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(step2TitleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(step2TitleStyle?.TextDecoration ?? "none");
+color: @(step2TitleStyle?.TextColor ?? "#34495e");"
                                     data-key="DiacomClub_Step2_Title">
                                 @ViewBag.Entries["DiacomClub_Step2_Title"]
                             </strong><br>
@@ -86,7 +92,8 @@
                                 font-size: @(step2DescStyle?.FontSize ?? "inherit")px;
                                 font-weight: @(step2DescStyle?.FontWeight ?? "normal");
                                 font-style: @(step2DescStyle?.FontStyle ?? "normal");
-                                text-decoration: @(step2DescStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(step2DescStyle?.TextDecoration ?? "none");
+color: @(step2DescStyle?.TextColor ?? "#34495e");"
                                   data-key="DiacomClub_Step2_Desc">
                                 @ViewBag.Entries["DiacomClub_Step2_Desc"]
                             </span>

@@ -11,10 +11,11 @@
             var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Title") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Title"] : null;
             <h1 class="page-title" style="text-align: center;
                 font-family: @(titleStyle?.FontFamily ?? "Arial");
-                font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                font-size: @(titleStyle?.FontSize ?? "2.5rem")px;
                 font-weight: @(titleStyle?.FontWeight ?? "600");
                 font-style: @(titleStyle?.FontStyle ?? "normal");
-                text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                text-decoration: @(titleStyle?.TextDecoration ?? "none");
+                color: @(titleStyle?.TextColor ?? "#212529");"
                 data-key="DiacomClub_PracovniAktiv_Title">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Title"]
             </h1>
@@ -25,10 +26,11 @@
             var subtitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Subtitle") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Subtitle"] : null;
             <h2 class="section-title" style="text-align: center;
                 font-family: @(subtitleStyle?.FontFamily ?? "Arial");
-                font-size: @(subtitleStyle?.FontSize ?? "2rem");
+                font-size: @(subtitleStyle?.FontSize ?? "2rem")px;
                 font-weight: @(subtitleStyle?.FontWeight ?? "600");
                 font-style: @(subtitleStyle?.FontStyle ?? "normal");
-                text-decoration: @(subtitleStyle?.TextDecoration ?? "none");"
+                text-decoration: @(subtitleStyle?.TextDecoration ?? "none");
+color: @(subtitleStyle?.TextColor ?? "#222");"
                 data-key="DiacomClub_PracovniAktiv_Subtitle">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Subtitle"]
             </h2>
@@ -39,10 +41,11 @@
             var desc1Style = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Desc1") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Desc1"] : null;
             <p class="text" style="text-align: center;
                 font-family: @(desc1Style?.FontFamily ?? "Arial");
-                font-size: @(desc1Style?.FontSize ?? "1rem");
+                font-size: @(desc1Style?.FontSize ?? "1rem")px;
                 font-weight: @(desc1Style?.FontWeight ?? "400");
                 font-style: @(desc1Style?.FontStyle ?? "normal");
-                text-decoration: @(desc1Style?.TextDecoration ?? "none");"
+                text-decoration: @(desc1Style?.TextDecoration ?? "none");
+color: @(desc1Style?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Desc1">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc1"]
             </p>
@@ -53,10 +56,11 @@
             var quoteStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Quote") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Quote"] : null;
             <p class="quote" style="text-align: center;
                 font-family: @(quoteStyle?.FontFamily ?? "Arial");
-                font-size: @(quoteStyle?.FontSize ?? "1.25rem");
+                font-size: @(quoteStyle?.FontSize ?? "1.25rem")px;
                 font-weight: @(quoteStyle?.FontWeight ?? "600");
                 font-style: @(quoteStyle?.FontStyle ?? "italic");
-                text-decoration: @(quoteStyle?.TextDecoration ?? "none");"
+                text-decoration: @(quoteStyle?.TextDecoration ?? "none");
+                color: @(quoteStyle?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Quote">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Quote"]
             </p>
@@ -68,10 +72,12 @@
                 var commentTitleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_CommentTitle") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_CommentTitle"] : null;
                 <h3 class="section-title" style="text-align: center;
                     font-family: @(commentTitleStyle?.FontFamily ?? "Arial");
-                    font-size: @(commentTitleStyle?.FontSize ?? "1.75rem");
+                    font-size: @(commentTitleStyle?.FontSize ?? "1.75rem")px;
                     font-weight: @(commentTitleStyle?.FontWeight ?? "600");
                     font-style: @(commentTitleStyle?.FontStyle ?? "normal");
-                    text-decoration: @(commentTitleStyle?.TextDecoration ?? "none");"
+                    text-decoration: @(commentTitleStyle?.TextDecoration ?? "none");
+                    color: @(commentTitleStyle?.TextColor ?? "#212529");"
+
                     data-key="DiacomClub_PracovniAktiv_CommentTitle">
                     @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentTitle"]
                 </h3>
@@ -82,10 +88,11 @@
                 var commentDescStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_CommentDesc") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_CommentDesc"] : null;
                 <p class="text" style="
                     font-family: @(commentDescStyle?.FontFamily ?? "Arial");
-                    font-size: @(commentDescStyle?.FontSize ?? "1rem");
+                    font-size: @(commentDescStyle?.FontSize ?? "1rem")px;
                     font-weight: @(commentDescStyle?.FontWeight ?? "400");
                     font-style: @(commentDescStyle?.FontStyle ?? "normal");
-                    text-decoration: @(commentDescStyle?.TextDecoration ?? "none");">
+                    text-decoration: @(commentDescStyle?.TextDecoration ?? "none");
+                    color: @(commentDescStyle?.TextColor ?? "#212529");">
                     <span data-key="DiacomClub_PracovniAktiv_CommentDesc">
                         @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentDesc"]
                     </span>
@@ -101,10 +108,11 @@
             var desc2Style = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Desc2") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Desc2"] : null;
             <p class="text" style="
                 font-family: @(desc2Style?.FontFamily ?? "Arial");
-                font-size: @(desc2Style?.FontSize ?? "1rem");
+                font-size: @(desc2Style?.FontSize ?? "1rem")px;
                 font-weight: @(desc2Style?.FontWeight ?? "400");
                 font-style: @(desc2Style?.FontStyle ?? "normal");
-                text-decoration: @(desc2Style?.TextDecoration ?? "none");"
+                text-decoration: @(desc2Style?.TextDecoration ?? "none");
+                color: @(desc2Style?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Desc2">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc2"]
             </p>
@@ -115,10 +123,11 @@
             var desc3Style = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Desc3") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Desc3"] : null;
             <p class="text" style="
                 font-family: @(desc3Style?.FontFamily ?? "Arial");
-                font-size: @(desc3Style?.FontSize ?? "1rem");
+                font-size: @(desc3Style?.FontSize ?? "1rem")px;
                 font-weight: @(desc3Style?.FontWeight ?? "400");
                 font-style: @(desc3Style?.FontStyle ?? "normal");
-                text-decoration: @(desc3Style?.TextDecoration ?? "none");"
+                text-decoration: @(desc3Style?.TextDecoration ?? "none");
+                color: @(desc3Style?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Desc3">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc3"]
             </p>
@@ -129,10 +138,11 @@
             var signatureStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Signature") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Signature"] : null;
             <p class="signature" style="
                 font-family: @(signatureStyle?.FontFamily ?? "Arial");
-                font-size: @(signatureStyle?.FontSize ?? "1.25rem");
+                font-size: @(signatureStyle?.FontSize ?? "1.25rem")px;
                 font-weight: @(signatureStyle?.FontWeight ?? "600");
                 font-style: @(signatureStyle?.FontStyle ?? "italic");
-                text-decoration: @(signatureStyle?.TextDecoration ?? "none");"
+                text-decoration: @(signatureStyle?.TextDecoration ?? "none");
+                color: @(signatureStyle?.TextColor ?? "#666");"
                data-key="DiacomClub_PracovniAktiv_Signature">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Signature"]
             </p>
@@ -143,10 +153,11 @@
             var authorStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_PracovniAktiv_Author") ? ViewBag.TextStyles["DiacomClub_PracovniAktiv_Author"] : null;
             <p class="author" style="
                 font-family: @(authorStyle?.FontFamily ?? "Arial");
-                font-size: @(authorStyle?.FontSize ?? "1.25rem");
+                font-size: @(authorStyle?.FontSize ?? "1.25rem")px;
                 font-weight: @(authorStyle?.FontWeight ?? "600");
                 font-style: @(authorStyle?.FontStyle ?? "normal");
-                text-decoration: @(authorStyle?.TextDecoration ?? "none");"
+                text-decoration: @(authorStyle?.TextDecoration ?? "none");
+                color: @(authorStyle?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Author">
                 @ViewBag.Entries["DiacomClub_PracovniAktiv_Author"]
             </p>

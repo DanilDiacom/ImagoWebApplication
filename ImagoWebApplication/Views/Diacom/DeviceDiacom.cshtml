@@ -76,7 +76,8 @@ else
                                 font-size: @(titleStyle?.FontSize ?? "inherit")px;
                                 font-weight: @(titleStyle?.FontWeight ?? "normal");
                                 font-style: @(titleStyle?.FontStyle ?? "normal");
-                                text-decoration: @(titleStyle?.TextDecoration ?? "none");"
+                                text-decoration: @(titleStyle?.TextDecoration ?? "none");
+                                color: @(titleStyle?.TextColor ?? "#212529");"
                                 data-key="@titleKey">
                                 @entries[titleKey]
                             </h1>
@@ -100,7 +101,8 @@ else
                                             font-size: @(labelStyle?.FontSize ?? "inherit")px;
                                             font-weight: @(labelStyle?.FontWeight ?? "Bold");
                                             font-style: @(labelStyle?.FontStyle ?? "normal");
-                                            text-decoration: @(labelStyle?.TextDecoration ?? "none");">
+                                            text-decoration: @(labelStyle?.TextDecoration ?? "none");
+                                            color: @(labelStyle?.TextColor ?? "#212529");">
                                             @entries[key]
                                         </strong>
                                         <span data-value="@valueKey" style="
@@ -108,7 +110,8 @@ else
                                             font-size: @(valueStyle?.FontSize ?? "inherit")px;
                                             font-weight: @(valueStyle?.FontWeight ?? "normal");
                                             font-style: @(valueStyle?.FontStyle ?? "normal");
-                                            text-decoration: @(valueStyle?.TextDecoration ?? "none");">
+                                            text-decoration: @(valueStyle?.TextDecoration ?? "none");
+                                            color: @(valueStyle?.TextColor ?? "#212529");">
                                             @entries[valueKey]
                                         </span>
                                     </li>
@@ -130,10 +133,11 @@ else
                         var headerStyle = textStyles != null && textStyles.ContainsKey(popisHeaderKey) ? textStyles[popisHeaderKey] : null;
                         <h2 data-key="@popisHeaderKey" style="margin-top: 20px; text-align:center;
                             font-family: @(headerStyle?.FontFamily ?? "inherit");
-                            font-size: @(headerStyle?.FontSize ?? "1.25rem");
+                            font-size: @(headerStyle?.FontSize ?? "1.25rem")px;
                             font-weight: @(headerStyle?.FontWeight ?? "Bold");
                             font-style: @(headerStyle?.FontStyle ?? "normal");
-                            text-decoration: @(headerStyle?.TextDecoration ?? "none");">
+                            text-decoration: @(headerStyle?.TextDecoration ?? "none");
+                            color: @(headerStyle?.TextColor ?? "#212529");">
                             @entries[popisHeaderKey]
                         </h2>
                     }
@@ -151,7 +155,8 @@ else
                                 font-size: @(textStyle?.FontSize ?? "inherit")px;
                                 font-weight: @(textStyle?.FontWeight ?? "normal");
                                 font-style: @(textStyle?.FontStyle ?? "normal");
-                                text-decoration: @(textStyle?.TextDecoration ?? "none");">
+                                text-decoration: @(textStyle?.TextDecoration ?? "none");
+                                color: @(textStyle?.TextColor ?? "#212529");">
                                 <p>
                                     @entries[key]
                                 </p>

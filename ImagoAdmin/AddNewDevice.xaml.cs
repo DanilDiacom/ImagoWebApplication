@@ -67,15 +67,57 @@ namespace ImagoAdmin {
 
         private void Save_Click(object sender, RoutedEventArgs e) {
             try {
+                // Проверка названия товара
                 if (string.IsNullOrWhiteSpace(TitleTextBox.Text)) {
-                    MessageBox.Show("Název produktu je povinný!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Název produktu je povinný pole!", "Chyba",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                    TitleTextBox.Focus();
                     return;
+                }
+
+                // Проверка описания товара
+                if (string.IsNullOrWhiteSpace(DescriptionTextBox.Text)) {
+                    var result = MessageBox.Show("Popis produktu je prázdný. Chcete pokračovat bez popisu?", "Upozornění",
+                                               MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.No) {
+                        DescriptionTextBox.Focus();
+                        return;
+                    }
+                }
+
+                // Проверка параметров
+                var emptyParameters = Parameters
+                    .Where(p => string.IsNullOrWhiteSpace(p.Name) != string.IsNullOrWhiteSpace(p.Value))
+                    .ToList();
+
+                if (emptyParameters.Any()) {
+                    var message = new StringBuilder();
+                    message.AppendLine("Některé parametry mají neúplné údaje:");
+
+                    foreach (var param in emptyParameters) {
+                        message.AppendLine($"- {(string.IsNullOrWhiteSpace(param.Name) ? "Název parametru chybí" : "Hodnota parametru chybí")}");
+                    }
+
+                    message.AppendLine("\nOpravte prosím neúplné parametry.");
+
+                    MessageBox.Show(message.ToString(), "Neúplné údaje",
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Проверка фотографий
+                if (Photos.Count == 0) {
+                    var result = MessageBox.Show("Produkt nemá žádné fotografie. Chcete pokračovat bez fotografií?", "Upozornění",
+                                               MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.No) {
+                        return;
+                    }
                 }
 
                 // 1. Создаем страницу (Page)
                 var page = new Pages {
                     Title = TitleTextBox.Text,
-                    Url = "/Diacom/DeviceDiacom", // Нужно реализовать эту функцию
+                    Url = "/Diacom/DeviceDiacom",
                     ParentId = 5
                 };
 
@@ -100,30 +142,29 @@ namespace ImagoAdmin {
 
                     var popisTextEntry = new DictionaryEntryForText {
                         PageId = pageId,
-                        EntryKey = $"{TitleTextBox.Text}_PopisText",
+                        EntryKey = $"{TitleTextBox.Text}PopisText",
                         ContentText = DescriptionTextBox.Text
                     };
                     DictionaryEntryForText.InsertEntryIfNotExists(popisTextEntry);
                 }
 
-                foreach (var param in Parameters) {
-                    if (!string.IsNullOrWhiteSpace(param.Name) && !string.IsNullOrWhiteSpace(param.Value)) {
-                        // Сохраняем Label (название параметра)
-                        var labelEntry = new DictionaryEntryForText {
-                            PageId = pageId,
-                            EntryKey = $"{param.Name}_Label",
-                            ContentText = param.Name
-                        };
-                        DictionaryEntryForText.InsertEntryIfNotExists(labelEntry);
+                // 4. Сохраняем параметры
+                foreach (var param in Parameters.Where(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Value))) {
+                    // Сохраняем Label (название параметра)
+                    var labelEntry = new DictionaryEntryForText {
+                        PageId = pageId,
+                        EntryKey = $"{TitleTextBox.Text}_{param.Name}_Label",
+                        ContentText = param.Name
+                    };
+                    DictionaryEntryForText.InsertEntryIfNotExists(labelEntry);
 
-                        // Сохраняем Value (значение параметра)
-                        var valueEntry = new DictionaryEntryForText {
-                            PageId = pageId,
-                            EntryKey = $"{param.Name}_Value",
-                            ContentText = param.Value
-                        };
-                        DictionaryEntryForText.InsertEntryIfNotExists(valueEntry);
-                    }
+                    // Сохраняем Value (значение параметра)
+                    var valueEntry = new DictionaryEntryForText {
+                        PageId = pageId,
+                        EntryKey = $"{TitleTextBox.Text}_{param.Name}_Value",
+                        ContentText = param.Value
+                    };
+                    DictionaryEntryForText.InsertEntryIfNotExists(valueEntry);
                 }
 
                 // 5. Сохраняем фотографии
@@ -132,7 +173,7 @@ namespace ImagoAdmin {
 
                     var imageEntry = new DictionaryEntryForImages {
                         PageId = pageId,
-                        EntryKey = $"Photo_{Guid.NewGuid().ToString("N")}",
+                        EntryKey = $"{TitleTextBox.Text}_Photo_{Guid.NewGuid():N}",
                         ImageData = imageData,
                         ImageName = $"{TitleTextBox.Text}_photo.jpg"
                     };
@@ -140,11 +181,13 @@ namespace ImagoAdmin {
                     DictionaryEntryForImages.InsertEntryIfNotExists(imageEntry);
                 }
 
-                MessageBox.Show("Produkt byl úspěšně uložen!", "Úspěch", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Produkt byl úspěšně uložen!", "Úspěch",
+                               MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();
             }
             catch (Exception ex) {
-                MessageBox.Show($"Chyba při ukládání: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Chyba při ukládání: {ex.Message}", "Chyba",
+                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -13,10 +13,11 @@
                 var titleStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Title") ? ViewBag.TextStyles["Marketing_Title"] : null;
                 <h1 class="page-title" data-key="Marketing_Title" style="
                     font-family: @(titleStyle?.FontFamily ?? "Arial");
-                    font-size: @(titleStyle?.FontSize ?? "2.5rem");
+                    font-size: @(titleStyle?.FontSize ?? "2.5rem")px;
                     font-weight: @(titleStyle?.FontWeight ?? "600");
                     font-style: @(titleStyle?.FontStyle ?? "normal");
-                    text-decoration: @(titleStyle?.TextDecoration ?? "none");">
+                    text-decoration: @(titleStyle?.TextDecoration ?? "none");
+                    color: @(titleStyle?.TextColor ?? "#34495e");">
                     @ViewBag.Entries["Marketing_Title"]
                 </h1>
             }
@@ -26,11 +27,12 @@
                 var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Header") ? ViewBag.TextStyles["Marketing_Header"] : null;
                 <p class="intro-text" data-key="Marketing_Header" style="
                     font-family: @(headerStyle?.FontFamily ?? "Arial");
-                    font-size: @(headerStyle?.FontSize ?? "1.1rem");
+                    font-size: @(headerStyle?.FontSize ?? "1.1rem")px;
                     font-weight: @(headerStyle?.FontWeight ?? "normal");
                     font-style: @(headerStyle?.FontStyle ?? "normal");
                     text-decoration: @(headerStyle?.TextDecoration ?? "none");
-                    line-height: 1.6;">
+                    line-height: 1.6;
+                    color: @(headerStyle?.TextColor ?? "#7f8c8d");">
                     @ViewBag.Entries["Marketing_Header"]
                 </p>
             }
@@ -40,10 +42,11 @@
                 var subHeadStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubHead") ? ViewBag.TextStyles["Marketing_SubHead"] : null;
                 <p class="sub-heading" data-key="Marketing_SubHead" style="
                     font-family: @(subHeadStyle?.FontFamily ?? "Arial");
-                    font-size: @(subHeadStyle?.FontSize ?? "1.2rem");
+                    font-size: @(subHeadStyle?.FontSize ?? "1.2rem")px;
                     font-weight: @(subHeadStyle?.FontWeight ?? "500");
                     font-style: @(subHeadStyle?.FontStyle ?? "normal");
-                    text-decoration: @(subHeadStyle?.TextDecoration ?? "none");">
+                    text-decoration: @(subHeadStyle?.TextDecoration ?? "none");
+                    color: @(subHeadStyle?.TextColor ?? "#34495e");">
                     @ViewBag.Entries["Marketing_SubHead"]
                 </p>
             }
@@ -55,41 +58,44 @@
                         var priorityFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Prioriti_First") ? ViewBag.TextStyles["Marketing_Prioriti_First"] : null;
                         <p data-key="Marketing_Prioriti_First" style="
                             font-family: @(priorityFirstStyle?.FontFamily ?? "Arial");
-                            font-size: @(priorityFirstStyle?.FontSize ?? "inherit");
+                            font-size: @(priorityFirstStyle?.FontSize ?? "inherit")px;
                             font-weight: @(priorityFirstStyle?.FontWeight ?? "600");
                             font-style: @(priorityFirstStyle?.FontStyle ?? "normal");
-                            text-decoration: @(priorityFirstStyle?.TextDecoration ?? "none");">
+                            text-decoration: @(priorityFirstStyle?.TextDecoration ?? "none");
+                            color: @(priorityFirstStyle?.TextColor ?? "#2c3e50");">
                             <strong>@ViewBag.Entries["Marketing_Prioriti_First"]</strong>
                         </p>
                     }
 
-                    <ul>
-                        @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_First"))
-                        {
-                            var subPriorityFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_First") ? ViewBag.TextStyles["Marketing_SubPrioriti_First"] : null;
-                            <li data-key="Marketing_SubPrioriti_First" style="
-                                font-family: @(subPriorityFirstStyle?.FontFamily ?? "Arial");
-                                font-size: @(subPriorityFirstStyle?.FontSize ?? "inherit");
-                                font-weight: @(subPriorityFirstStyle?.FontWeight ?? "normal");
-                                font-style: @(subPriorityFirstStyle?.FontStyle ?? "normal");
-                                text-decoration: @(subPriorityFirstStyle?.TextDecoration ?? "none");">
-                                @ViewBag.Entries["Marketing_SubPrioriti_First"]
-                            </li>
-                        }
+                    @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_First"))
+                    {
+                        var subPriorityFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_First") ? ViewBag.TextStyles["Marketing_SubPrioriti_First"] : null;
+                        <p data-key="Marketing_SubPrioriti_First"
+                           class="marketing-subpriority"
+                           style="font-family: @(subPriorityFirstStyle?.FontFamily ?? "Arial");
+             font-size: @(subPriorityFirstStyle?.FontSize ?? "16")px;
+             font-weight: @(subPriorityFirstStyle?.FontWeight ?? "normal");
+             font-style: @(subPriorityFirstStyle?.FontStyle ?? "normal");
+             text-decoration: @(subPriorityFirstStyle?.TextDecoration ?? "none");
+             color: @(subPriorityFirstStyle?.TextColor ?? "#000000");">
+                            @ViewBag.Entries["Marketing_SubPrioriti_First"]
+                        </p>
+                    }
 
-                        @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_Second"))
-                        {
-                            var subPrioritySecondStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_Second") ? ViewBag.TextStyles["Marketing_SubPrioriti_Second"] : null;
-                            <li data-key="Marketing_SubPrioriti_Second" style="
-                                font-family: @(subPrioritySecondStyle?.FontFamily ?? "Arial");
-                                font-size: @(subPrioritySecondStyle?.FontSize ?? "inherit");
-                                font-weight: @(subPrioritySecondStyle?.FontWeight ?? "normal");
-                                font-style: @(subPrioritySecondStyle?.FontStyle ?? "normal");
-                                text-decoration: @(subPrioritySecondStyle?.TextDecoration ?? "none");">
-                                @ViewBag.Entries["Marketing_SubPrioriti_Second"]
-                            </li>
-                        }
-                    </ul>
+                    @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_Second"))
+                    {
+                        var subPrioritySecondStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_Second") ? ViewBag.TextStyles["Marketing_SubPrioriti_Second"] : null;
+                        <p data-key="Marketing_SubPrioriti_Second"
+                           class="marketing-subpriority"
+                           style="font-family: @(subPrioritySecondStyle?.FontFamily ?? "Arial");
+             font-size: @(subPrioritySecondStyle?.FontSize ?? "16")px;
+             font-weight: @(subPrioritySecondStyle?.FontWeight ?? "normal");
+             font-style: @(subPrioritySecondStyle?.FontStyle ?? "normal");
+             text-decoration: @(subPrioritySecondStyle?.TextDecoration ?? "none");
+             color: @(subPrioritySecondStyle?.TextColor ?? "#000000");">
+                            @ViewBag.Entries["Marketing_SubPrioriti_Second"]
+                        </p>
+                    }
                 </li>
 
                 <li>
@@ -98,28 +104,29 @@
                         var prioritySecondStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Prioriti_Second") ? ViewBag.TextStyles["Marketing_Prioriti_Second"] : null;
                         <p data-key="Marketing_Prioriti_Second" style="
                             font-family: @(prioritySecondStyle?.FontFamily ?? "Arial");
-                            font-size: @(prioritySecondStyle?.FontSize ?? "inherit");
+                            font-size: @(prioritySecondStyle?.FontSize ?? "inherit")px;
                             font-weight: @(prioritySecondStyle?.FontWeight ?? "600");
                             font-style: @(prioritySecondStyle?.FontStyle ?? "normal");
-                            text-decoration: @(prioritySecondStyle?.TextDecoration ?? "none");">
+                            text-decoration: @(prioritySecondStyle?.TextDecoration ?? "none");
+                            color: @(prioritySecondStyle?.TextColor ?? "#2c3e50");">
                             <strong>@ViewBag.Entries["Marketing_Prioriti_Second"]</strong>
                         </p>
                     }
 
-                    <ul>
-                        @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_Second_First"))
-                        {
-                            var subPrioritySecondFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_Second_First") ? ViewBag.TextStyles["Marketing_SubPrioriti_Second_First"] : null;
-                            <li data-key="Marketing_SubPrioriti_Second_First" style="
-                                font-family: @(subPrioritySecondFirstStyle?.FontFamily ?? "Arial");
-                                font-size: @(subPrioritySecondFirstStyle?.FontSize ?? "inherit");
-                                font-weight: @(subPrioritySecondFirstStyle?.FontWeight ?? "normal");
-                                font-style: @(subPrioritySecondFirstStyle?.FontStyle ?? "normal");
-                                text-decoration: @(subPrioritySecondFirstStyle?.TextDecoration ?? "none");">
-                                @ViewBag.Entries["Marketing_SubPrioriti_Second_First"]
-                            </li>
-                        }
-                    </ul>
+                    @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_Second_First"))
+                    {
+                        var subPrioritySecondFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_Second_First") ? ViewBag.TextStyles["Marketing_SubPrioriti_Second_First"] : null;
+                        <p data-key="Marketing_SubPrioriti_Second_First"
+                           style="font-family: @(subPrioritySecondFirstStyle?.FontFamily ?? "Arial");
+             font-size: @(subPrioritySecondFirstStyle?.FontSize ?? "16")px;
+             font-weight: @(subPrioritySecondFirstStyle?.FontWeight ?? "normal");
+             font-style: @(subPrioritySecondFirstStyle?.FontStyle ?? "normal");
+             text-decoration: @(subPrioritySecondFirstStyle?.TextDecoration ?? "none");
+             color: @(subPrioritySecondFirstStyle?.TextColor ?? "#000000");">
+                            @ViewBag.Entries["Marketing_SubPrioriti_Second_First"]
+                        </p>
+                    }
+
                 </li>
 
                 <li>
@@ -128,28 +135,29 @@
                         var priorityThirdStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Prioriti_Third") ? ViewBag.TextStyles["Marketing_Prioriti_Third"] : null;
                         <p data-key="Marketing_Prioriti_Third" style="
                             font-family: @(priorityThirdStyle?.FontFamily ?? "Arial");
-                            font-size: @(priorityThirdStyle?.FontSize ?? "inherit");
+                            font-size: @(priorityThirdStyle?.FontSize ?? "inherit")px;
                             font-weight: @(priorityThirdStyle?.FontWeight ?? "600");
                             font-style: @(priorityThirdStyle?.FontStyle ?? "normal");
-                            text-decoration: @(priorityThirdStyle?.TextDecoration ?? "none");">
+                            text-decoration: @(priorityThirdStyle?.TextDecoration ?? "none");
+                            color: @(priorityThirdStyle?.TextColor ?? "#2c3e50");">
                             <strong>@ViewBag.Entries["Marketing_Prioriti_Third"]</strong>
                         </p>
                     }
 
-                    <ul>
-                        @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_Third_First"))
-                        {
-                            var subPriorityThirdFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_Third_First") ? ViewBag.TextStyles["Marketing_SubPrioriti_Third_First"] : null;
-                            <li data-key="Marketing_SubPrioriti_Third_First" style="
-                                font-family: @(subPriorityThirdFirstStyle?.FontFamily ?? "Arial");
-                                font-size: @(subPriorityThirdFirstStyle?.FontSize ?? "inherit");
-                                font-weight: @(subPriorityThirdFirstStyle?.FontWeight ?? "normal");
-                                font-style: @(subPriorityThirdFirstStyle?.FontStyle ?? "normal");
-                                text-decoration: @(subPriorityThirdFirstStyle?.TextDecoration ?? "none");">
-                                @ViewBag.Entries["Marketing_SubPrioriti_Third_First"]
-                            </li>
-                        }
-                    </ul>
+                    @if (ViewBag.Entries.ContainsKey("Marketing_SubPrioriti_Third_First"))
+                    {
+                        var subPriorityThirdFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_SubPrioriti_Third_First") ? ViewBag.TextStyles["Marketing_SubPrioriti_Third_First"] : null;
+                        <p data-key="Marketing_SubPrioriti_Third_First"
+                           class="marketing-subpriority"
+                           style="font-family: @(subPriorityThirdFirstStyle?.FontFamily ?? "Arial");
+             font-size: @(subPriorityThirdFirstStyle?.FontSize ?? "16")px;
+             font-weight: @(subPriorityThirdFirstStyle?.FontWeight ?? "normal");
+             font-style: @(subPriorityThirdFirstStyle?.FontStyle ?? "normal");
+             text-decoration: @(subPriorityThirdFirstStyle?.TextDecoration ?? "none");
+             color: @(subPriorityThirdFirstStyle?.TextColor ?? "#000000");">
+                            @ViewBag.Entries["Marketing_SubPrioriti_Third_First"]
+                        </p>
+                    }
                 </li>
 
                 <li>
@@ -158,28 +166,29 @@
                         var priorityFourStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Prioriti_Four") ? ViewBag.TextStyles["Marketing_Prioriti_Four"] : null;
                         <p data-key="Marketing_Prioriti_Four" style="
                             font-family: @(priorityFourStyle?.FontFamily ?? "Arial");
-                            font-size: @(priorityFourStyle?.FontSize ?? "inherit");
+                            font-size: @(priorityFourStyle?.FontSize ?? "inherit")px;
                             font-weight: @(priorityFourStyle?.FontWeight ?? "600");
                             font-style: @(priorityFourStyle?.FontStyle ?? "normal");
-                            text-decoration: @(priorityFourStyle?.TextDecoration ?? "none");">
+                            text-decoration: @(priorityFourStyle?.TextDecoration ?? "none");
+                            color: @(priorityFourStyle?.TextColor ?? "#2c3e50");">
                             <strong>@ViewBag.Entries["Marketing_Prioriti_Four"]</strong>
                         </p>
                     }
 
-                    <ul>
-                        @if (ViewBag.Entries.ContainsKey("Marketing_Prioriti_Four_First"))
-                        {
-                            var priorityFourFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Prioriti_Four_First") ? ViewBag.TextStyles["Marketing_Prioriti_Four_First"] : null;
-                            <li data-key="Marketing_Prioriti_Four_First" style="
-                                font-family: @(priorityFourFirstStyle?.FontFamily ?? "Arial");
-                                font-size: @(priorityFourFirstStyle?.FontSize ?? "inherit");
-                                font-weight: @(priorityFourFirstStyle?.FontWeight ?? "normal");
-                                font-style: @(priorityFourFirstStyle?.FontStyle ?? "normal");
-                                text-decoration: @(priorityFourFirstStyle?.TextDecoration ?? "none");">
-                                @ViewBag.Entries["Marketing_Prioriti_Four_First"]
-                            </li>
-                        }
-                    </ul>
+                    @if (ViewBag.Entries.ContainsKey("Marketing_Prioriti_Four_First"))
+                    {
+                        var priorityFourFirstStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("Marketing_Prioriti_Four_First") ? ViewBag.TextStyles["Marketing_Prioriti_Four_First"] : null;
+                        <p data-key="Marketing_Prioriti_Four_First"
+                           class="marketing-priority"
+                           style="font-family: @(priorityFourFirstStyle?.FontFamily ?? "Arial");
+             font-size: @(priorityFourFirstStyle?.FontSize ?? "16")px;
+             font-weight: @(priorityFourFirstStyle?.FontWeight ?? "normal");
+             font-style: @(priorityFourFirstStyle?.FontStyle ?? "normal");
+             text-decoration: @(priorityFourFirstStyle?.TextDecoration ?? "none");
+             color: @(priorityFourFirstStyle?.TextColor ?? "#000000");">
+                            @ViewBag.Entries["Marketing_Prioriti_Four_First"]
+                        </p>
+                    }
                 </li>
             </ul>
         </div>
