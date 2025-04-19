@@ -186,7 +186,7 @@ namespace ImagoAdmin {
                 this.Close();
             }
             catch (Exception ex) {
-                MessageBox.Show($"Chyba při ukládání: {ex.Message}", "Chyba",
+                MessageBox.Show($"Chyba při ukládání: {ex.Message}", "Chyba!",
                                MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

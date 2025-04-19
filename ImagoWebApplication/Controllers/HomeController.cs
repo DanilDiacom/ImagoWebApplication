@@ -73,6 +73,7 @@ public class HomeController : BaseController {
 
     public IActionResult Vyhody() {
         SetViewHomeBagEntries();
+        SetViewHomeBagStyles();
         return View();
     }
 
