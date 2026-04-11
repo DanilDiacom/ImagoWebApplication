@@ -95,7 +95,7 @@ namespace ImagoAdmin {
                 }
             }
             catch (Exception ex) {
-                MessageBox.Show($"Ошибка загрузки изображения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Chyba při načítání obrázku: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
         }

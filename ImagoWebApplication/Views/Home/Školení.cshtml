@@ -25,14 +25,13 @@
                 @if (ViewBag.Entries.ContainsKey("DiacomClub_Skoleni_Header"))
                 {
                     var headerStyle = ViewBag.TextStyles != null && ViewBag.TextStyles.ContainsKey("DiacomClub_Skoleni_Header") ? ViewBag.TextStyles["DiacomClub_Skoleni_Header"] : null;
-                    <h2 class="steps-title" style="
+                    <h2 class="steps-title" data-key="DiacomClub_Skoleni_Header" style="
                         font-family: @(headerStyle?.FontFamily ?? "Arial");
                         font-size: @(headerStyle?.FontSize ?? "inherit")px;
                         font-weight: @(headerStyle?.FontWeight ?? "normal");
                         font-style: @(headerStyle?.FontStyle ?? "normal");
                         text-decoration: @(headerStyle?.TextDecoration ?? "none");
-                        color: @(headerStyle?.TextColor ?? "#2c3e50");
-                        data-key="DiacomClub_Skoleni_Header">
+                        color: @(headerStyle?.TextColor ?? "#2c3e50");">
                         @ViewBag.Entries["DiacomClub_Skoleni_Header"]
                     </h2>
                 }

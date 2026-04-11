@@ -906,8 +906,8 @@ namespace ImagoAdmin {
         private void UpdatePhotosButton_Click_1(object sender, RoutedEventArgs e) {
             if (PhotoList.SelectedItem is DictionaryEntryForImages selectedPhoto) {
                 OpenFileDialog openFileDialog = new OpenFileDialog {
-                    Filter = "Изображения (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg",
-                    Title = "Выберите новое изображение"
+                    Filter = "Obrázky (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg",
+                    Title = "Vyberte nový obrázek"
                 };
 
                 if (openFileDialog.ShowDialog() == true) {
@@ -992,7 +992,7 @@ namespace ImagoAdmin {
             PhotoList.Items.Refresh();
 
             isContentModified = false;
-            MessageBox.Show("Изменения успешно опубликованы.");
+            MessageBox.Show("Změny byly úspěšně publikovány.");
         }
 
         private void DeletePhotosButton_Click(object sender, RoutedEventArgs e) {

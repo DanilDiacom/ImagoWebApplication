@@ -31,44 +31,47 @@
         </Grid.ColumnDefinitions>
 
         <!-- Левая панель -->
-        <StackPanel Grid.Column="0" Background="#f5f5f5" Margin="10">
-            <TextBlock Text="Stránky" FontWeight="Bold" Margin="0,0,0,5" FontSize="16"/>
-            <TreeView Name="tvPageList" ItemsSource="{Binding PagesList}" Height="250" SelectedItemChanged="TreeView_SelectionChanged">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding SubPages}">
-                        <TextBlock Text="{Binding Title}"/>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-            <Button Name="AddDeviceButton" Content="➕ Přidat přístroj" Click="AddDeviceButton_Click"/>
-            <Button Name="DeleteDeviceButton" Content="Odstranit přístroj" Click="DeleteDeviceButton_Click"/>
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Grid.Column="0" Background="#f5f5f5" Margin="10">
+                <TextBlock Text="Stránky" FontWeight="Bold" Margin="0,0,0,5" FontSize="16"/>
+                <TreeView Name="tvPageList" ItemsSource="{Binding PagesList}" Height="250" SelectedItemChanged="TreeView_SelectionChanged">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding SubPages}">
+                            <TextBlock Text="{Binding Title}"/>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+                <Button Name="AddDeviceButton" Content="➕ Přidat přístroj" Click="AddDeviceButton_Click"/>
+                <Button Name="DeleteDeviceButton" Content="Odstranit přístroj" Click="DeleteDeviceButton_Click"/>
 
 
-            <ListView Name="lv_Meeting" ItemsSource="{Binding MeetingList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                <ListView Name="lv_Meeting" ItemsSource="{Binding MeetingList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
 
-            <Button Name="AddMeetingButton" Content="➕ Přidat mítink" Click="AddMeetingButton_Click" Visibility="Collapsed"/>
-            <Button Name="EditMeetingButton" Content="✏ Opravit mítink" Click="EditMeetingButton_Click" Visibility="Collapsed"/>
-            <Button Name="DeleteMeetingButton" Content="🗑 Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed"/>
+                <Button Name="AddMeetingButton" Content="➕ Přidat mítink" Click="AddMeetingButton_Click" Visibility="Collapsed"/>
+                <Button Name="EditMeetingButton" Content="✏ Opravit mítink" Click="EditMeetingButton_Click" Visibility="Collapsed"/>
+                <Button Name="DeleteMeetingButton" Content="🗑 Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed"/>
 
-            <ListView Name="lv_Noviny" ItemsSource="{Binding NovinkyList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                <ListView Name="lv_Noviny" ItemsSource="{Binding NovinkyList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
 
-            <Button Name="AddNovinyButton" Content="➕ Přidat novinky" Click="AddNovinyButton_Click" Visibility="Collapsed"/>
-            <Button Name="EditNovinyButton" Content="✏ Opravit novinky" Click="EditNovinyButton_Click" Visibility="Collapsed"/>
-            <Button Name="DeleteNovinyButton" Content="🗑 Smazat novinky" Click="DeleteNovinyButton_Click" Visibility="Collapsed"/>
+                <Button Name="AddNovinyButton" Content="➕ Přidat novinky" Click="AddNovinyButton_Click" Visibility="Collapsed"/>
+                <Button Name="EditNovinyButton" Content="✏ Opravit novinky" Click="EditNovinyButton_Click" Visibility="Collapsed"/>
+                <Button Name="DeleteNovinyButton" Content="🗑 Smazat novinky" Click="DeleteNovinyButton_Click" Visibility="Collapsed"/>
 
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
 
         <!-- Центральная панель (WebView2) -->
         <!--<wv2:WebView2 Name="webView" Grid.Column="1" Source="https://localhost:7090/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>-->
