@@ -1,8 +1,12 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
+builder.Services.AddMemoryCache();
+
+// Чат-бот: приём обновлений Telegram (ответы менеджеров), включается "Telegram:ReceiveUpdates": true + "Telegram:BotToken"
+builder.Services.AddHostedService<ImagoWebApplication.Chatbot.TelegramPollingService>();
 
 var app = builder.Build();
 

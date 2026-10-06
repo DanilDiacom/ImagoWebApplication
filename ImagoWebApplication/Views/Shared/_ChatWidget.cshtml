@@ -1,0 +1,73 @@
+﻿@using ImagoWebApplication.Chatbot
+@inject IConfiguration Configuration
+@{
+    // Виджет показываем, только если задан ключ OpenAI (OpenAI:ApiKey)
+    if (!ChatbotService.IsEnabled(Configuration)) { return; }
+
+    var texts = ChatbotTexts.Keys.ToDictionary(k => k, k => ChatbotTexts.Get(k));
+}
+
+<link rel="stylesheet" href="~/css/chatbot.css" asp-append-version="true" />
+
+<div id="ic-chat" class="ic-chat"
+     data-url-message="@Url.Action("Message", "Chatbot")"
+     data-url-contact="@Url.Action("Contact", "Chatbot")"
+     data-url-history="@Url.Action("History", "Chatbot")"
+     data-url-new="@Url.Action("New", "Chatbot")"
+     data-url-send="@Url.Action("Send", "Chatbot")">
+
+    <div class="ic-chat-launcher">
+        <button type="button" class="ic-chat-label" tabindex="-1" aria-hidden="true">@texts["Chatbot_AskMe"]</button>
+        <button type="button" class="ic-chat-toggle" aria-label="@texts["Chatbot_Open"]" title="@texts["Chatbot_Open"]">
+            <svg class="ic-chat-toggle-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+                <path fill="currentColor" d="M12 3C6.48 3 2 6.92 2 11.75c0 2.47 1.18 4.7 3.08 6.29L4.3 21.2a.6.6 0 0 0 .86.68l3.6-1.86c1.02.3 2.11.48 3.24.48 5.52 0 10-3.92 10-8.75S17.52 3 12 3Zm-4.5 10.1a1.35 1.35 0 1 1 0-2.7 1.35 1.35 0 0 1 0 2.7Zm4.5 0a1.35 1.35 0 1 1 0-2.7 1.35 1.35 0 0 1 0 2.7Zm4.5 0a1.35 1.35 0 1 1 0-2.7 1.35 1.35 0 0 1 0 2.7Z" />
+            </svg>
+            <span class="ic-chat-badge" title="@texts["Chatbot_NewAnswer"]" hidden></span>
+        </button>
+    </div>
+
+    <div class="ic-chat-panel" role="dialog" aria-label="@texts["Chatbot_Title"]" hidden>
+        <div class="ic-chat-header">
+            <span class="ic-chat-avatar" aria-hidden="true">
+                <img src="~/img/favicon.ico" alt="" width="22" height="22" />
+            </span>
+            <span class="ic-chat-heading">
+                <span class="ic-chat-title">@texts["Chatbot_Title"]</span>
+                <span class="ic-chat-subtitle">IMAGO D&amp;T, s.r.o.</span>
+            </span>
+            <button type="button" class="ic-chat-icon ic-chat-new" title="@texts["Chatbot_NewChat"]" aria-label="@texts["Chatbot_NewChat"]">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7.5 6.5 12 11V7.5a5 5 0 1 1-5 5H4.5A7.5 7.5 0 1 0 12 5Z" /></svg>
+            </button>
+            <button type="button" class="ic-chat-icon ic-chat-close" title="@texts["Chatbot_Close"]" aria-label="@texts["Chatbot_Close"]">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7a1 1 0 0 0-1.4 0L12 10.6 7.1 5.7a1 1 0 1 0-1.4 1.4l4.9 4.9-4.9 4.9a1 1 0 1 0 1.4 1.4l4.9-4.9 4.9 4.9a1 1 0 0 0 1.4-1.4L13.4 12l4.9-4.9a1 1 0 0 0 0-1.4Z" /></svg>
+            </button>
+        </div>
+
+        <div class="ic-chat-messages" aria-live="polite"></div>
+
+        <form class="ic-chat-contact" hidden>
+            <div class="ic-chat-contact-title">@texts["Chatbot_ContactTitle"]</div>
+            <input type="text" name="name" maxlength="100" placeholder="@texts["Chatbot_Name"]" autocomplete="name" />
+            <input type="text" name="contact" maxlength="100" placeholder="@texts["Chatbot_Contact"]" autocomplete="email" />
+            <button type="submit">@texts["Chatbot_ContactSend"]</button>
+            <div class="ic-chat-consent">@texts["Chatbot_ContactConsent"] <a href="/Home/GDPR" target="_blank">GDPR</a></div>
+        </form>
+
+        @* Вопросы копятся, клиент сам решает, когда передать их менеджеру (одной заявкой) *@
+        <div class="ic-chat-confirm" hidden>
+            <div class="ic-chat-contact-title">@texts["Chatbot_ConfirmTitle"]</div>
+            <button type="button" class="ic-chat-confirm-send">@texts["Chatbot_ConfirmSend"]</button>
+        </div>
+
+        <form class="ic-chat-input">
+            <textarea rows="1" maxlength="@ChatbotService.MaxMessageLength" placeholder="@texts["Chatbot_Placeholder"]"></textarea>
+            <button type="submit" aria-label="@texts["Chatbot_Send"]" title="@texts["Chatbot_Send"]">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 10.1 15 12 3.4 13.9Z" /></svg>
+            </button>
+        </form>
+        <div class="ic-chat-disclaimer">@texts["Chatbot_Disclaimer"]</div>
+    </div>
+</div>
+
+<script>window.icChatTexts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(texts));</script>
+<script src="~/js/chatbot.js" asp-append-version="true"></script>
