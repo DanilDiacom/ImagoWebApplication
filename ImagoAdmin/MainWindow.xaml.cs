@@ -128,63 +128,52 @@ namespace ImagoAdmin {
         #region Обновление программы (GitHub Releases)
 
         private const string GitHubRepo = "DanilDiacom/ImagoWebApplication";
+        private const string UpdateFilePrefix = "ImagoAdmin_Update_";
 
+        /// <summary>
+        /// Проверка новой версии при запуске: последний выпуск (Release) на GitHub с файлом *.msi и тегом vX.Y.Z.
+        /// Без интернета или при ошибке GitHub — молча (программа работает дальше), чтобы не мешать работе.
+        /// </summary>
         public async Task CheckForUpdatesAsync() {
+            CleanupOldUpdateFiles();
             try {
-                if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()) {
-                    MessageBox.Show("Není připojení k internetu. Zkontrolujte síť.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+                if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()) return;
 
-                Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                (string latestTag, string downloadUrl) = await GetLatestReleaseInfoAsync();
+                var current = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0);
+                var (latestTag, downloadUrl, notes) = await GetLatestReleaseInfoAsync();
+                if (latestTag == null || downloadUrl == null) return;
+                if (!Version.TryParse(latestTag.TrimStart('v', 'V'), out var latest)) return;
+                // 1.0.3 и 1.0.3.0 — одна версия
+                latest = new Version(latest.Major, latest.Minor, Math.Max(latest.Build, 0), Math.Max(latest.Revision, 0));
+                if (latest <= current) return;
 
-                if (latestTag == null || downloadUrl == null) {
-                    return;
-                }
-
-                Version latestVersion = new Version(latestTag.TrimStart('v') + ".0");
-
-                if (latestVersion > currentVersion) {
-                    var result = MessageBox.Show(
-                        $"Je k dispozici nová verze {latestVersion}. Nainstalovat aktualizaci?",
-                        "Aktualizace",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
-
-                    if (result == MessageBoxResult.Yes) {
-                        await DownloadAndInstallUpdate(downloadUrl);
-                    }
+                var text = $"Je k dispozici nová verze {latest.ToString(3)} (nyní máte {current.ToString(3)}).";
+                if (!string.IsNullOrWhiteSpace(notes)) text += "\n\nCo je nového:\n" + (notes.Length > 600 ? notes[..600] + "…" : notes);
+                text += "\n\nNainstalovat aktualizaci? Program se zavře a nainstaluje se nová verze, pak ho znovu spusťte.";
+                if (MessageBox.Show(text, "Aktualizace", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
+                    await DownloadAndInstallUpdate(downloadUrl);
                 }
             }
             catch (Exception ex) {
-                MessageBox.Show($"Chyba při kontrole aktualizací: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("Kontrola aktualizací: " + ex.Message);
             }
         }
 
-        private async Task<(string latestTag, string downloadUrl)> GetLatestReleaseInfoAsync() {
-            string apiUrl = $"https://api.github.com/repos/{GitHubRepo}/releases/latest";
+        private async Task<(string? tag, string? url, string? notes)> GetLatestReleaseInfoAsync() {
+            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("ImagoAdmin-Updater/1.0");
+            using var response = await client.GetAsync($"https://api.github.com/repos/{GitHubRepo}/releases/latest");
+            if (!response.IsSuccessStatusCode) return (null, null, null);   // 404 — выпусков нет
 
-            using (var client = new HttpClient()) {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("ImagoAdmin-Updater/1.0");
-
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-                if (!response.IsSuccessStatusCode) return (null, null);
-
-                if (response.StatusCode == HttpStatusCode.NotFound) {
-                    return (null, null); // Нет релизов
-                }
-
-                string json = await response.Content.ReadAsStringAsync();
-                using (JsonDocument doc = JsonDocument.Parse(json)) {
-                    string tag = doc.RootElement.GetProperty("tag_name").GetString();
-                    foreach (var asset in doc.RootElement.GetProperty("assets").EnumerateArray()) {
-                        string fileName = asset.GetProperty("name").GetString();
-                        if (fileName.EndsWith(".msi")) return (tag, asset.GetProperty("browser_download_url").GetString());
-                    }
-                }
+            using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            var root = doc.RootElement;
+            var tag = root.GetProperty("tag_name").GetString();
+            var notes = root.TryGetProperty("body", out var b) && b.ValueKind == JsonValueKind.String ? b.GetString() : null;
+            foreach (var asset in root.GetProperty("assets").EnumerateArray()) {
+                var name = asset.GetProperty("name").GetString() ?? "";
+                if (name.EndsWith(".msi", StringComparison.OrdinalIgnoreCase)) return (tag, asset.GetProperty("browser_download_url").GetString(), notes);
             }
-            return (null, null);
+            return (null, null, null);
         }
 
         public class DownloadProgressWindow : Window {
@@ -193,92 +182,77 @@ namespace ImagoAdmin {
 
             public DownloadProgressWindow() {
                 Title = "Stahování aktualizace";
-                Width = 350;
+                Width = 380;
                 Height = 160;
                 WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
                 var stackPanel = new StackPanel { Margin = new Thickness(10) };
                 stackPanel.Children.Add(ProgressBar);
                 stackPanel.Children.Add(StatusText);
-
                 Content = stackPanel;
             }
         }
 
+        /// <summary>
+        /// Скачивает MSI и запускает установку с окном хода (/passive), а сама программа сразу закрывается —
+        /// установщик заменяет файлы, когда они уже не заняты. Неопубликованные změny остаются в návrhu.
+        /// </summary>
         private async Task DownloadAndInstallUpdate(string url) {
-            string tempFile = Path.Combine(Path.GetTempPath(), "ImagoAdmin_Update.msi");
-
+            var tempFile = Path.Combine(Path.GetTempPath(), UpdateFilePrefix + Guid.NewGuid().ToString("N")[..8] + ".msi");
+            var progressWindow = new DownloadProgressWindow { Owner = this };
             try {
-                // Создаем окно прогресса
-                var progressWindow = new DownloadProgressWindow();
-                progressWindow.StatusText.Text = "Příprava stahování...";
+                progressWindow.StatusText.Text = "Příprava stahování…";
                 progressWindow.Show();
 
-                using (var client = new HttpClient()) {
+                using (var client = new HttpClient { Timeout = TimeSpan.FromMinutes(10) }) {
                     client.DefaultRequestHeaders.UserAgent.ParseAdd("ImagoAdmin-Updater/1.0");
-
-                    using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead)) {
-                        response.EnsureSuccessStatusCode();
-
-                        var totalBytes = response.Content.Headers.ContentLength ?? -1L;
-                        var receivedBytes = 0L;
-                        var buffer = new byte[8192];
-
-                        using (var contentStream = await response.Content.ReadAsStreamAsync())
-                        using (var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write)) {
-                            progressWindow.StatusText.Text = "Stahování aktualizace...";
-
-                            int bytesRead;
-                            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0) {
-                                await fs.WriteAsync(buffer, 0, bytesRead);
-
-                                receivedBytes += bytesRead;
-                                if (totalBytes > 0) {
-                                    var progressPercentage = (int)((double)receivedBytes / totalBytes * 100);
-                                    progressWindow.ProgressBar.Value = progressPercentage;
-                                    progressWindow.StatusText.Text = $"Staženo: {progressPercentage}% ({receivedBytes / 1024} KB / {totalBytes / 1024} KB)";
-                                }
-
-                                // Даем возможность обработать сообщения UI
-                                await Task.Delay(1);
-                                Application.Current.Dispatcher.Invoke(() => { }, DispatcherPriority.Background);
-                            }
+                    using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                    response.EnsureSuccessStatusCode();
+                    var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+                    var receivedBytes = 0L;
+                    var buffer = new byte[81920];
+                    await using var contentStream = await response.Content.ReadAsStreamAsync();
+                    await using var fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write);
+                    int bytesRead;
+                    while ((bytesRead = await contentStream.ReadAsync(buffer)) > 0) {
+                        await fs.WriteAsync(buffer.AsMemory(0, bytesRead));
+                        receivedBytes += bytesRead;
+                        if (totalBytes > 0) {
+                            var percent = (int)(receivedBytes * 100 / totalBytes);
+                            progressWindow.ProgressBar.Value = percent;
+                            progressWindow.StatusText.Text = $"Staženo: {percent} % ({receivedBytes / 1024} KB / {totalBytes / 1024} KB)";
                         }
                     }
                 }
 
-                progressWindow.StatusText.Text = "Instalace aktualizace...";
-                progressWindow.ProgressBar.IsIndeterminate = true;
-
-                Process process = new Process {
-                    StartInfo = new ProcessStartInfo {
-                        FileName = "msiexec",
-                        Arguments = $"/i \"{tempFile}\" /quiet",
-                        Verb = "runas",
-                        UseShellExecute = true
-                    }
-                };
-
-                process.Start();
-                await Task.Run(() => process.WaitForExit());
-
-                if (process.ExitCode == 0) {
-                    progressWindow.Close();
-                    Application.Current.Shutdown();
-                }
-                else {
-                    progressWindow.Close();
-                    MessageBox.Show($"Chyba instalace. Kód: {process.ExitCode}", "Chyba instalace", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                SaveCurrentTextIfDirty();   // rozepsaný text — do návrhu
+                Process.Start(new ProcessStartInfo {
+                    FileName = "msiexec",
+                    Arguments = $"/i \"{tempFile}\" /passive /norestart",
+                    Verb = "runas",          // instalace pro všechny uživatele — potvrzení správce
+                    UseShellExecute = true,
+                });
+                progressWindow.Close();
+                Closing -= MainWindow_Closing;   // bez dotazu na nepublikované změny — zůstávají v návrhu
+                Application.Current.Shutdown();
+            }
+            catch (System.ComponentModel.Win32Exception) {
+                progressWindow.Close();   // uživatel zrušil potvrzení správce
+                MessageBox.Show("Instalace aktualizace byla zrušena. Program můžete aktualizovat při příštím spuštění.", "Aktualizace", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex) {
-                MessageBox.Show($"Chyba při stahování aktualizace: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                progressWindow.Close();
+                MessageBox.Show($"Aktualizaci se nepodařilo stáhnout: {ex.Message}", "Aktualizace", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            finally {
-                if (File.Exists(tempFile)) {
-                    try { File.Delete(tempFile); } catch { }
+        }
+
+        /// <summary>Stažené instalátory z minulých aktualizací (instalace už proběhla) — smazat.</summary>
+        private static void CleanupOldUpdateFiles() {
+            try {
+                foreach (var f in Directory.GetFiles(Path.GetTempPath(), UpdateFilePrefix + "*.msi")) {
+                    try { File.Delete(f); } catch { }
                 }
             }
+            catch { }
         }
 
         #endregion
@@ -344,6 +318,15 @@ namespace ImagoAdmin {
 
                 _previewToken = await Task.Run(SiteSettings.GetPreviewToken);
                 webView.CoreWebView2.Navigate(SiteUrl + "/Home/Index?nahled=" + _previewToken);
+            }
+            catch (WebView2RuntimeNotFoundException) {
+                // Prohlížečová komponenta WebView2 je ve Windows 10/11 obvykle předinstalovaná; instalátor ji už nenese s sebou
+                var result = MessageBox.Show("Pro náhled stránek je potřeba komponenta Microsoft Edge WebView2, která v tomto počítači chybí.\n\n" +
+                                             "Otevřít stránku Microsoftu ke stažení? Po instalaci program spusťte znovu.",
+                                             "Chybí WebView2", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes) {
+                    Process.Start(new ProcessStartInfo("https://go.microsoft.com/fwlink/p/?LinkId=2124703") { UseShellExecute = true });
+                }
             }
             catch (Exception ex) {
                 ShowError("Náhled stránky se nepodařilo spustit (WebView2)", ex);

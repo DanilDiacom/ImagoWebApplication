@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using ImagoLib.Models;
-using Microsoft.CodeAnalysis;
 using Microsoft.Win32;
 
 namespace ImagoAdmin {

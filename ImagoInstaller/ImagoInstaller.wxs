@@ -1,102 +1,76 @@
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
-     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-	<!-- Project defines -->
-	<?define ProductUpgradeCode="ce94df53-0e8e-4909-8137-cb8e788c63b7"?>
-	<?define ProductLanguage=1033?>
+<!--
+  Instalátor ImagoAdmin (WiX 5).
+
+  Сборка выпуска: скрипт build-admin-release.ps1 в корне решения
+    (публикует ImagoAdmin в ImagoAdmin\bin\Release\publish и собирает ImagoInstaller\bin\x64\Release\ImagoAdminInstaller.msi).
+  Версия MSI = версия ImagoAdmin.exe (<Version> в ImagoAdmin.csproj) — поднимать только там.
+
+  UpgradeCode, производитель и папка совпадают с установщиком 1.0.2 (Visual Studio Installer Project),
+  поэтому новая версия заменяет старую у клиента, а не ставится второй копией.
+  WebView2 (náhled stránek) берётся из Windows 10/11 — в установщик не входит.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 	<?define ProductName="ImagoAdmin"?>
-	<?define ProductManufacturer="ImagoDT s.r.o"?>
-	<?define InfoURL="http://test.imagodt.cz/"?>
-	<?define Icon="../ImagoAdmin/bin/Release/net6.0-windows/favicon.ico"?>
-	<?define PublishDir="../ImagoAdmin/bin/Release/net6.0-windows/"?>
-	<?define WebView2InstallerPath="MicrosoftEdgeWebView2RuntimeInstallerX64.exe"?>
+	<?define Manufacturer="ImagoDT s.r.o"?>
+	<?define UpgradeCode="8BEC8800-3E3F-4D20-B1EF-5500786F7490"?>
+	<?define PublishDir="..\ImagoAdmin\bin\Release\publish\"?>
 
-	<Package Name="ImagoInstaller" Language="1033" Version="1.0.0.0"
-             Manufacturer="$(var.ProductManufacturer)" UpgradeCode="$(var.ProductUpgradeCode)"
-             InstallerVersion="400">
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
-		<MediaTemplate EmbedCab="yes" CompressionLevel="high"/>
+	<Package Name="$(var.ProductName)"
+	         Manufacturer="$(var.Manufacturer)"
+	         Version="!(bind.FileVersion.ImagoAdminExe)"
+	         UpgradeCode="$(var.UpgradeCode)"
+	         Language="1033"
+	         Scope="perMachine">
 
-		<!-- Проверка наличия WebView2 -->
-		<Property Id="WEBVIEW2INSTALLED">
-			<RegistrySearch Id="WebView2Installed"
-                         Root="HKLM"
-                         Key="SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
-                         Name="pv"
-                         Type="raw" />
-		</Property>
+		<!-- Старая версия удаляется целиком перед установкой новой; более новую не понижаем.
+		     IgnoreLanguage: у 1.0.0/1.0.2 (Visual Studio Installer) язык продукта 1029, у этого MSI 1033 — без него старые версии не находятся.
+		     AllowSameVersionUpgrades: пересобранный MSI той же версии заменяет установленный, а не ставится второй записью. -->
+		<MajorUpgrade Schedule="afterInstallInitialize"
+		              IgnoreLanguage="yes"
+		              AllowSameVersionUpgrades="yes"
+		              DowngradeErrorMessage="Je již nainstalována novější verze programu [ProductName]." />
+		<MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
-		<Feature Id="ProductFeature" Title="Imago admin" Level="1">
-			<ComponentGroupRef Id="ApplicationComponents"/>
-			<ComponentRef Id="DesktopShortcutComponent" />
-			<ComponentRef Id="StartMenuShortcutComponent" />
-			<ComponentRef Id="WebView2InstallerComponent" />
+		<Icon Id="AppIcon.ico" SourceFile="..\ImagoAdmin\favicon.ico" />
+		<Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+		<Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
+		<Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />
+		<Property Id="ARPURLINFOABOUT" Value="https://imagodt.cz/" />
+		<!-- Обновление из программы (у версии 1.0.2 — msiexec /quiet при открытой программе): běžící ImagoAdmin zavřít, ne čekat na restart počítače -->
+		<Property Id="MSIRMSHUTDOWN" Value="1" />
+
+		<StandardDirectory Id="ProgramFiles64Folder">
+			<Directory Id="ManufacturerFolder" Name="$(var.Manufacturer)">
+				<Directory Id="INSTALLFOLDER" Name="$(var.ProductName)" />
+			</Directory>
+		</StandardDirectory>
+
+		<Feature Id="Main" Title="$(var.ProductName)">
+			<ComponentGroupRef Id="AppFiles" />
 		</Feature>
-
-		<Icon Id="icon.exe" SourceFile="$(var.Icon)"/>
-		<Property Id="ARPPRODUCTICON" Value="icon.exe"/>
-		<Property Id="ARPNOREPAIR" Value="yes" Secure="yes"/>
-		<Property Id="ARPNOMODIFY" Value="yes" Secure="yes"/>
-		<Property Id="ARPHELPLINK" Value="$(var.InfoURL)"/>
 	</Package>
 
+	<!-- Файлы программы — всё из папки публикации (новые библиотеки попадают в установщик сами) -->
 	<Fragment>
-		<!-- Основные директории -->
-		<StandardDirectory Id="ProgramFiles64Folder">
-			<Directory Id="INSTALLFOLDER" Name="$(var.ProductName)"/>
-		</StandardDirectory>
-
-		<!-- Директория для меню Пуск -->
-		<StandardDirectory Id="ProgramMenuFolder">
-			<Directory Id="ProgramMenuDir" Name="$(var.ProductName)"/>
-		</StandardDirectory>
-
-		<!-- Директория рабочего стола -->
-		<StandardDirectory Id="DesktopFolder"/>
+		<ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+			<Component>
+				<File Id="ImagoAdminExe" Source="$(var.PublishDir)ImagoAdmin.exe" KeyPath="yes">
+					<!-- ярлыки «ImagoAdmin» на рабочем столе и в меню «Пуск» (как у версии 1.0.2) — ставятся и удаляются вместе с программой -->
+					<Shortcut Id="DesktopShortcut" Directory="DesktopFolder" Name="$(var.ProductName)" Description="$(var.ProductName)"
+					          WorkingDirectory="INSTALLFOLDER" Icon="AppIcon.ico" Advertise="no" />
+					<Shortcut Id="StartMenuShortcut" Directory="ProgramMenuFolder" Name="$(var.ProductName)" Description="$(var.ProductName)"
+					          WorkingDirectory="INSTALLFOLDER" Icon="AppIcon.ico" Advertise="no" />
+				</File>
+			</Component>
+			<Files Include="$(var.PublishDir)**">
+				<Exclude Files="$(var.PublishDir)ImagoAdmin.exe" />
+				<Exclude Files="$(var.PublishDir)**\*.pdb" />
+			</Files>
+		</ComponentGroup>
 	</Fragment>
 
 	<Fragment>
-		<!-- Компонент с установщиком WebView2 -->
-		<Component Id="WebView2InstallerComponent" Directory="TARGETDIR" Guid="5BDB9806-4D33-4903-BE9E-886AD6BBF4DF">
-			<File Id="WebView2SetupExe" Source="$(var.WebView2InstallerPath)" KeyPath="yes"/>
-		</Component>
-
-		<!-- Кастомное действие для установки WebView2 -->
-		<CustomAction Id="InstallWebView2"
-				FileRef="WebView2SetupExe"
-				ExeCommand="/silent /install"
-				Execute="deferred"
-				Return="check"
-				Impersonate="no"/>
-
-		<InstallExecuteSequence>
-			<Custom Action="InstallWebView2" After="InstallFiles"></Custom>
-		</InstallExecuteSequence>
-	</Fragment>
-
-	<Fragment>
-		<!-- Ярлык на рабочем столе -->
-		<Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="*">
-			<Shortcut Id="DesktopShortcut"
-                     Name="$(var.ProductName)"
-                     Description="$(var.ProductName)"
-                     Target="[INSTALLFOLDER]ImagoAdmin.exe"
-                     WorkingDirectory="INSTALLFOLDER"
-                     Icon="icon.exe"/>
-			<RegistryValue Root="HKCU" Key="Software\$(var.ProductManufacturer)\$(var.ProductName)"
-                          Name="DesktopShortcutInstalled" Type="integer" Value="1" KeyPath="yes"/>
-		</Component>
-
-		<!-- Ярлык в меню Пуск -->
-		<Component Id="StartMenuShortcutComponent" Directory="ProgramMenuDir" Guid="*">
-			<Shortcut Id="StartMenuShortcut"
-                     Name="$(var.ProductName)"
-                     Description="$(var.ProductName)"
-                     Target="[INSTALLFOLDER]ImagoAdmin.exe"
-                     WorkingDirectory="INSTALLFOLDER"
-                     Icon="icon.exe"/>
-			<RemoveFolder Id="RemoveProgramMenuDir" Directory="ProgramMenuDir" On="uninstall"/>
-			<RegistryValue Root="HKCU" Key="Software\$(var.ProductManufacturer)\$(var.ProductName)"
-                          Name="StartMenuShortcutInstalled" Type="integer" Value="1" KeyPath="yes"/>
-		</Component>
+		<StandardDirectory Id="DesktopFolder" />
+		<StandardDirectory Id="ProgramMenuFolder" />
 	</Fragment>
 </Wix>

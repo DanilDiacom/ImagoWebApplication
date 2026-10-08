@@ -1,3 +1,10 @@
 ﻿<Project Sdk="WixToolset.Sdk/5.0.2">
-
+	<PropertyGroup>
+		<!-- Имя файла выпуска: его ищет обновление ImagoAdmin в GitHub Releases (любой *.msi) -->
+		<OutputName>ImagoAdminInstaller</OutputName>
+		<Platform>x64</Platform>
+		<InstallerPlatform>x64</InstallerPlatform>
+		<!-- ICE38/43/57 считают Desktop/Programs папками пользователя; у установки для всех (perMachine) это общие папки — ложные срабатывания -->
+		<SuppressIces>ICE38;ICE43;ICE57</SuppressIces>
+	</PropertyGroup>
 </Project>
