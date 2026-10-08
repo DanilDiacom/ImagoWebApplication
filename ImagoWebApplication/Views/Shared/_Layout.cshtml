@@ -194,9 +194,11 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
+    @* Chatbot zatím nezveřejňovat — pro zapnutí odkomentovat:
     @if (ViewBag.IsDraft != true)
     {
         <partial name="_ChatWidget" />
     }
+    *@
 </body>
 </html>
