@@ -1,0 +1,27 @@
+@model string
+@using System.Text.RegularExpressions
+@{
+    // Стили текстов из ImagoAdmin (шрифт, размер, цвет…) для страниц, где тексты выводятся без inline-стилей:
+    // одно правило [data-key="…"] на текст, только для заданных свойств. Model — префикс ключей страницы («Kontakty_»).
+    var styles = ViewBag.TextStyles as Dictionary<string, ImagoLib.Models.TextStyle>;
+    string Css(string? v) => Regex.Replace(v ?? "", @"[^\w\s#,.'-]", "");
+    string Px(string? v) => Regex.IsMatch(v ?? "", @"^\d+(\.\d+)?$") ? v + "px" : Css(v);
+    var cssRules = (styles ?? new Dictionary<string, ImagoLib.Models.TextStyle>())
+        .Where(s => s.Key.StartsWith(Model))
+        .Select(s => {
+            var st = s.Value;
+            var props = new List<string>();
+            if (!string.IsNullOrWhiteSpace(st.FontFamily)) props.Add($"font-family:{Css(st.FontFamily)}");
+            if (!string.IsNullOrWhiteSpace(st.FontSize)) props.Add($"font-size:{Px(st.FontSize)}");
+            if (!string.IsNullOrWhiteSpace(st.FontWeight)) props.Add($"font-weight:{Css(st.FontWeight)}");
+            if (!string.IsNullOrWhiteSpace(st.FontStyle)) props.Add($"font-style:{Css(st.FontStyle)}");
+            if (!string.IsNullOrWhiteSpace(st.TextDecoration)) props.Add($"text-decoration:{Css(st.TextDecoration)}");
+            if (!string.IsNullOrWhiteSpace(st.TextColor)) props.Add($"color:{Css(st.TextColor)}");
+            return props.Count == 0 ? "" : $"[data-key=\"{Css(s.Key)}\"]{{{string.Join(";", props)}}}";
+        })
+        .Where(r => r.Length > 0).ToList();
+}
+@if (cssRules.Count > 0)
+{
+    <style>@Html.Raw(string.Join("\n", cssRules))</style>
+}

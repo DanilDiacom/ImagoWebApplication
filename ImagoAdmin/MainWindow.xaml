@@ -8,18 +8,38 @@
         d:DataContext="{d:DesignInstance Type=models:Pages}"
         mc:Ignorable="d"
         Icon="favicon.ico"
-        Height="1000" Width="1200"
+        Height="1000" Width="1400"
         WindowState="Maximized" Background="#f0f0f0">
 
     <Window.Resources>
         <Style TargetType="Button">
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Padding" Value="10,8"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Background" Value="#1d4f99"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.45"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!-- вторичные кнопки (светлые) -->
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#e8eef9"/>
+            <Setter Property="Foreground" Value="#1d4f99"/>
+        </Style>
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#fbe9e9"/>
+            <Setter Property="Foreground" Value="#b02a37"/>
+        </Style>
+        <Style x:Key="Hint" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#6c757d"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
     </Window.Resources>
 
@@ -27,177 +47,294 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="275"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Левая панель -->
+        <!-- ===== Левая панель: страницы ===== -->
         <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Grid.Column="0" Background="#f5f5f5" Margin="10">
+            <StackPanel Background="#f5f5f5" Margin="10">
                 <TextBlock Text="Stránky" FontWeight="Bold" Margin="0,0,0,5" FontSize="16"/>
-                <TreeView Name="tvPageList" ItemsSource="{Binding PagesList}" Height="250" SelectedItemChanged="TreeView_SelectionChanged">
+                <TreeView Name="tvPageList" ItemsSource="{Binding PagesList}" Height="320" SelectedItemChanged="TreeView_SelectionChanged">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding SubPages}">
-                            <TextBlock Text="{Binding Title}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Title}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <!-- skrytá v menu webu -->
+                                                <DataTrigger Binding="{Binding IsHidden}" Value="True">
+                                                    <Setter Property="Foreground" Value="Gray"/>
+                                                    <Setter Property="FontStyle" Value="Italic"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <!-- «● 3» — неопубликованные změny страницы -->
+                                <TextBlock Text="{Binding Badge}" Foreground="#d9822b" FontWeight="Bold"/>
+                            </StackPanel>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
-                <Button Name="AddDeviceButton" Content="➕ Přidat přístroj" Click="AddDeviceButton_Click"/>
-                <Button Name="DeleteDeviceButton" Content="Odstranit přístroj" Click="DeleteDeviceButton_Click"/>
+                <TextBlock Style="{StaticResource Hint}" Margin="0,4,0,4" Text="● = nepublikované změny"/>
+                <Button Name="PublishAllButton" Content="📤 Publikovat vše" Click="PublishAllButton_Click" IsEnabled="False"/>
+                <Button Name="MenuButton" Content="☰ Menu webu" Click="MenuButton_Click" Style="{StaticResource SecondaryButton}"
+                        ToolTip="Názvy, pořadí a skrytí stránek v menu webu"/>
 
+                <Button Name="AddDeviceButton" Content="➕ Přidat přístroj" Click="AddDeviceButton_Click" Margin="5,20,5,5"/>
+                <Button Name="DeleteDeviceButton" Content="🗑 Odstranit přístroj" Click="DeleteDeviceButton_Click" Style="{StaticResource DangerButton}"/>
 
                 <ListView Name="lv_Meeting" ItemsSource="{Binding MeetingList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
+                            <GridViewColumn Header="Mítinky" DisplayMemberBinding="{Binding Title}" Width="245"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
-
                 <Button Name="AddMeetingButton" Content="➕ Přidat mítink" Click="AddMeetingButton_Click" Visibility="Collapsed"/>
                 <Button Name="EditMeetingButton" Content="✏ Opravit mítink" Click="EditMeetingButton_Click" Visibility="Collapsed"/>
-                <Button Name="DeleteMeetingButton" Content="🗑 Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed"/>
+                <Button Name="DeleteMeetingButton" Content="🗑 Smazat mítink" Click="DeleteMeetingButton_Click" Visibility="Collapsed" Style="{StaticResource DangerButton}"/>
 
                 <ListView Name="lv_Noviny" ItemsSource="{Binding NovinkyList}" Height="350" Margin="0,30,0,10" Visibility="Collapsed">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="245"/>
+                            <GridViewColumn Header="Novinky" DisplayMemberBinding="{Binding Title}" Width="245"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
-
-                <Button Name="AddNovinyButton" Content="➕ Přidat novinky" Click="AddNovinyButton_Click" Visibility="Collapsed"/>
-                <Button Name="EditNovinyButton" Content="✏ Opravit novinky" Click="EditNovinyButton_Click" Visibility="Collapsed"/>
-                <Button Name="DeleteNovinyButton" Content="🗑 Smazat novinky" Click="DeleteNovinyButton_Click" Visibility="Collapsed"/>
-
+                <Button Name="AddNovinyButton" Content="➕ Přidat novinku" Click="AddNovinyButton_Click" Visibility="Collapsed"/>
+                <Button Name="EditNovinyButton" Content="✏ Opravit novinku" Click="EditNovinyButton_Click" Visibility="Collapsed"/>
+                <Button Name="DeleteNovinyButton" Content="🗑 Smazat novinku" Click="DeleteNovinyButton_Click" Visibility="Collapsed" Style="{StaticResource DangerButton}"/>
             </StackPanel>
         </ScrollViewer>
 
+        <!-- ===== Центр: náhled stránky (черновик с сайта) ===== -->
+        <Grid Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="#fff8e1" BorderBrush="#ffe08a" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,6">
+                <TextBlock Name="PreviewInfo" TextWrapping="Wrap" Foreground="#6b5300"
+                           Text="Náhled návrhu: klikněte na text na stránce a upravte ho vpravo. Na webu se změny objeví až po „📤 Publikovat stránku“."/>
+            </Border>
+            <wv2:WebView2 Name="webView" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
 
-        <!-- Центральная панель (WebView2) -->
-        <!--<wv2:WebView2 Name="webView" Grid.Column="1" Source="https://localhost:7090/" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>-->
+        <!-- ===== Правая панель: правка ===== -->
+        <Grid Grid.Column="2" Margin="0,10,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <wv2:WebView2 Name="webView" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
-        <!-- Правая панель -->
-        <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <TabControl Grid.Column="2" Background="#eeeeee" Margin="10">
-            <TabItem Header="📝 Text">
+            <!-- Шапка страницы: статус и публикация -->
+            <Border Grid.Row="0" Background="White" BorderBrush="#dbe3f0" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,0,0,8">
                 <StackPanel>
-                    <TextBlock Text="Úprava obsahu" FontWeight="Bold" Margin="0,10,0,5" FontSize="16"/>
+                    <TextBlock Name="PageTitleText" Text="Vyberte stránku vlevo" FontWeight="Bold" FontSize="16" TextWrapping="Wrap"/>
+                    <TextBlock Name="PageStatusText" Text="" Margin="0,4,0,6" TextWrapping="Wrap"/>
+                    <WrapPanel>
+                        <Button Name="PublishPageButton" Content="📤 Publikovat stránku" Click="PublishPageButton_Click" IsEnabled="False"/>
+                        <Button Name="DiscardPageButton" Content="↩ Zahodit změny" Click="DiscardPageButton_Click" IsEnabled="False" Style="{StaticResource SecondaryButton}"/>
+                        <Button Name="HistoryButton" Content="🕘 Historie" Click="HistoryButton_Click" IsEnabled="False" Style="{StaticResource SecondaryButton}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
 
-                    <ListBox Name="EntryList" Height="200" Margin="0,0,0,10" SelectionChanged="EntryList_SelectionChanged">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                        <TextBlock Text="{Binding ContentText}" FontSize="18px"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+            <TabControl Name="EditorTabs" Grid.Row="1" Background="#eeeeee">
 
-                    <TextBox Name="TextEditor" Height="350" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,10"/>
-
-                    <!-- Шрифт -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Písmo:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
-                        <ComboBox Name="FontFamilyComboBox" Width="200" SelectionChanged="FontFamilyComboBox_SelectionChanged">
-                            <ComboBoxItem Content="Arial"/>
-                                <ComboBoxItem Content="Segoe UI"/>
-                                <ComboBoxItem Content="Times New Roman"/>
-                            <ComboBoxItem Content="Courier New"/>
-                            <ComboBoxItem Content="Verdana"/>
-                            <ComboBoxItem Content="Georgia"/>
-                            <ComboBoxItem Content="Tahoma"/>
-                            <ComboBoxItem Content="Calibri"/>
-                            <ComboBoxItem Content="Comic Sans MS"/>
-                            <ComboBoxItem Content="Impact"/>
-                            <ComboBoxItem Content="Lucida Console"/>
-                        </ComboBox>
-                    </StackPanel>
-
-                    <!-- Размер шрифта -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Velikost:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
-                        <ComboBox Name="FontSizeComboBox" Width="200" SelectionChanged="FontSizeComboBox_SelectionChanged">
-                            <ComboBoxItem Content="8"/>
-                            <ComboBoxItem Content="10"/>
-                            <ComboBoxItem Content="12"/>
-                            <ComboBoxItem Content="14"/>
-                            <ComboBoxItem Content="16"/>
-                            <ComboBoxItem Content="18"/>
-                            <ComboBoxItem Content="20"/>
-                            <ComboBoxItem Content="24"/>
-                            <ComboBoxItem Content="28"/>
-                            <ComboBoxItem Content="32"/>
-                            <ComboBoxItem Content="36"/>
-                                <ComboBoxItem Content="38"/>
-                                <ComboBoxItem Content="40"/>
-                                <ComboBoxItem Content="42"/>
-                                <ComboBoxItem Content="44"/>
-                                <ComboBoxItem Content="46"/>
-                                <ComboBoxItem Content="48"/>
-                                <ComboBoxItem Content="50"/>
-                                <ComboBoxItem Content="52"/>
-                                <ComboBoxItem Content="54"/>
-                                <ComboBoxItem Content="56"/>
-                                <ComboBoxItem Content="58"/>
-                                <ComboBoxItem Content="60"/>
-                            </ComboBox>
-                    </StackPanel>
-
-                    <!-- Форматирование -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Formátování:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
-                        <StackPanel Orientation="Horizontal">
-                                <Button x:Name="BoldButton" Content="B" FontWeight="Bold" Width="40" Click="BoldButton_Click" Margin="0,0,5,0" Tag="False"/>
-                                <Button x:Name="ItalicButton" Content="I" FontStyle="Italic" Width="40" Click="ItalicButton_Click" Margin="0,0,5,0" Tag="False"/>
-                                <Button x:Name="UnderlineButton" Click="UnderlineButton_Click" Width="40" Margin="0,0,5,0" Tag="False">
-                                    <TextBlock Text="U" TextDecorations="Underline"/>
-                                </Button>
-                            </StackPanel>
-                    </StackPanel>
-
-                    <!-- Цвет текста -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <TextBlock Text="Barva textu:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
-                            <ComboBox Name="TextColorComboBox" Width="200" SelectionChanged="TextColorComboBox_SelectionChanged">
-                                <ComboBox.ItemTemplate>
+                <!-- ===== Тексты ===== -->
+                <TabItem Name="TextsTab" Header="📝 Texty">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="5">
+                            <TextBlock Style="{StaticResource Hint}" Text="Vyberte text v seznamu nebo klikněte na text v náhledu. Změny se ukládají do návrhu automaticky."/>
+                            <TextBox Name="EntrySearch" Margin="0,0,0,5" TextChanged="EntrySearch_TextChanged" ToolTip="Hledat text"/>
+                            <ListBox Name="EntryList" Height="230" Margin="0,0,0,10" SelectionChanged="EntryList_SelectionChanged">
+                                <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Border Width="20" Height="20" Margin="0,0,5,0" CornerRadius="10"
-                        Background="{Binding ColorBrush}"/>
-                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                        <StackPanel Margin="0,2,0,4">
+                                            <!-- какое это поле, затем его текст -->
+                                            <TextBlock Text="{Binding DisplayName}" FontSize="11" Foreground="#6c757d"/>
+                                            <TextBlock Text="{Binding PlainText}" FontSize="15" TextTrimming="CharacterEllipsis" MaxWidth="330"/>
                                         </StackPanel>
                                     </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
-                    
-                        <!-- Кнопки сохранения и публикации -->
-                    <Button Name="SaveButton" Content="💾 Uložit změny" Click="SaveButton_Click" Margin="0,10,0,5"/>
-                    <Button Name="PublishButton" Content="📤 Publikovat" Click="PublishButton_Click" Margin="0,5,0,10"/>
-                </StackPanel>
-            </TabItem>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
 
-            <TabItem Header="🖼 Foto">
-                <StackPanel>
-                    <ListBox Name="PhotoList" Height="400" Margin="0,0,0,10">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding ImageName}" />
-                                    <Image Source="{Binding ImageData}" Height="100" Width="100" Margin="5"/>
+                            <TextBlock Name="EditorFieldName" FontWeight="Bold" Foreground="#1d4f99" Margin="0,0,0,4"/>
+                            <!-- Форматирование части текста (без HTML): жирный, курсив, подчёркнутый, ссылка -->
+                            <WrapPanel Name="FormatToolbar" Margin="0,0,0,2" IsEnabled="False">
+                                <Button Content="B" FontWeight="Bold" Width="36" Padding="0,4" Margin="0,0,4,0" Click="FmtBold_Click" ToolTip="Tučně (Ctrl+B)" Style="{StaticResource SecondaryButton}"/>
+                                <Button Content="I" FontStyle="Italic" Width="36" Padding="0,4" Margin="0,0,4,0" Click="FmtItalic_Click" ToolTip="Kurzíva (Ctrl+I)" Style="{StaticResource SecondaryButton}"/>
+                                <Button Width="36" Padding="0,4" Margin="0,0,4,0" Click="FmtUnderline_Click" ToolTip="Podtržení (Ctrl+U)" Style="{StaticResource SecondaryButton}">
+                                    <TextBlock Text="U" TextDecorations="Underline"/>
+                                </Button>
+                                <Button Content="🔗 Odkaz" Padding="8,4" Margin="0,0,4,0" Click="FmtLink_Click" ToolTip="Udělat z vybraného textu odkaz" Style="{StaticResource SecondaryButton}"/>
+                                <Button Content="✖ Formát" Padding="8,4" Margin="0,0,4,0" Click="FmtClear_Click" ToolTip="Zrušit tučné, kurzívu a odkazy ve vybraném textu" Style="{StaticResource SecondaryButton}"/>
+                            </WrapPanel>
+                            <TextBlock Name="PlainFieldHint" Style="{StaticResource Hint}" Visibility="Collapsed" Margin="0,0,0,2"
+                                       Text="Toto pole je odkaz, e-mail nebo telefon — píše se bez formátování."/>
+                            <!-- Текст с форматированием; проверка pravopisu — čeština (нужен český jazyk ve Windows) -->
+                            <RichTextBox Name="TextEditor" Height="220" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,6" IsEnabled="False"
+                                         SpellCheck.IsEnabled="True" Language="cs-CZ" FontSize="15" Padding="2"/>
+                            <WrapPanel>
+                                <Button Name="SaveTextButton" Content="💾 Uložit text" Click="SaveTextButton_Click" IsEnabled="False"/>
+                                <Button Name="RevertTextButton" Content="↺ Vrátit původní" Click="RevertTextButton_Click" IsEnabled="False" Style="{StaticResource SecondaryButton}"
+                                        ToolTip="Vrátí text na verzi, která je teď na webu"/>
+                            </WrapPanel>
+
+                            <Expander Header="Styl textu (písmo, velikost, barva)" Margin="0,10,0,0" Name="StyleExpander" IsEnabled="False">
+                                <StackPanel Margin="0,6,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="Písmo:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                                        <ComboBox Name="FontFamilyComboBox" Width="200" SelectionChanged="FontFamilyComboBox_SelectionChanged">
+                                            <ComboBoxItem Content="Arial"/>
+                                            <ComboBoxItem Content="Segoe UI"/>
+                                            <ComboBoxItem Content="Times New Roman"/>
+                                            <ComboBoxItem Content="Courier New"/>
+                                            <ComboBoxItem Content="Verdana"/>
+                                            <ComboBoxItem Content="Georgia"/>
+                                            <ComboBoxItem Content="Tahoma"/>
+                                            <ComboBoxItem Content="Calibri"/>
+                                            <ComboBoxItem Content="Comic Sans MS"/>
+                                            <ComboBoxItem Content="Impact"/>
+                                            <ComboBoxItem Content="Lucida Console"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="Velikost:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                                        <ComboBox Name="FontSizeComboBox" Width="200" SelectionChanged="FontSizeComboBox_SelectionChanged">
+                                            <ComboBoxItem Content="10"/>
+                                            <ComboBoxItem Content="12"/>
+                                            <ComboBoxItem Content="14"/>
+                                            <ComboBoxItem Content="16"/>
+                                            <ComboBoxItem Content="18"/>
+                                            <ComboBoxItem Content="20"/>
+                                            <ComboBoxItem Content="22"/>
+                                            <ComboBoxItem Content="24"/>
+                                            <ComboBoxItem Content="28"/>
+                                            <ComboBoxItem Content="32"/>
+                                            <ComboBoxItem Content="36"/>
+                                            <ComboBoxItem Content="40"/>
+                                            <ComboBoxItem Content="44"/>
+                                            <ComboBoxItem Content="48"/>
+                                            <ComboBoxItem Content="54"/>
+                                            <ComboBoxItem Content="60"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="Formátování:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                                        <Button x:Name="BoldButton" Content="B" FontWeight="Bold" Width="40" Click="BoldButton_Click" Margin="0,0,5,0" Style="{StaticResource SecondaryButton}"/>
+                                        <Button x:Name="ItalicButton" Content="I" FontStyle="Italic" Width="40" Click="ItalicButton_Click" Margin="0,0,5,0" Style="{StaticResource SecondaryButton}"/>
+                                        <Button x:Name="UnderlineButton" Click="UnderlineButton_Click" Width="40" Margin="0,0,5,0" Style="{StaticResource SecondaryButton}">
+                                            <TextBlock Text="U" TextDecorations="Underline"/>
+                                        </Button>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="Barva textu:" VerticalAlignment="Center" Width="100" Margin="5,0,0,0"/>
+                                        <ComboBox Name="TextColorComboBox" Width="200" SelectionChanged="TextColorComboBox_SelectionChanged">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="20" Height="20" Margin="0,0,5,0" CornerRadius="10" BorderBrush="#ccc" BorderThickness="1"
+                                                                Background="{Binding Brush}"/>
+                                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <Button Name="DefaultStyleButton" Content="Výchozí styl" Click="DefaultStyleButton_Click" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left"
+                                            ToolTip="Zruší vlastní písmo, velikost a barvu — text bude vypadat jako ostatní na stránce"/>
                                 </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                            </Expander>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
 
-                    <Button Name="AddPhotoButton" Content="➕ Přidat fotografii" Click="AddPhotoButton_Click"/>
-                    <Button Name="UpdatePhotosButton" Content="✏ Upravit fotografii" Click="UpdatePhotosButton_Click_1"/>
-                    <Button Name="DeletePhotosButton" Content="🗑 Odstranit fotografii" Click="DeletePhotosButton_Click"/>
-                    <Button Name="SavePhotosButton" Content="💾 Uložit fotografii na web" Click="SavePhotosButton_Click"/>
-                </StackPanel>
-            </TabItem>
-        </TabControl>
-        </ScrollViewer>
+                <!-- ===== Блоки ===== -->
+                <TabItem Name="BlocksTab" Header="🧩 Bloky" Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="5">
+                            <TextBlock Style="{StaticResource Hint}" Text="Opakující se části stránky (kontaktní osoby, spolupracovníci…). Vyberte blok nebo na něj klikněte v náhledu."/>
+                            <ListBox Name="BlockList" Height="230" Margin="0,0,0,6" SelectionChanged="BlockList_SelectionChanged">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,2,0,4">
+                                            <TextBlock Text="{Binding TemplateTitle}" FontSize="11" Foreground="#6c757d"/>
+                                            <TextBlock Text="{Binding Label}" FontSize="15" TextTrimming="CharacterEllipsis" MaxWidth="330"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <WrapPanel>
+                                <Button Name="MoveUpButton" Content="⬆" Width="44" Click="MoveUpButton_Click" ToolTip="Posunout výš" Style="{StaticResource SecondaryButton}"/>
+                                <Button Name="MoveDownButton" Content="⬇" Width="44" Click="MoveDownButton_Click" ToolTip="Posunout níž" Style="{StaticResource SecondaryButton}"/>
+                                <Button Name="DuplicateBlockButton" Content="📄 Duplikovat" Click="DuplicateBlockButton_Click" Style="{StaticResource SecondaryButton}"/>
+                                <Button Name="DeleteBlockButton" Content="🗑 Smazat" Click="DeleteBlockButton_Click" Style="{StaticResource DangerButton}"/>
+                            </WrapPanel>
+
+                            <TextBlock Text="Přidat nový blok:" FontWeight="Bold" Margin="0,10,0,0"/>
+                            <ItemsControl Name="NewBlockButtons">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Tag="{Binding}" Click="NewBlockButton_Click">
+                                            <TextBlock Text="{Binding Title, StringFormat=➕ {0}}"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Форма блока: все поля на одном экране -->
+                            <Border Name="BlockFormPanel" Background="White" BorderBrush="#dbe3f0" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,12,0,0" Visibility="Collapsed">
+                                <StackPanel>
+                                    <TextBlock Name="BlockFormTitle" FontWeight="Bold" FontSize="15" Foreground="#1d4f99" Margin="0,0,0,8"/>
+                                    <ItemsControl Name="BlockFormFields">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="0,0,0,8">
+                                                    <TextBlock Text="{Binding Caption}" FontWeight="SemiBold"/>
+                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="{Binding Multiline}" TextWrapping="Wrap" Padding="4,3"/>
+                                                    <TextBlock Text="{Binding Hint}" FontSize="11" Foreground="#6c757d"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <WrapPanel>
+                                        <Button Name="SaveBlockButton" Content="💾 Uložit blok" Click="SaveBlockButton_Click"/>
+                                        <Button Name="CancelBlockButton" Content="Zrušit" Click="CancelBlockButton_Click" Style="{StaticResource SecondaryButton}"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- ===== Фото ===== -->
+                <TabItem Name="PhotosTab" Header="🖼 Foto">
+                    <StackPanel Margin="5">
+                        <TextBlock Style="{StaticResource Hint}" Text="Fotografie stránky. Změny se na webu objeví po „📤 Publikovat stránku“."/>
+                        <ListBox Name="PhotoList" Height="400" Margin="0,0,0,10">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding ImageData}" Height="80" Width="110" Margin="5" Stretch="Uniform"/>
+                                        <TextBlock Text="{Binding ImageName}" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="200"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button Name="AddPhotoButton" Content="➕ Přidat fotografii" Click="AddPhotoButton_Click"/>
+                        <Button Name="UpdatePhotosButton" Content="✏ Vyměnit fotografii" Click="UpdatePhotosButton_Click"/>
+                        <Button Name="DeletePhotosButton" Content="🗑 Odstranit fotografii" Click="DeletePhotosButton_Click" Style="{StaticResource DangerButton}"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </Grid>
     </Grid>
 </Window>

@@ -1,9 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace ImagoLib.Models {
+    /// <summary>
+    /// Стиль текста (шрифт, размер, цвет…) по ключу текста. Опубликованные стили — TextStyles,
+    /// черновик админки — EditingTextStyles (на сайт попадает только по «Publikovat», см. PageDraft).
+    /// </summary>
     public class TextStyle {
         public int Id { get; set; }
         public string EntryKey { get; set; }
@@ -14,6 +18,8 @@ namespace ImagoLib.Models {
         public string TextDecoration { get; set; }
         public string TextColor { get; set; }  // Новый параметр
         public string TextAlignment { get; set; }  // Новый параметр
+
+        internal static string Table(bool draft) => draft ? "EditingTextStyles" : "TextStyles";
 
         private static TextStyle FromDataReader(IDataReader dr) {
             return new TextStyle {
@@ -28,21 +34,24 @@ namespace ImagoLib.Models {
             };
         }
 
-        public static void SaveTextStyleAsync(TextStyle style) {
+        public static void SaveTextStyleAsync(TextStyle style) => SaveTextStyle(style, draft: false);
+
+        public static void SaveTextStyle(TextStyle style, bool draft) {
+            var table = Table(draft);
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = @"
-                IF EXISTS (SELECT 1 FROM TextStyles WHERE EntryKey = @EntryKey)
-                    UPDATE TextStyles 
-                    SET FontFamily = @FontFamily, 
-                        FontSize = @FontSize, 
-                        FontWeight = @FontWeight, 
-                        FontStyle = @FontStyle, 
+                cmd.CommandText = $@"
+                IF EXISTS (SELECT 1 FROM {table} WHERE EntryKey = @EntryKey)
+                    UPDATE {table}
+                    SET FontFamily = @FontFamily,
+                        FontSize = @FontSize,
+                        FontWeight = @FontWeight,
+                        FontStyle = @FontStyle,
                         TextDecoration = @TextDecoration,
                         TextColor = @TextColor
                     WHERE EntryKey = @EntryKey
                 ELSE
-                    INSERT INTO TextStyles (EntryKey, FontFamily, FontSize, FontWeight, FontStyle, TextDecoration, TextColor)
+                    INSERT INTO {table} (EntryKey, FontFamily, FontSize, FontWeight, FontStyle, TextDecoration, TextColor)
                     VALUES (@EntryKey, @FontFamily, @FontSize, @FontWeight, @FontStyle, @TextDecoration, @TextColor)";
 
                 Db.SetParam(cmd, "@EntryKey", style.EntryKey);
@@ -57,12 +66,14 @@ namespace ImagoLib.Models {
             }
         }
 
-        public static TextStyle GetTextStyle(string entryKey) {
+        public static TextStyle GetTextStyle(string entryKey) => GetTextStyle(entryKey, draft: false);
+
+        public static TextStyle GetTextStyle(string entryKey, bool draft) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = @"
-            SELECT FontFamily, FontSize, FontWeight, FontStyle, TextDecoration, TextColor 
-            FROM TextStyles 
+                cmd.CommandText = $@"
+            SELECT FontFamily, FontSize, FontWeight, FontStyle, TextDecoration, TextColor
+            FROM {Table(draft)}
             WHERE EntryKey = @EntryKey";
                 Db.SetParam(cmd, "@EntryKey", entryKey);
 
@@ -83,10 +94,12 @@ namespace ImagoLib.Models {
             return null;
         }
 
-        public static List<TextStyle> GetAllStyles() {
+        public static List<TextStyle> GetAllStyles() => GetAllStyles(draft: false);
+
+        public static List<TextStyle> GetAllStyles(bool draft) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT EntryKey, FontFamily, FontSize, FontWeight, FontStyle, TextDecoration,TextColor FROM TextStyles";
+                cmd.CommandText = $"SELECT EntryKey, FontFamily, FontSize, FontWeight, FontStyle, TextDecoration,TextColor FROM {Table(draft)}";
                 var styles = new List<TextStyle>();
 
                 using (var dr = cmd.ExecuteReader()) {
@@ -103,14 +116,18 @@ namespace ImagoLib.Models {
                     }
                 }
 
-                return styles;
+                // если по ошибке у ключа несколько строк — берём одну, чтобы ToDictionary на сайте не падал
+                return styles.GroupBy(s => s.EntryKey).Select(g => g.First()).ToList();
             }
         }
 
-        public static void DeleteTextStyle(string entryKey) {
+        public static void DeleteTextStyle(string entryKey) => DeleteTextStyle(entryKey, draft: false);
+
+        /// <summary>Убирает стиль текста — на сайте текст снова в оформлении по умолчанию («Výchozí styl»).</summary>
+        public static void DeleteTextStyle(string entryKey, bool draft) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "DELETE FROM TextStyles WHERE EntryKey = @EntryKey";
+                cmd.CommandText = $"DELETE FROM {Table(draft)} WHERE EntryKey = @EntryKey";
                 Db.SetParam(cmd, "@EntryKey", entryKey);
 
                 cmd.ExecuteNonQuery();

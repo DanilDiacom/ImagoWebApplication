@@ -15,7 +15,7 @@
                     font-style: @(titleStyle?.FontStyle ?? "normal");
                     text-decoration: @(titleStyle?.TextDecoration ?? "none");
                     color: @(titleStyle?.TextColor ?? "#333");">
-                    @ViewBag.Entries["DiacomClub_Benefits_Title"]
+                    @Html.Raw(ViewBag.Entries["DiacomClub_Benefits_Title"])
                 </h1>
             }
 
@@ -35,7 +35,7 @@
                                 text-decoration: @(benefit1TitleStyle?.TextDecoration ?? "none");
                                 color: @(benefit1TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit1_Title">
-                                @ViewBag.Entries["DiacomClub_Benefit1_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit1_Title"])
                             </h3>
                             <p style="
                                 font-family: @(benefit1DescStyle?.FontFamily ?? "Arial");
@@ -46,7 +46,7 @@
                                 color: @(benefit1DescStyle?.TextColor ?? "#333");"
 
                                data-key="DiacomClub_Benefit1_Desc">
-                                @ViewBag.Entries["DiacomClub_Benefit1_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit1_Desc"])
                             </p>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                                 text-decoration: @(benefit2TitleStyle?.TextDecoration ?? "none");
 color: @(benefit2TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit2_Title">
-                                @ViewBag.Entries["DiacomClub_Benefit2_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit2_Title"])
                             </h3>
                             <p style="
                                 font-family: @(benefit2DescStyle?.FontFamily ?? "Arial");
@@ -77,7 +77,7 @@ color: @(benefit2TitleStyle?.TextColor ?? "#333");"
                                 text-decoration: @(benefit2DescStyle?.TextDecoration ?? "none");
 color: @(benefit2DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit2_Desc">
-                                @ViewBag.Entries["DiacomClub_Benefit2_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit2_Desc"])
                             </p>
                         </div>
                     </div>
@@ -98,7 +98,7 @@ color: @(benefit2DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit3TitleStyle?.TextDecoration ?? "none");
                                 color: @(benefit3TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit3_Title">
-                                @ViewBag.Entries["DiacomClub_Benefit3_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit3_Title"])
                             </h3>
                             <p style="
                                 font-family: @(benefit3DescStyle?.FontFamily ?? "Arial");
@@ -108,7 +108,7 @@ color: @(benefit2DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit3DescStyle?.TextDecoration ?? "none");
 color: @(benefit3DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit3_Desc">
-                                @ViewBag.Entries["DiacomClub_Benefit3_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit3_Desc"])
                             </p>
                         </div>
                     </div>
@@ -129,7 +129,7 @@ color: @(benefit3DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit4TitleStyle?.TextDecoration ?? "none");
                                 color: @(benefit4TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit4_Title">
-                                @ViewBag.Entries["DiacomClub_Benefit4_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit4_Title"])
                             </h3>
                             <p style="
                                 font-family: @(benefit4DescStyle?.FontFamily ?? "Arial");
@@ -139,7 +139,7 @@ color: @(benefit3DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit4DescStyle?.TextDecoration ?? "none");
 color: @(benefit4DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit4_Desc">
-                                @ViewBag.Entries["DiacomClub_Benefit4_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit4_Desc"])
                             </p>
                         </div>
                     </div>
@@ -160,7 +160,7 @@ color: @(benefit4DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit5TitleStyle?.TextDecoration ?? "none");
                                 color: @(benefit5TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit5_Title">
-                                @ViewBag.Entries["DiacomClub_Benefit5_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit5_Title"])
                             </h3>
                             <p style="
                                 font-family: @(benefit5DescStyle?.FontFamily ?? "Arial");
@@ -170,7 +170,7 @@ color: @(benefit4DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit5DescStyle?.TextDecoration ?? "none");
 color: @(benefit5DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit5_Desc">
-                                @ViewBag.Entries["DiacomClub_Benefit5_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit5_Desc"])
                             </p>
                         </div>
                     </div>
@@ -191,7 +191,7 @@ color: @(benefit5DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit6TitleStyle?.TextDecoration ?? "none");
                                 color: @(benefit6TitleStyle?.TextColor ?? "#333");"
                                 data-key="DiacomClub_Benefit6_Title">
-                                @ViewBag.Entries["DiacomClub_Benefit6_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit6_Title"])
                             </h3>
                             <p style="
                                 font-family: @(benefit6DescStyle?.FontFamily ?? "Arial");
@@ -201,7 +201,7 @@ color: @(benefit5DescStyle?.TextColor ?? "#666");"
                                 text-decoration: @(benefit6DescStyle?.TextDecoration ?? "none");
                                 color: @(benefit6DescStyle?.TextColor ?? "#666");"
                                data-key="DiacomClub_Benefit6_Desc">
-                                @ViewBag.Entries["DiacomClub_Benefit6_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Benefit6_Desc"])
                             </p>
                         </div>
                     </div>

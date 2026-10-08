@@ -133,7 +133,7 @@ namespace ImagoAdmin {
                     IconPhoto = File.ReadAllBytes(SelectedIconPath)
                 };
 
-                int novinyId = Noviny.InsertNoviny(noviny);
+                int novinyId = Noviny.InsertNoviny(noviny, draft: true);
 
                 // Сохранение параметров (только заполненных)
                 foreach (var parameter in Parameters) {
@@ -143,7 +143,7 @@ namespace ImagoAdmin {
                             ParameterName = parameter.Name,
                             ParameterValue = parameter.Value
                         };
-                        NovinyParameter.InsertParameter(novinyParameter);
+                        NovinyParameter.InsertParameter(novinyParameter, draft: true);
                     }
                 }
 
@@ -154,7 +154,7 @@ namespace ImagoAdmin {
                         PhotoName = System.IO.Path.GetFileName(photo.UriSource.LocalPath),
                         PhotoData = ConvertImageToByteArray(photo)
                     };
-                    NovinyFoto.InsertPhoto(photoInfo, novinyId);
+                    NovinyFoto.InsertPhoto(photoInfo, novinyId, draft: true);
                 }
 
                 MessageBox.Show("Data úspěšně uložena!", "Hotovo", MessageBoxButton.OK, MessageBoxImage.Information);

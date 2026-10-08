@@ -64,7 +64,7 @@
            font-style: @(headerStyle?.FontStyle ?? "normal");
            text-decoration: @(headerStyle?.TextDecoration ?? "none");
             color: @(headerStyle?.TextColor ?? "#000000");">
-                        @ViewBag.Entries["uvod_header"]
+                        @Html.Raw(ViewBag.Entries["uvod_header"])
                     </h2>
                 }
 
@@ -80,7 +80,7 @@
         text-decoration: @(textStyle?.TextDecoration ?? "none");
         color: @(textStyle?.TextColor ?? "#000000");">
                         <p>
-                            @ViewBag.Entries["uvod_text"]
+                            @Html.Raw(ViewBag.Entries["uvod_text"])
                         </p>
                     </div>
                 }
@@ -138,7 +138,7 @@
         text-decoration: @(textStyle?.TextDecoration ?? "none");
         color: @(textStyle?.TextColor ?? "#000000");">
                     <p>
-                        @ViewBag.Entries["uvod_secondText"]
+                        @Html.Raw(ViewBag.Entries["uvod_secondText"])
                     </p>
                 </div>
             }

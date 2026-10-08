@@ -13,18 +13,18 @@ public class HomeController : BaseController {
     }
 
     private void SetViewHomeBagEntries() {
-        var entries = DictionaryEntryForText.GetAllEntries();
-        ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
+        var entries = DictionaryEntryForText.GetAllEntries(IsDraft);
+        ViewBag.Entries = HtmlLite.ToSafeDictionary(entries);
 
     }
 
     private void SetViewHomeBagStyles() {
-        var styles = TextStyle.GetAllStyles();
+        var styles = TextStyle.GetAllStyles(IsDraft);
         ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
     }
 
     private void SetViewHomeBagImages() {
-        var images = DictionaryEntryForImages.GetAllEntries()
+        var images = DictionaryEntryForImages.GetAllEntries(IsDraft)
             .Select(img => new Dictionary<string, string> {
             { "EntryKey", img.EntryKey },
             { "Base64", Convert.ToBase64String(img.ImageData) }
@@ -120,10 +120,10 @@ public class HomeController : BaseController {
     }
 
     public IActionResult Mitink() {
-        var meetings = Meeting.GetMeetings().OrderByDescending(m => m.Id).ToList();
+        var meetings = Meeting.GetMeetings(draft: IsDraft).OrderByDescending(m => m.Id).ToList();
 
         foreach (var meeting in meetings) {
-            meeting.Photos = MeetingPhoto.GetPhotosForMeeting(meeting.Id);
+            meeting.Photos = MeetingPhoto.GetPhotosForMeeting(meeting.Id, draft: IsDraft);
         }
 
         SetViewHomeBagEntries();
@@ -143,10 +143,10 @@ public class HomeController : BaseController {
             endDate = dates.Length > 1 ? DateTime.Parse(dates[1]) : startDate;
         }
 
-        var novinkyList = Noviny.GetNoviny(startDate, endDate).OrderByDescending(m => m.Id).ToList();
+        var novinkyList = Noviny.GetNoviny(startDate, endDate, draft: IsDraft).OrderByDescending(m => m.Id).ToList();
 
         foreach (var item in novinkyList) {
-            item.Photos = NovinyFoto.GetPhotosForRequest(item.Id);
+            item.Photos = NovinyFoto.GetPhotosForRequest(item.Id, draft: IsDraft);
         }
 
         ViewBag.Novinky = novinkyList;
@@ -155,15 +155,16 @@ public class HomeController : BaseController {
 
     public IActionResult Kontakty() {
         SetViewHomeBagEntries();
+        SetViewHomeBagStyles();
         return View();
     }
     
     public IActionResult ProductDetails(int id) {
-        var novinka = Noviny.GetNoviny().FirstOrDefault(n => n.Id == id);
+        var novinka = Noviny.GetNoviny(draft: IsDraft).FirstOrDefault(n => n.Id == id);
 
         if (novinka != null) {
-            novinka.Photos = NovinyFoto.GetPhotosForRequest(novinka.Id);
-            novinka.Parameters = NovinyParameter.GetParametersForNoviny(novinka.Id);
+            novinka.Photos = NovinyFoto.GetPhotosForRequest(novinka.Id, draft: IsDraft);
+            novinka.Parameters = NovinyParameter.GetParametersForNoviny(novinka.Id, draft: IsDraft);
         }
 
         ViewBag.NovinkaDetails = novinka;

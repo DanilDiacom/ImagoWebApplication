@@ -66,6 +66,11 @@ namespace ImagoWebApplication.Controllers {
                 return Json(new ChatReply { ConversationId = conversation.Id, Reply = ChatbotTexts.Get("Chatbot_ContactInvalid"), AskContact = true, Error = true });
             }
 
+            // Без вопроса в чате заявку не создаём (иначе менеджеру уйдёт пустой požadavek)
+            if (!conversation.Turns.Any(t => t.Role == "user")) {
+                return Json(new ChatReply { ConversationId = conversation.Id, Reply = ChatbotTexts.Get("Chatbot_AskFirst"), Error = true });
+            }
+
             conversation.CustomerName = request.Name!.Trim();
             conversation.CustomerContact = request.Contact!.Trim();
             if (!string.IsNullOrEmpty(request.Page)) conversation.PageUrl = TrimPage(request.Page);

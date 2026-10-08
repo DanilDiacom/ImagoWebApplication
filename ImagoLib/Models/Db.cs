@@ -35,6 +35,7 @@ namespace ImagoLib.Models {
 
         public static void SetParam(IDbCommand cmd, string name, object value) {
             var sqlCmd = (SqlCommand)cmd;
+            value ??= DBNull.Value;   // null -> NULL в базе (иначе SqlClient пишет «parameter was not supplied»)
             if (sqlCmd.Parameters.Contains(name)) {
                 sqlCmd.Parameters[name].Value = value;
             }

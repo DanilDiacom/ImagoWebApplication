@@ -11,8 +11,19 @@ namespace ImagoLib.Models {
         [ObservableProperty] public string m_Title;
         [ObservableProperty] public string m_Url;
         [ObservableProperty] public int? m_ParentId;
+        /// <summary>Порядок в меню (среди страниц одного уровня).</summary>
+        [ObservableProperty] public int m_SortOrder;
+        /// <summary>Скрыта в меню сайта (по прямому адресу страница доступна).</summary>
+        [ObservableProperty] public bool m_IsHidden;
 
         public ObservableCollection<Pages> SubPages { get; set; } = new ObservableCollection<Pages>();
+
+        /// <summary>Неопубликованные изменения черновика страницы (ImagoAdmin показывает «● N» у страницы в дереве).</summary>
+        [ObservableProperty] public int m_PendingChanges;
+
+        public string Badge => PendingChanges > 0 ? $"  ● {PendingChanges}" : "";
+
+        partial void OnPendingChangesChanged(int value) => OnPropertyChanged(nameof(Badge));
 
         private static Pages FromDataReader(IDataReader dr) {
             return new Pages() {
@@ -20,6 +31,8 @@ namespace ImagoLib.Models {
                 Title = dr.GetString(1),
                 Url = dr.GetString(2),
                 ParentId = dr.IsDBNull(3) ? null : dr.GetInt32(3),
+                SortOrder = dr.IsDBNull(4) ? int.MaxValue : dr.GetInt32(4),
+                IsHidden = !dr.IsDBNull(5) && dr.GetBoolean(5),
             };
         }
 
@@ -28,7 +41,8 @@ namespace ImagoLib.Models {
 
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT id, title, url, parentId FROM Pages";
+                // новые страницы (SortOrder ещё не задан) — в конец своего уровня
+                cmd.CommandText = "SELECT id, title, url, parentId, SortOrder, IsHidden FROM Pages ORDER BY ISNULL(SortOrder, 2147483647), id";
                 using (var dr = cmd.ExecuteReader()) {
                     while (dr.Read()) {
                         allPages.Add(FromDataReader(dr));
@@ -45,6 +59,26 @@ namespace ImagoLib.Models {
             }
 
             return new ObservableCollection<Pages>(pageDictionary.Values.Where(p => !p.ParentId.HasValue));
+        }
+
+        /// <summary>
+        /// Сохраняет меню из ImagoAdmin («☰ Menu»): название, порядок и скрытие страниц. Сразу видно на сайте.
+        /// </summary>
+        public static void SaveMenu(IEnumerable<Pages> pages) {
+            using (var db = Db.Get())
+            using (var tx = db.BeginTransaction()) {
+                foreach (var p in pages) {
+                    var cmd = db.CreateCommand();
+                    cmd.Transaction = tx;
+                    cmd.CommandText = "UPDATE Pages SET title = @title, SortOrder = @sort, IsHidden = @hidden WHERE id = @id";
+                    Db.SetParam(cmd, "@id", p.Id);
+                    Db.SetParam(cmd, "@title", p.Title);
+                    Db.SetParam(cmd, "@sort", p.SortOrder);
+                    Db.SetParam(cmd, "@hidden", p.IsHidden);
+                    cmd.ExecuteNonQuery();
+                }
+                tx.Commit();
+            }
         }
 
         public static int InsertPageIfNotExists(Pages page) {
@@ -114,6 +148,13 @@ namespace ImagoLib.Models {
                     cmdText.Transaction = transaction;
                     Db.SetParam(cmdText, "@pageId", pageId);
                     cmdText.ExecuteNonQuery();
+
+                    // 1a. И из черновика — иначе «Publikovat» вернул бы тексты удалённой страницы
+                    var cmdEditingText = db.CreateCommand();
+                    cmdEditingText.CommandText = "DELETE FROM EditingDictionaryEntries WHERE PageId = @pageId";
+                    cmdEditingText.Transaction = transaction;
+                    Db.SetParam(cmdEditingText, "@pageId", pageId);
+                    cmdEditingText.ExecuteNonQuery();
 
                     // 2. Удаляем связанные изображения (основная таблица)
                     var cmdImages = db.CreateCommand();

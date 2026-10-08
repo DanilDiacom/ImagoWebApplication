@@ -68,7 +68,7 @@ namespace ImagoAdmin {
                 CreatedAt = createdAt
             };
 
-            var meetingId = Meeting.InsertMeeting(newMeeting);
+            var meetingId = Meeting.InsertMeeting(newMeeting, draft: true);
 
             foreach (var photo in Photos) {
                 var photoName = System.IO.Path.GetFileName(photo.UriSource.LocalPath);
@@ -80,7 +80,7 @@ namespace ImagoAdmin {
                     PhotoData = photoData
                 };
 
-                MeetingPhoto.InsertPhoto(newPhoto, meetingId);
+                MeetingPhoto.InsertPhoto(newPhoto, meetingId, draft: true);
             }
 
             MessageBox.Show("Mítink byl úspěšně uložen!", "Hotovo", MessageBoxButton.OK, MessageBoxImage.Information);

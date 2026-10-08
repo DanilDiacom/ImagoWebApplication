@@ -15,18 +15,18 @@ namespace ImagoWebApplication.Controllers {
         }
 
         private void SetViewBagEntries() {
-            var entries = DictionaryEntryForText.GetAllEntries();
-            ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
+            var entries = DictionaryEntryForText.GetAllEntries(IsDraft);
+            ViewBag.Entries = HtmlLite.ToSafeDictionary(entries);
         }
 
 
 
         private void SetViewBagEntrie(int id) {
-            var entries = DictionaryEntryForText.GetEntriesForPage(id);
-            ViewBag.Entries = entries.ToDictionary(e => e.EntryKey, e => e.ContentText);
+            var entries = DictionaryEntryForText.GetEntriesForPage(id, IsDraft);
+            ViewBag.Entries = HtmlLite.ToSafeDictionary(entries);
         }
         private void SetViewHomeBagImage(int id) {
-            var images = DictionaryEntryForImages.GetEntriesForPage(id)
+            var images = DictionaryEntryForImages.GetEntriesForPage(id, IsDraft)
                 .Select(img => new Dictionary<string, string> {
             { "EntryKey", img.EntryKey },
             { "Base64", Convert.ToBase64String(img.ImageData) }
@@ -39,7 +39,7 @@ namespace ImagoWebApplication.Controllers {
 
 
         private void SetViewHomeBagImages() {
-            var images = DictionaryEntryForImages.GetAllEntries()
+            var images = DictionaryEntryForImages.GetAllEntries(IsDraft)
                 .Select(img => new Dictionary<string, string> {
             { "EntryKey", img.EntryKey },
             { "Base64", Convert.ToBase64String(img.ImageData) }
@@ -50,7 +50,7 @@ namespace ImagoWebApplication.Controllers {
         }
 
         private void SetViewHomeBagStyles() {
-            var styles = TextStyle.GetAllStyles();
+            var styles = TextStyle.GetAllStyles(IsDraft);
             ViewBag.TextStyles = styles.ToDictionary(s => s.EntryKey, s => s);
         }
 
@@ -120,6 +120,7 @@ namespace ImagoWebApplication.Controllers {
 
         public IActionResult Navody() {
             SetViewBagEntries();
+            SetViewHomeBagStyles();
             return View();
         }
 

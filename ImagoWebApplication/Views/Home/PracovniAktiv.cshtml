@@ -17,7 +17,7 @@
                 text-decoration: @(titleStyle?.TextDecoration ?? "none");
                 color: @(titleStyle?.TextColor ?? "#212529");"
                 data-key="DiacomClub_PracovniAktiv_Title">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Title"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Title"])
             </h1>
         }
 
@@ -32,7 +32,7 @@
                 text-decoration: @(subtitleStyle?.TextDecoration ?? "none");
 color: @(subtitleStyle?.TextColor ?? "#222");"
                 data-key="DiacomClub_PracovniAktiv_Subtitle">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Subtitle"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Subtitle"])
             </h2>
         }
 
@@ -47,7 +47,7 @@ color: @(subtitleStyle?.TextColor ?? "#222");"
                 text-decoration: @(desc1Style?.TextDecoration ?? "none");
 color: @(desc1Style?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Desc1">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc1"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Desc1"])
             </p>
         }
 
@@ -62,7 +62,7 @@ color: @(desc1Style?.TextColor ?? "#212529");"
                 text-decoration: @(quoteStyle?.TextDecoration ?? "none");
                 color: @(quoteStyle?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Quote">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Quote"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Quote"])
             </p>
         }
 
@@ -79,7 +79,7 @@ color: @(desc1Style?.TextColor ?? "#212529");"
                     color: @(commentTitleStyle?.TextColor ?? "#212529");"
 
                     data-key="DiacomClub_PracovniAktiv_CommentTitle">
-                    @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentTitle"]
+                    @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_CommentTitle"])
                 </h3>
             }
 
@@ -94,7 +94,7 @@ color: @(desc1Style?.TextColor ?? "#212529");"
                     text-decoration: @(commentDescStyle?.TextDecoration ?? "none");
                     color: @(commentDescStyle?.TextColor ?? "#212529");">
                     <span data-key="DiacomClub_PracovniAktiv_CommentDesc">
-                        @ViewBag.Entries["DiacomClub_PracovniAktiv_CommentDesc"]
+                        @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_CommentDesc"])
                     </span>
                     <a href="http://www.semes.sk/urmium-2017/" class="styled-link" target="_blank">
                         http://www.semes.sk/urmium-2017/
@@ -114,7 +114,7 @@ color: @(desc1Style?.TextColor ?? "#212529");"
                 text-decoration: @(desc2Style?.TextDecoration ?? "none");
                 color: @(desc2Style?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Desc2">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc2"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Desc2"])
             </p>
         }
 
@@ -129,7 +129,7 @@ color: @(desc1Style?.TextColor ?? "#212529");"
                 text-decoration: @(desc3Style?.TextDecoration ?? "none");
                 color: @(desc3Style?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Desc3">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Desc3"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Desc3"])
             </p>
         }
 
@@ -144,7 +144,7 @@ color: @(desc1Style?.TextColor ?? "#212529");"
                 text-decoration: @(signatureStyle?.TextDecoration ?? "none");
                 color: @(signatureStyle?.TextColor ?? "#666");"
                data-key="DiacomClub_PracovniAktiv_Signature">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Signature"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Signature"])
             </p>
         }
 
@@ -159,7 +159,7 @@ color: @(desc1Style?.TextColor ?? "#212529");"
                 text-decoration: @(authorStyle?.TextDecoration ?? "none");
                 color: @(authorStyle?.TextColor ?? "#212529");"
                data-key="DiacomClub_PracovniAktiv_Author">
-                @ViewBag.Entries["DiacomClub_PracovniAktiv_Author"]
+                @Html.Raw(ViewBag.Entries["DiacomClub_PracovniAktiv_Author"])
             </p>
         }
     </div>

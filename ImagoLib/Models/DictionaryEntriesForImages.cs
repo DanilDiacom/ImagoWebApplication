@@ -73,11 +73,19 @@ namespace ImagoLib.Models {
             return null;
         }
 
-        public static ObservableCollection<DictionaryEntryForImages> GetEntriesForPage(int pageId) {
+        // Черновик фото — EditingDictionaryEntriesForFoto (картинка в столбце Image), сайт — DictionaryEntriesImages (столбец ImageUrl)
+        private static string Select(bool draft) => draft
+            ? "SELECT Id, PageId, [EntryKey], Image, ImageName FROM EditingDictionaryEntriesForFoto"
+            : "SELECT Id, PageId, [EntryKey], ImageUrl, ImageName FROM DictionaryEntriesImages";
+
+        public static ObservableCollection<DictionaryEntryForImages> GetEntriesForPage(int pageId) => GetEntriesForPage(pageId, draft: false);
+
+        /// <summary>Фото страницы: опубликованные (сайт) или черновик (предпросмотр админки).</summary>
+        public static ObservableCollection<DictionaryEntryForImages> GetEntriesForPage(int pageId, bool draft) {
             var entries = new ObservableCollection<DictionaryEntryForImages>();
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT Id, PageId, [EntryKey], ImageUrl, ImageName FROM DictionaryEntriesImages WHERE PageId = @pageId";
+                cmd.CommandText = Select(draft) + " WHERE PageId = @pageId";
                 Db.SetParam(cmd, "@pageId", pageId);
 
                 using (var dr = cmd.ExecuteReader()) {
@@ -89,11 +97,13 @@ namespace ImagoLib.Models {
             return entries;
         }
 
-        public static ObservableCollection<DictionaryEntryForImages> GetAllEntries() {
+        public static ObservableCollection<DictionaryEntryForImages> GetAllEntries() => GetAllEntries(draft: false);
+
+        public static ObservableCollection<DictionaryEntryForImages> GetAllEntries(bool draft) {
             var entries = new ObservableCollection<DictionaryEntryForImages>();
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT Id, PageId, EntryKey, ImageUrl, ImageName FROM DictionaryEntriesImages";
+                cmd.CommandText = Select(draft);
 
                 using (var dr = cmd.ExecuteReader()) {
                     while (dr.Read()) {
@@ -143,6 +153,14 @@ namespace ImagoLib.Models {
             )
             BEGIN
                 INSERT INTO DictionaryEntriesImages (PageId, [EntryKey], ImageUrl, ImageName)
+                VALUES (@pageId, @key, @imageData, @imageName)
+            END
+            -- и в черновик: «Publikovat» делает сайт копией черновика
+            IF NOT EXISTS (
+                SELECT 1 FROM EditingDictionaryEntriesForFoto WHERE PageId = @pageId AND [EntryKey] = @key
+            )
+            BEGIN
+                INSERT INTO EditingDictionaryEntriesForFoto (PageId, [EntryKey], Image, ImageName)
                 VALUES (@pageId, @key, @imageData, @imageName)
             END";
 

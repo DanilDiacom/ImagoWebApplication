@@ -14,24 +14,8 @@
 
 @if (pageId == 46)
 {
-    <section id="content">
-        <div class="inner-content">
-            <div class="container">
-                <h1 class="page-title" style="margin-top:20px; text-align:center; margin-bottom:20px;">Návody k přístrojům</h1>
-                <p class="text-center" style="margin-bottom:20px;">Připravili jsme pro Vás instruktážní videa s podrobným návodem k jednotlivým přístrojů.</p>
-                <p class="text-center">
-                    <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen=""
-                            frameborder="0"
-                            height="315"
-                            src="https://www.youtube.com/embed/w5F7zgRqVs0"
-                            title="YouTube video player"
-                            width="560">
-                    </iframe>
-                </p>
-            </div>
-        </div>
-    </section>
+    @* Návody k přístrojům — obsah z databáze, upravuje se v ImagoAdmin *@
+    <partial name="_NavodyContent" />
 }
 else
 {
@@ -79,7 +63,7 @@ else
                                 text-decoration: @(titleStyle?.TextDecoration ?? "none");
                                 color: @(titleStyle?.TextColor ?? "#212529");"
                                 data-key="@titleKey">
-                                @entries[titleKey]
+                                @Html.Raw(entries[titleKey])
                             </h1>
                         }
                     }
@@ -103,7 +87,7 @@ else
                                             font-style: @(labelStyle?.FontStyle ?? "normal");
                                             text-decoration: @(labelStyle?.TextDecoration ?? "none");
                                             color: @(labelStyle?.TextColor ?? "#212529");">
-                                            @entries[key]
+                                            @Html.Raw(entries[key])
                                         </strong>
                                         <span data-value="@valueKey" style="
                                             font-family: @(valueStyle?.FontFamily ?? "Arial");
@@ -112,7 +96,7 @@ else
                                             font-style: @(valueStyle?.FontStyle ?? "normal");
                                             text-decoration: @(valueStyle?.TextDecoration ?? "none");
                                             color: @(valueStyle?.TextColor ?? "#212529");">
-                                            @entries[valueKey]
+                                            @Html.Raw(entries[valueKey])
                                         </span>
                                     </li>
                                 }
@@ -138,7 +122,7 @@ else
                             font-style: @(headerStyle?.FontStyle ?? "normal");
                             text-decoration: @(headerStyle?.TextDecoration ?? "none");
                             color: @(headerStyle?.TextColor ?? "#212529");">
-                            @entries[popisHeaderKey]
+                            @Html.Raw(entries[popisHeaderKey])
                         </h2>
                     }
                 }
@@ -158,7 +142,7 @@ else
                                 text-decoration: @(textStyle?.TextDecoration ?? "none");
                                 color: @(textStyle?.TextColor ?? "#212529");">
                                 <p>
-                                    @entries[key]
+                                    @Html.Raw(entries[key])
                                 </p>
                             </div>
                         }

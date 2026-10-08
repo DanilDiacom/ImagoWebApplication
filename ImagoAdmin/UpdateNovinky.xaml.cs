@@ -48,7 +48,7 @@ namespace ImagoAdmin {
 
             id = noviny.Id;
 
-            var photos = NovinyFoto.GetPhotosForRequest(noviny.Id);
+            var photos = NovinyFoto.GetPhotosForRequest(noviny.Id, draft: true);
             foreach (var photo in photos) {
                 Photos.Add(new PhotoItem {
                     Image = ConvertByteArrayToImage(photo.PhotoData),
@@ -73,7 +73,7 @@ namespace ImagoAdmin {
 
             
             // Загрузка параметров
-            var parameters = NovinyParameter.GetParametersForNoviny(noviny.Id);
+            var parameters = NovinyParameter.GetParametersForNoviny(noviny.Id, draft: true);
             foreach (var parameter in parameters) {
                 Parameters.Add(new Parameter {
                     Name = parameter.ParameterName,
@@ -202,10 +202,10 @@ namespace ImagoAdmin {
                 };
 
                 // Обновление записи в базе данных
-                Noviny.UpdateNoviny(newDitales, id);
+                Noviny.UpdateNoviny(newDitales, id, draft: true);
 
                 // Удаление старых фотографий
-                NovinyFoto.DeletePhotosForRequest(id);
+                NovinyFoto.DeletePhotosForRequest(id, draft: true);
 
                 // Сохранение новых фотографий (если они есть)
                 if (Photos != null && Photos.Count > 0) {
@@ -224,7 +224,7 @@ namespace ImagoAdmin {
                             PhotoData = photoData
                         };
 
-                        NovinyFoto.InsertPhoto(newPhoto, id);
+                        NovinyFoto.InsertPhoto(newPhoto, id, draft: true);
                     }
                 }
                 else {
@@ -232,7 +232,7 @@ namespace ImagoAdmin {
                 }
 
                 // Удаление старых параметров
-                NovinyParameter.DeleteParametersForNoviny(id);
+                NovinyParameter.DeleteParametersForNoviny(id, draft: true);
 
                 // Проверка параметров: хотя бы один параметр должен быть заполнен
                 if (Parameters != null && Parameters.Count > 0) {
@@ -257,7 +257,7 @@ namespace ImagoAdmin {
                                 ParameterName = parameter.Name,
                                 ParameterValue = parameter.Value
                             };
-                            NovinyParameter.InsertParameter(novinyParameter);
+                            NovinyParameter.InsertParameter(novinyParameter, draft: true);
                         }
                     }
                 }

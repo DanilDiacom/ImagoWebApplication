@@ -21,12 +21,12 @@ namespace ImagoLib.Models {
             };
         }
 
-        public static ObservableCollection<NovinyFoto> GetPhotosForRequest(int NovinyId) {
+        public static ObservableCollection<NovinyFoto> GetPhotosForRequest(int NovinyId, bool draft = false) {
             var photos = new List<NovinyFoto>();
 
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT Id, NovinyId, PhotoName, PhotoData FROM NovinyPhotos WHERE NovinyId = @NovinyId";
+                cmd.CommandText = $"SELECT Id, NovinyId, PhotoName, PhotoData FROM {DraftTables.Name("NovinyPhotos", draft)} WHERE NovinyId = @NovinyId";
                 Db.SetParam(cmd, "@NovinyId", NovinyId);
 
                 using (var dr = cmd.ExecuteReader()) {
@@ -40,10 +40,10 @@ namespace ImagoLib.Models {
         }
 
        
-        public static void InsertPhoto(NovinyFoto photo, int NovinyId) {
+        public static void InsertPhoto(NovinyFoto photo, int NovinyId, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "INSERT INTO NovinyPhotos (NovinyId, PhotoName, PhotoData) VALUES (@NovinyId, @PhotoName, @PhotoData)";
+                cmd.CommandText = $"INSERT INTO {DraftTables.Name("NovinyPhotos", draft)} (NovinyId, PhotoName, PhotoData) VALUES (@NovinyId, @PhotoName, @PhotoData)";
                 Db.SetParam(cmd, "@NovinyId", NovinyId);
                 Db.SetParam(cmd, "@PhotoName", photo.PhotoName);
                 Db.SetParam(cmd, "@PhotoData", photo.PhotoData);
@@ -52,20 +52,20 @@ namespace ImagoLib.Models {
             }
         }
 
-        public static void DeletePhoto(int photoId) {
+        public static void DeletePhoto(int photoId, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "DELETE FROM NovinyPhotos WHERE Id = @PhotoId";
+                cmd.CommandText = $"DELETE FROM {DraftTables.Name("NovinyPhotos", draft)} WHERE Id = @PhotoId";
                 Db.SetParam(cmd, "@PhotoId", photoId);
 
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public static void UpdatePhoto(NovinyFoto photo) {
+        public static void UpdatePhoto(NovinyFoto photo, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "UPDATE NovinyPhotos SET PhotoName = @PhotoName, PhotoData = @PhotoData WHERE Id = @PhotoId";
+                cmd.CommandText = $"UPDATE {DraftTables.Name("NovinyPhotos", draft)} SET PhotoName = @PhotoName, PhotoData = @PhotoData WHERE Id = @PhotoId";
                 Db.SetParam(cmd, "@PhotoId", photo.Id);
                 Db.SetParam(cmd, "@PhotoName", photo.PhotoName);
                 Db.SetParam(cmd, "@PhotoData", photo.PhotoData);
@@ -74,10 +74,10 @@ namespace ImagoLib.Models {
             }
         }
 
-        public static void DeletePhotosForRequest(int NovinyId) {
+        public static void DeletePhotosForRequest(int NovinyId, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "DELETE FROM NovinyPhotos WHERE NovinyId = @NovinyId";
+                cmd.CommandText = $"DELETE FROM {DraftTables.Name("NovinyPhotos", draft)} WHERE NovinyId = @NovinyId";
                 Db.SetParam(cmd, "@NovinyId", NovinyId);
 
                 cmd.ExecuteNonQuery();

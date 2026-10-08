@@ -18,7 +18,7 @@
                     font-style: @(titleStyle?.FontStyle ?? "normal");
                     text-decoration: @(titleStyle?.TextDecoration ?? "none");
                     color: @(titleStyle?.TextColor ?? "#34495e");">
-                    @ViewBag.Entries["Marketing_Title"]
+                    @Html.Raw(ViewBag.Entries["Marketing_Title"])
                 </h1>
             }
 
@@ -33,7 +33,7 @@
                     text-decoration: @(headerStyle?.TextDecoration ?? "none");
                     line-height: 1.6;
                     color: @(headerStyle?.TextColor ?? "#7f8c8d");">
-                    @ViewBag.Entries["Marketing_Header"]
+                    @Html.Raw(ViewBag.Entries["Marketing_Header"])
                 </p>
             }
 
@@ -47,7 +47,7 @@
                     font-style: @(subHeadStyle?.FontStyle ?? "normal");
                     text-decoration: @(subHeadStyle?.TextDecoration ?? "none");
                     color: @(subHeadStyle?.TextColor ?? "#34495e");">
-                    @ViewBag.Entries["Marketing_SubHead"]
+                    @Html.Raw(ViewBag.Entries["Marketing_SubHead"])
                 </p>
             }
 
@@ -63,7 +63,7 @@
                             font-style: @(priorityFirstStyle?.FontStyle ?? "normal");
                             text-decoration: @(priorityFirstStyle?.TextDecoration ?? "none");
                             color: @(priorityFirstStyle?.TextColor ?? "#2c3e50");">
-                            <strong>@ViewBag.Entries["Marketing_Prioriti_First"]</strong>
+                            <strong>@Html.Raw(ViewBag.Entries["Marketing_Prioriti_First"])</strong>
                         </p>
                     }
 
@@ -78,7 +78,7 @@
              font-style: @(subPriorityFirstStyle?.FontStyle ?? "normal");
              text-decoration: @(subPriorityFirstStyle?.TextDecoration ?? "none");
              color: @(subPriorityFirstStyle?.TextColor ?? "#000000");">
-                            @ViewBag.Entries["Marketing_SubPrioriti_First"]
+                            @Html.Raw(ViewBag.Entries["Marketing_SubPrioriti_First"])
                         </p>
                     }
 
@@ -93,7 +93,7 @@
              font-style: @(subPrioritySecondStyle?.FontStyle ?? "normal");
              text-decoration: @(subPrioritySecondStyle?.TextDecoration ?? "none");
              color: @(subPrioritySecondStyle?.TextColor ?? "#000000");">
-                            @ViewBag.Entries["Marketing_SubPrioriti_Second"]
+                            @Html.Raw(ViewBag.Entries["Marketing_SubPrioriti_Second"])
                         </p>
                     }
                 </li>
@@ -109,7 +109,7 @@
                             font-style: @(prioritySecondStyle?.FontStyle ?? "normal");
                             text-decoration: @(prioritySecondStyle?.TextDecoration ?? "none");
                             color: @(prioritySecondStyle?.TextColor ?? "#2c3e50");">
-                            <strong>@ViewBag.Entries["Marketing_Prioriti_Second"]</strong>
+                            <strong>@Html.Raw(ViewBag.Entries["Marketing_Prioriti_Second"])</strong>
                         </p>
                     }
 
@@ -123,7 +123,7 @@
              font-style: @(subPrioritySecondFirstStyle?.FontStyle ?? "normal");
              text-decoration: @(subPrioritySecondFirstStyle?.TextDecoration ?? "none");
              color: @(subPrioritySecondFirstStyle?.TextColor ?? "#000000");">
-                            @ViewBag.Entries["Marketing_SubPrioriti_Second_First"]
+                            @Html.Raw(ViewBag.Entries["Marketing_SubPrioriti_Second_First"])
                         </p>
                     }
 
@@ -140,7 +140,7 @@
                             font-style: @(priorityThirdStyle?.FontStyle ?? "normal");
                             text-decoration: @(priorityThirdStyle?.TextDecoration ?? "none");
                             color: @(priorityThirdStyle?.TextColor ?? "#2c3e50");">
-                            <strong>@ViewBag.Entries["Marketing_Prioriti_Third"]</strong>
+                            <strong>@Html.Raw(ViewBag.Entries["Marketing_Prioriti_Third"])</strong>
                         </p>
                     }
 
@@ -155,7 +155,7 @@
              font-style: @(subPriorityThirdFirstStyle?.FontStyle ?? "normal");
              text-decoration: @(subPriorityThirdFirstStyle?.TextDecoration ?? "none");
              color: @(subPriorityThirdFirstStyle?.TextColor ?? "#000000");">
-                            @ViewBag.Entries["Marketing_SubPrioriti_Third_First"]
+                            @Html.Raw(ViewBag.Entries["Marketing_SubPrioriti_Third_First"])
                         </p>
                     }
                 </li>
@@ -171,7 +171,7 @@
                             font-style: @(priorityFourStyle?.FontStyle ?? "normal");
                             text-decoration: @(priorityFourStyle?.TextDecoration ?? "none");
                             color: @(priorityFourStyle?.TextColor ?? "#2c3e50");">
-                            <strong>@ViewBag.Entries["Marketing_Prioriti_Four"]</strong>
+                            <strong>@Html.Raw(ViewBag.Entries["Marketing_Prioriti_Four"])</strong>
                         </p>
                     }
 
@@ -186,7 +186,7 @@
              font-style: @(priorityFourFirstStyle?.FontStyle ?? "normal");
              text-decoration: @(priorityFourFirstStyle?.TextDecoration ?? "none");
              color: @(priorityFourFirstStyle?.TextColor ?? "#000000");">
-                            @ViewBag.Entries["Marketing_Prioriti_Four_First"]
+                            @Html.Raw(ViewBag.Entries["Marketing_Prioriti_Four_First"])
                         </p>
                     }
                 </li>

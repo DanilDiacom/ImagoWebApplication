@@ -28,12 +28,12 @@ namespace ImagoLib.Models {
             };
         }
 
-        public static ObservableCollection<Noviny> GetNoviny(DateTime? startDate = null, DateTime? endDate = null) {
+        public static ObservableCollection<Noviny> GetNoviny(DateTime? startDate = null, DateTime? endDate = null, bool draft = false) {
             var allNoviny = new List<Noviny>();
 
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT Id, PostedDate, Title, Comment, Description, IconPhoto FROM Noviny";
+                cmd.CommandText = $"SELECT Id, PostedDate, Title, Comment, Description, IconPhoto FROM {DraftTables.Name("Noviny", draft)}";
 
                 if (startDate.HasValue && endDate.HasValue) {
                     cmd.CommandText += " WHERE PostedDate BETWEEN @StartDate AND @EndDate";
@@ -58,12 +58,12 @@ namespace ImagoLib.Models {
             return new ObservableCollection<Noviny>(allNoviny);
         }
 
-        public static ObservableCollection<Noviny> GetNovinyFromId(int id) {
+        public static ObservableCollection<Noviny> GetNovinyFromId(int id, bool draft = false) {
             var allNoviny = new List<Noviny>();
 
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT Id, PostedDate, Title, Comment, Description, IconPhoto FROM Noviny Where Id = @id";
+                cmd.CommandText = $"SELECT Id, PostedDate, Title, Comment, Description, IconPhoto FROM {DraftTables.Name("Noviny", draft)} Where Id = @id";
                 Db.SetParam(cmd, "@id", id);
 
                 using (var dr = cmd.ExecuteReader()) {
@@ -76,10 +76,10 @@ namespace ImagoLib.Models {
             return new ObservableCollection<Noviny>(allNoviny);
         }
 
-        public static int InsertNoviny(Noviny noviny) {
+        public static int InsertNoviny(Noviny noviny, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "INSERT INTO Noviny (PostedDate, Title, Comment, Description, IconPhoto) VALUES (@PostedDate, @Title, @Comment, @Description, @IconPhoto); SELECT SCOPE_IDENTITY();";
+                cmd.CommandText = $"INSERT INTO {DraftTables.Name("Noviny", draft)} (PostedDate, Title, Comment, Description, IconPhoto) VALUES (@PostedDate, @Title, @Comment, @Description, @IconPhoto); SELECT SCOPE_IDENTITY();";
 
                 Db.SetParam(cmd, "@PostedDate", noviny.PostedDate);
                 Db.SetParam(cmd, "@Title", noviny.Title);
@@ -92,10 +92,10 @@ namespace ImagoLib.Models {
             }
         }
 
-        public static void UpdateNoviny(Noviny noviny, int id) {
+        public static void UpdateNoviny(Noviny noviny, int id, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "UPDATE Noviny SET PostedDate = @PostedDate, Title = @Title, Comment = @Comment, Description = @Description, IconPhoto = @IconPhoto WHERE Id = @Id";
+                cmd.CommandText = $"UPDATE {DraftTables.Name("Noviny", draft)} SET PostedDate = @PostedDate, Title = @Title, Comment = @Comment, Description = @Description, IconPhoto = @IconPhoto WHERE Id = @Id";
 
                 Db.SetParam(cmd, "@Id", id);
                 Db.SetParam(cmd, "@PostedDate", noviny.PostedDate);
@@ -108,10 +108,10 @@ namespace ImagoLib.Models {
             }
         }
 
-        public static void DeleteNoviny(int id) {
+        public static void DeleteNoviny(int id, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "DELETE FROM NovinyPhotos WHERE NovinyId = @Id; DELETE FROM NovinyParameters WHERE NovinyId = @Id; DELETE FROM Noviny WHERE Id = @Id;";
+                cmd.CommandText = $"DELETE FROM {DraftTables.Name("NovinyPhotos", draft)} WHERE NovinyId = @Id; DELETE FROM {DraftTables.Name("NovinyParameters", draft)} WHERE NovinyId = @Id; DELETE FROM {DraftTables.Name("Noviny", draft)} WHERE Id = @Id;";
                 Db.SetParam(cmd, "@Id", id);
                 cmd.ExecuteNonQuery();
             }
@@ -133,11 +133,11 @@ namespace ImagoLib.Models {
             };
         }
 
-        public static ObservableCollection<NovinyParameter> GetParametersForNoviny(int novinyId) {
+        public static ObservableCollection<NovinyParameter> GetParametersForNoviny(int novinyId, bool draft = false) {
             var parameters = new List<NovinyParameter>();
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "SELECT Id, NovinyId, ParameterName, ParameterValue FROM NovinyParameters WHERE NovinyId = @NovinyId";
+                cmd.CommandText = $"SELECT Id, NovinyId, ParameterName, ParameterValue FROM {DraftTables.Name("NovinyParameters", draft)} WHERE NovinyId = @NovinyId";
                 Db.SetParam(cmd, "@NovinyId", novinyId);
 
                 using (var dr = cmd.ExecuteReader()) {
@@ -149,10 +149,10 @@ namespace ImagoLib.Models {
             return new ObservableCollection<NovinyParameter>(parameters);
         }
 
-        public static void InsertParameter(NovinyParameter parameter) {
+        public static void InsertParameter(NovinyParameter parameter, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "INSERT INTO NovinyParameters (NovinyId, ParameterName, ParameterValue) VALUES (@NovinyId, @ParameterName, @ParameterValue)";
+                cmd.CommandText = $"INSERT INTO {DraftTables.Name("NovinyParameters", draft)} (NovinyId, ParameterName, ParameterValue) VALUES (@NovinyId, @ParameterName, @ParameterValue)";
                 Db.SetParam(cmd, "@NovinyId", parameter.NovinyId);
                 Db.SetParam(cmd, "@ParameterName", parameter.ParameterName);
                 Db.SetParam(cmd, "@ParameterValue", parameter.ParameterValue);
@@ -160,10 +160,10 @@ namespace ImagoLib.Models {
             }
         }
 
-        public static void UpdateParameter(NovinyParameter parameter) {
+        public static void UpdateParameter(NovinyParameter parameter, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "UPDATE NovinyParameters SET ParameterName = @ParameterName, ParameterValue = @ParameterValue WHERE Id = @Id";
+                cmd.CommandText = $"UPDATE {DraftTables.Name("NovinyParameters", draft)} SET ParameterName = @ParameterName, ParameterValue = @ParameterValue WHERE Id = @Id";
                 Db.SetParam(cmd, "@Id", parameter.Id);
                 Db.SetParam(cmd, "@ParameterName", parameter.ParameterName);
                 Db.SetParam(cmd, "@ParameterValue", parameter.ParameterValue);
@@ -171,18 +171,18 @@ namespace ImagoLib.Models {
             }
         }
 
-        public static void DeleteParameter(int parameterId) {
+        public static void DeleteParameter(int parameterId, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "DELETE FROM NovinyParameters WHERE Id = @ParameterId";
+                cmd.CommandText = $"DELETE FROM {DraftTables.Name("NovinyParameters", draft)} WHERE Id = @ParameterId";
                 Db.SetParam(cmd, "@ParameterId", parameterId);
                 cmd.ExecuteNonQuery();
             }
         }
-        public static void DeleteParametersForNoviny(int novinyId) {
+        public static void DeleteParametersForNoviny(int novinyId, bool draft = false) {
             using (var db = Db.Get()) {
                 var cmd = db.CreateCommand();
-                cmd.CommandText = "DELETE FROM NovinyParameters WHERE NovinyId = @NovinyId";
+                cmd.CommandText = $"DELETE FROM {DraftTables.Name("NovinyParameters", draft)} WHERE NovinyId = @NovinyId";
                 Db.SetParam(cmd, "@NovinyId", novinyId);
                 cmd.ExecuteNonQuery();
             }

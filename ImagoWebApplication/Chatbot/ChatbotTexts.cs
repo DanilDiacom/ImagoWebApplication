@@ -28,6 +28,7 @@ namespace ImagoWebApplication.Chatbot {
             { "Chatbot_ConfirmTitle", "Předat Váš dotaz manažerovi IMAGO D&T? Můžete se nejdřív zeptat na další věci — pošlu vše jednou zprávou." },
             { "Chatbot_ConfirmSend", "Předat dotaz" },
             { "Chatbot_NothingToSend", "Žádné nové dotazy k předání nejsou." },
+            { "Chatbot_AskFirst", "Napište prosím nejdřív svůj dotaz do chatu, pak ho předám manažerovi IMAGO D&T." },
             { "Chatbot_StaffLabel", "Odpověď manažera IMAGO D&T" },
             { "Chatbot_NewAnswer", "Nová odpověď na Váš dotaz" },
             { "Chatbot_RateLimited", "Příliš mnoho zpráv. Počkejte prosím minutu a zkuste to znovu." },

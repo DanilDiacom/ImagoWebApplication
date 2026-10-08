@@ -8,16 +8,16 @@
 
             <h1 class="page-title" style="margin-top:20px; text-align:center; margin-bottom:20px;"
                 data-key="Diacom_Devices_Title">
-                @ViewBag.Entries["Diacom_Devices_Title"]
+                @Html.Raw(ViewBag.Entries["Diacom_Devices_Title"])
             </h1>
 
             <div class="table-container">
                 <table class="table table-bordered" style="width: 100%; max-width: 1110px; margin: 0 auto;">
                     <thead>
                         <tr>
-                            <th data-key="Diacom_Table_Header_First">@ViewBag.Entries["Diacom_Table_Header_First"]</th>
-                            <th data-key="Diacom_Table_Header_Second">@ViewBag.Entries["Diacom_Table_Header_Second"]</th>
-                            <th data-key="Diacom_Table_Header_Third">@ViewBag.Entries["Diacom_Table_Header_Third"]</th>
+                            <th data-key="Diacom_Table_Header_First">@Html.Raw(ViewBag.Entries["Diacom_Table_Header_First"])</th>
+                            <th data-key="Diacom_Table_Header_Second">@Html.Raw(ViewBag.Entries["Diacom_Table_Header_Second"])</th>
+                            <th data-key="Diacom_Table_Header_Third">@Html.Raw(ViewBag.Entries["Diacom_Table_Header_Third"])</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,30 +26,30 @@
                             <td>
                                 <a asp-area="" asp-controller="Diacom" asp-action="Enerscan"
                                    data-key="Device_First_Name">
-                                    @ViewBag.Entries["Device_First_Name"]
+                                    @Html.Raw(ViewBag.Entries["Device_First_Name"])
                                 </a>
                             </td>
-                            <td data-key="Device_First_Price">@ViewBag.Entries["Device_First_Price"]</td>
+                            <td data-key="Device_First_Price">@Html.Raw(ViewBag.Entries["Device_First_Price"])</td>
                         </tr>
                         <tr>
                             <td><img class="zoom-img" src="~/img/Freq_1.jpg" alt="DIACOM FREQ LITE"></td>
                             <td>
                                 <a asp-area="" asp-controller="Diacom" asp-action="LiteFreq" 
                                    data-key="Device_Second_Name">
-                                    @ViewBag.Entries["Device_Second_Name"]
+                                    @Html.Raw(ViewBag.Entries["Device_Second_Name"])
                                 </a>
                             </td>
-                            <td data-key="Device_Second_Price">@ViewBag.Entries["Device_Second_Price"]</td>
+                            <td data-key="Device_Second_Price">@Html.Raw(ViewBag.Entries["Device_Second_Price"])</td>
                         </tr>
                         <tr>
                             <td><img class="zoom-img" src="~/img/Plasma_2.jpg" alt="PLASMOTRONIC"></td>
                             <td>
                                 <a asp-area="" asp-controller="Diacom" asp-action="Plasmotronic"
                                    data-key="Device_Third_Name">
-                                    @ViewBag.Entries["Device_Third_Name"]
+                                    @Html.Raw(ViewBag.Entries["Device_Third_Name"])
                                 </a>
                             </td>
-                            <td data-key="Device_Third_Price">@ViewBag.Entries["Device_Third_Price"]</td>
+                            <td data-key="Device_Third_Price">@Html.Raw(ViewBag.Entries["Device_Third_Price"])</td>
                         </tr>
 
 
@@ -58,30 +58,30 @@
                             <td>
                                 <a asp-area="" asp-controller="Diacom" asp-action="Medio"
                                    data-key="Device_Four_Name">
-                                    @ViewBag.Entries["Device_Four_Name"]
+                                    @Html.Raw(ViewBag.Entries["Device_Four_Name"])
                                 </a>
                             </td>
-                            <td data-key="Device_Four_Price">@ViewBag.Entries["Device_Four_Price"]</td>
+                            <td data-key="Device_Four_Price">@Html.Raw(ViewBag.Entries["Device_Four_Price"])</td>
                         </tr>
                         <tr>
                             <td><img class="zoom-img" src="~/img/freqpc.jpg" alt="DIACOM-SOLO-FREQ-PC"></td>
                             <td>
                                 <a asp-area="" asp-controller="Diacom" asp-action="FreqPc"
                                    data-key="Device_Fifth_Name">
-                                    @ViewBag.Entries["Device_Fifth_Name"]
+                                    @Html.Raw(ViewBag.Entries["Device_Fifth_Name"])
                                 </a>
                             </td>
-                            <td data-key="Device_Fifth_Price">@ViewBag.Entries["Device_Fifth_Price"]</td>
+                            <td data-key="Device_Fifth_Price">@Html.Raw(ViewBag.Entries["Device_Fifth_Price"])</td>
                         </tr>
                         <tr>
                             <td><img class="zoom-img" src="~/img/Ioniser.jpg" alt="DIACOM-SOLO-Ionizer"></td>
                             <td>
                                 <a asp-area="" asp-controller="Diacom" asp-action="Ioniser"
                                    data-key="Device_Six_Name">
-                                    @ViewBag.Entries["Device_Six_Name"]
+                                    @Html.Raw(ViewBag.Entries["Device_Six_Name"])
                                 </a>
                             </td>
-                            <td data-key="Device_Six_Price">@ViewBag.Entries["Device_Six_Price"]</td>
+                            <td data-key="Device_Six_Price">@Html.Raw(ViewBag.Entries["Device_Six_Price"])</td>
                         </tr>
                     </tbody>
                 </table>

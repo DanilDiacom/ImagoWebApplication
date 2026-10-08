@@ -17,7 +17,7 @@
                     color: @(titleStyle?.TextColor ?? "#212529");"
 
                     data-key="DiacomClub_Skoleni_Title">
-                    @ViewBag.Entries["DiacomClub_Skoleni_Title"]
+                    @Html.Raw(ViewBag.Entries["DiacomClub_Skoleni_Title"])
                 </h1>
             }
 
@@ -32,7 +32,7 @@
                         font-style: @(headerStyle?.FontStyle ?? "normal");
                         text-decoration: @(headerStyle?.TextDecoration ?? "none");
                         color: @(headerStyle?.TextColor ?? "#2c3e50");">
-                        @ViewBag.Entries["DiacomClub_Skoleni_Header"]
+                        @Html.Raw(ViewBag.Entries["DiacomClub_Skoleni_Header"])
                     </h2>
                 }
 
@@ -51,7 +51,7 @@
                                 text-decoration: @(step1TitleStyle?.TextDecoration ?? "none");
  color: @(step1TitleStyle?.TextColor ?? "#34495e");"
                                     data-key="DiacomClub_Step1_Title">
-                                @ViewBag.Entries["DiacomClub_Step1_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Step1_Title"])
                             </strong><br>
                             <span style="
                                 font-family: @(step1DescStyle?.FontFamily ?? "Arial");
@@ -61,7 +61,7 @@
                                 text-decoration: @(step1DescStyle?.TextDecoration ?? "none");
  color: @(step1DescStyle?.TextColor ?? "#34495e");"
                                   data-key="DiacomClub_Step1_Desc">
-                                @ViewBag.Entries["DiacomClub_Step1_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Step1_Desc"])
                             </span>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                                 text-decoration: @(step2TitleStyle?.TextDecoration ?? "none");
 color: @(step2TitleStyle?.TextColor ?? "#34495e");"
                                     data-key="DiacomClub_Step2_Title">
-                                @ViewBag.Entries["DiacomClub_Step2_Title"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Step2_Title"])
                             </strong><br>
                             <span style="
                                 font-family: @(step2DescStyle?.FontFamily ?? "Arial");
@@ -94,7 +94,7 @@ color: @(step2TitleStyle?.TextColor ?? "#34495e");"
                                 text-decoration: @(step2DescStyle?.TextDecoration ?? "none");
 color: @(step2DescStyle?.TextColor ?? "#34495e");"
                                   data-key="DiacomClub_Step2_Desc">
-                                @ViewBag.Entries["DiacomClub_Step2_Desc"]
+                                @Html.Raw(ViewBag.Entries["DiacomClub_Step2_Desc"])
                             </span>
                         </div>
                     </div>

@@ -10,6 +10,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ImagoDT - @ViewData["Title"]</title>
+    @if (ViewBag.IsDraft == true)
+    {
+        @* предпросмотр черновика для ImagoAdmin — не индексировать *@
+        <meta name="robots" content="noindex, nofollow" />
+    }
     <link rel="shortcut icon" href="/img/favicon.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -34,7 +39,7 @@
                                     @if (ViewBag.GlobalEntries.ContainsKey("uvod_PhoneNumber"))
                                     {
                                         <span data-key="uvod_PhoneNumber">
-                                            @ViewBag.GlobalEntries["uvod_PhoneNumber"]
+                                            @Html.Raw(ViewBag.GlobalEntries["uvod_PhoneNumber"])
                                         </span>
                                     }
                                 </div>
@@ -42,7 +47,7 @@
                                     @if (ViewBag.GlobalEntries.ContainsKey("uvod_Email"))
                                     {
                                         <a href="mailto:imagodt@imagodt.cz" data-key="uvod_Email">
-                                            @ViewBag.GlobalEntries["uvod_Email"]
+                                            @Html.Raw(ViewBag.GlobalEntries["uvod_Email"])
                                         </a>
                                     }
                                 </div>
@@ -63,7 +68,7 @@
                     <ul class="navbar-nav">
                         @if (page != null)
                         {
-                            @foreach (var pages in page)
+                            @foreach (var pages in page.Where(p => !p.IsHidden))
                             {
                                 if (pages.SubPages != null && pages.SubPages.Any())
                                 {
@@ -74,7 +79,8 @@
                                         <ul class="dropdown-menu" aria-labelledby="@pages.Title">
                                             @foreach (var subPage in pages.SubPages)
                                             {
-                                                if (subPage.Id == 45)
+                                                @* skrytá stránka (ImagoAdmin → ☰ Menu) — v menu není, po adrese dostupná *@
+                                                if (subPage.IsHidden)
                                                 {
                                                     continue;
                                                 }
@@ -137,7 +143,7 @@
                             @if (ViewBag.GlobalEntries.ContainsKey("uvod_PhoneNumber"))
                             {
                                 <span data-key="uvod_PhoneNumber">
-                                    @ViewBag.GlobalEntries["uvod_PhoneNumber"]
+                                    @Html.Raw(ViewBag.GlobalEntries["uvod_PhoneNumber"])
                                 </span>
                             }
                         </div>
@@ -145,7 +151,7 @@
                             @if (ViewBag.GlobalEntries.ContainsKey("uvod_Email"))
                             {
                                 <a href="mailto:imagodt@imagodt.cz" style="color: #fff;" data-key="uvod_Email">
-                                    @ViewBag.GlobalEntries["uvod_Email"]
+                                    @Html.Raw(ViewBag.GlobalEntries["uvod_Email"])
                                 </a>
                             }
                         </div>
@@ -188,6 +194,9 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
-    <partial name="_ChatWidget" />
+    @if (ViewBag.IsDraft != true)
+    {
+        <partial name="_ChatWidget" />
+    }
 </body>
 </html>

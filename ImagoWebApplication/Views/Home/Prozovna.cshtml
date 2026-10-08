@@ -24,7 +24,7 @@
                     font-style: @(titleStyle?.FontStyle ?? "normal");
                     text-decoration: @(titleStyle?.TextDecoration ?? "none");
                     color: @(titleStyle?.TextColor ?? "#212529");">
-                    @ViewBag.Entries["Skoleni_Title"]
+                    @Html.Raw(ViewBag.Entries["Skoleni_Title"])
                 </h1>
             }
 
@@ -38,7 +38,7 @@
         font-style: @(headerStyle?.FontStyle ?? "normal");
         text-decoration: @(headerStyle?.TextDecoration ?? "none");
         color: @(headerStyle?.TextColor ?? "#212529");">
-                    @ViewBag.Entries["Skoleni_Header"]
+                    @Html.Raw(ViewBag.Entries["Skoleni_Header"])
                 </h2>
             }
             <div class="section">
@@ -52,7 +52,7 @@
         font-style: @(labelFirstStyle?.FontStyle ?? "normal");
         text-decoration: @(labelFirstStyle?.TextDecoration ?? "none");
             color: @(labelFirstStyle?.TextColor ?? "#212529");">
-                        @ViewBag.Entries["Skoleni_Label_First"]
+                        @Html.Raw(ViewBag.Entries["Skoleni_Label_First"])
                     </h3>
                 }
 
@@ -66,7 +66,7 @@
         font-style: @(subLabelFirstStyle?.FontStyle ?? "normal");
         text-decoration: @(subLabelFirstStyle?.TextDecoration ?? "none");
         color: @(subLabelFirstStyle?.TextColor ?? "#212529");">
-                        @ViewBag.Entries["Skoleni_SubLabel_First"]
+                        @Html.Raw(ViewBag.Entries["Skoleni_SubLabel_First"])
                     </p>
                 }
                 <div class="image-container">
@@ -91,7 +91,7 @@
         font-style: @(labelSecondStyle?.FontStyle ?? "normal");
         text-decoration: @(labelSecondStyle?.TextDecoration ?? "none");
 color: @(labelSecondStyle?.TextColor ?? "#212529");">
-                        @ViewBag.Entries["Skoleni_Label_Second"]
+                        @Html.Raw(ViewBag.Entries["Skoleni_Label_Second"])
                     </h3>
                 }
 
@@ -105,7 +105,7 @@ color: @(labelSecondStyle?.TextColor ?? "#212529");">
         font-style: @(subLabelSecondStyle?.FontStyle ?? "normal");
         text-decoration: @(subLabelSecondStyle?.TextDecoration ?? "none");
 color: @(subLabelSecondStyle?.TextColor ?? "#212529");">
-                        @ViewBag.Entries["Skoleni_SubLabel_Second"]
+                        @Html.Raw(ViewBag.Entries["Skoleni_SubLabel_Second"])
                     </p>
                 }
                 <!-- Карусель изображений -->
@@ -143,7 +143,7 @@ color: @(subLabelSecondStyle?.TextColor ?? "#212529");">
             font-style: @(labelThirdStyle?.FontStyle ?? "normal");
             text-decoration: @(labelThirdStyle?.TextDecoration ?? "none");
             color: @(labelThirdStyle?.TextColor ?? "#212529");">
-                        @ViewBag.Entries["Skoleni_Label_Third"]
+                        @Html.Raw(ViewBag.Entries["Skoleni_Label_Third"])
                     </h3>
                 }
             </div>
@@ -159,29 +159,29 @@ color: @(subLabelSecondStyle?.TextColor ?? "#212529");">
                 font-style: @(subLabelThirdStyle?.FontStyle ?? "normal");
                 text-decoration: @(subLabelThirdStyle?.TextDecoration ?? "none");
                 color: @(subLabelThirdStyle?.TextColor ?? "#212529");">
-                        @ViewBag.Entries["Skoleni_SubLabel_Third"]
+                        @Html.Raw(ViewBag.Entries["Skoleni_SubLabel_Third"])
                     </h3>
                 }
 
                 <table class="pricing-table">
                     <thead>
                         <tr>
-                            <th data-key="Pricing_Service_Label">@ViewBag.Entries["Pricing_Service_Label"]</th>
-                            <th data-key="Pricing_Price_Label">@ViewBag.Entries["Pricing_Price_Label"]</th>
+                            <th data-key="Pricing_Service_Label">@Html.Raw(ViewBag.Entries["Pricing_Service_Label"])</th>
+                            <th data-key="Pricing_Price_Label">@Html.Raw(ViewBag.Entries["Pricing_Price_Label"])</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td data-key="Pricing_BioScan_Label">@ViewBag.Entries["Pricing_BioScan_Label"]</td>
-                            <td data-key="Pricing_BioScan_Price">@ViewBag.Entries["Pricing_BioScan_Price"]</td>
+                            <td data-key="Pricing_BioScan_Label">@Html.Raw(ViewBag.Entries["Pricing_BioScan_Label"])</td>
+                            <td data-key="Pricing_BioScan_Price">@Html.Raw(ViewBag.Entries["Pricing_BioScan_Price"])</td>
                         </tr>
                         <tr>
-                            <td data-key="Pricing_Freq_Label">@ViewBag.Entries["Pricing_Freq_Label"]</td>
-                            <td data-key="Pricing_Freq_Price">@ViewBag.Entries["Pricing_Freq_Price"]</td>
+                            <td data-key="Pricing_Freq_Label">@Html.Raw(ViewBag.Entries["Pricing_Freq_Label"])</td>
+                            <td data-key="Pricing_Freq_Price">@Html.Raw(ViewBag.Entries["Pricing_Freq_Price"])</td>
                         </tr>
                         <tr>
-                            <td data-key="Pricing_Training_Label">@ViewBag.Entries["Pricing_Training_Label"]</td>
-                            <td data-key="Pricing_Training_Price">@ViewBag.Entries["Pricing_Training_Price"]</td>
+                            <td data-key="Pricing_Training_Label">@Html.Raw(ViewBag.Entries["Pricing_Training_Label"])</td>
+                            <td data-key="Pricing_Training_Price">@Html.Raw(ViewBag.Entries["Pricing_Training_Price"])</td>
                         </tr>
                     </tbody>
                 </table>

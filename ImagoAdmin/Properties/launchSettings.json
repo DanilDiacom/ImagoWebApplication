@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "ImagoAdmin": {
+      "commandName": "Project"
+    },
+    "ImagoAdmin (lokální web)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "IMAGO_ADMIN_SITE": "https://localhost:7090"
+      }
+    }
+  }
+}

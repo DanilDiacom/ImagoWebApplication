@@ -27,7 +27,7 @@ namespace ImagoAdmin {
 
             id = meeting.Id;
 
-            var photos = MeetingPhoto.GetPhotosForMeeting(meeting.Id);
+            var photos = MeetingPhoto.GetPhotosForMeeting(meeting.Id, draft: true);
             foreach (var photo in photos) {
                 Photos.Add(new PhotoItem {
                     Image = ConvertByteArrayToImage(photo.PhotoData),
@@ -126,10 +126,10 @@ namespace ImagoAdmin {
             };
 
             // Обновляем саму встречу
-            Meeting.UpdateMeeting(newMeeting, id);
+            Meeting.UpdateMeeting(newMeeting, id, draft: true);
 
             // Удаляем старые фотографии для этой встречи
-            MeetingPhoto.DeletePhotosForMeeting(id);
+            MeetingPhoto.DeletePhotosForMeeting(id, draft: true);
 
             // Добавляем новые фотографии
             foreach (var photo in Photos) {
@@ -142,7 +142,7 @@ namespace ImagoAdmin {
                     PhotoData = photoData
                 };
 
-                MeetingPhoto.InsertPhoto(newPhoto, id);
+                MeetingPhoto.InsertPhoto(newPhoto, id, draft: true);
             }
 
             MessageBox.Show("Mítink byl úspěšně uložen!", "Hotovo", MessageBoxButton.OK, MessageBoxImage.Information);

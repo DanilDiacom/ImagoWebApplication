@@ -52,7 +52,7 @@
                 font-style: @(titleStyle?.FontStyle ?? "normal");
                 text-decoration: @(titleStyle?.TextDecoration ?? "none");"
                         data-key="DiacomMedio_Title">
-                        @ViewBag.Entries["DiacomMedio_Title"]
+                        @Html.Raw(ViewBag.Entries["DiacomMedio_Title"])
                     </h1>
                 }
 
@@ -82,7 +82,7 @@
                             font-weight: @(labelStyle?.FontWeight ?? "Bold");
                             font-style: @(labelStyle?.FontStyle ?? "normal");
                             text-decoration: @(labelStyle?.TextDecoration ?? "none");">
-                                    @ViewBag.Entries[key]
+                                    @Html.Raw(ViewBag.Entries[key])
                                 </strong>
                                 <span data-value="@key.Replace("_Label", "_Value")" style="
                             font-family: @(valueStyle?.FontFamily ?? "Arial");
@@ -90,7 +90,7 @@
                             font-weight: @(valueStyle?.FontWeight ?? "normal");
                             font-style: @(valueStyle?.FontStyle ?? "normal");
                             text-decoration: @(valueStyle?.TextDecoration ?? "none");">
-                                    @ViewBag.Entries[key.Replace("_Label", "_Value")]
+                                    @Html.Raw(ViewBag.Entries[key.Replace("_Label", "_Value")])
                                 </span>
                             </li>
                         }
@@ -112,7 +112,7 @@
                 font-weight: @(headerStyle?.FontWeight ?? "normal");
                 font-style: @(headerStyle?.FontStyle ?? "normal");
                 text-decoration: @(headerStyle?.TextDecoration ?? "none");">
-                        @ViewBag.Entries["MedioPopisHeader"]
+                        @Html.Raw(ViewBag.Entries["MedioPopisHeader"])
                     </h2>
                 }
 
@@ -135,7 +135,7 @@
                     font-style: @(textStyle?.FontStyle ?? "normal");
                     text-decoration: @(textStyle?.TextDecoration ?? "none");">
                             <p>
-                                @ViewBag.Entries[key]
+                                @Html.Raw(ViewBag.Entries[key])
                             </p>
                         </div>
                     }

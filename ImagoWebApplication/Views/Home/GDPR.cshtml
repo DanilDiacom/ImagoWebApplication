@@ -94,7 +94,7 @@
                 font-style: @(titleStyle?.FontStyle ?? "normal");
                 text-decoration: @(titleStyle?.TextDecoration ?? "none");
                 color: @(titleStyle?.TextColor ?? "#000000");">
-                @ViewBag.Entries["GDPR_Title"]
+                @Html.Raw(ViewBag.Entries["GDPR_Title"])
             </h1>
         }
 
@@ -108,7 +108,7 @@
                 font-style: @(headerStyle?.FontStyle ?? "normal");
                 text-decoration: @(headerStyle?.TextDecoration ?? "none");
                 color: @(headerStyle?.TextColor ?? "#000000");">
-                @ViewBag.Entries["GDPR_Header"]
+                @Html.Raw(ViewBag.Entries["GDPR_Header"])
             </h3>
         }
 
@@ -125,7 +125,7 @@
                     font-style: @(dataControllerStyle?.FontStyle ?? "normal");
                     text-decoration: @(dataControllerStyle?.TextDecoration ?? "none");
                     color: @(dataControllerStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_DataController"]
+                        @Html.Raw(ViewBag.Entries["GDPR_DataController"])
                     </b>
                 </p>
             }
@@ -162,7 +162,7 @@
                     font-style: @(legalBasisStyle?.FontStyle ?? "normal");
                     text-decoration: @(legalBasisStyle?.TextDecoration ?? "none");
                     color: @(legalBasisStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_LegalBasis"]
+                        @Html.Raw(ViewBag.Entries["GDPR_LegalBasis"])
                     </b>
                 </p>
             }
@@ -177,7 +177,7 @@
        font-style: @(legalBasisDetailsStyle?.FontStyle ?? "normal");
        text-decoration: @(legalBasisDetailsStyle?.TextDecoration ?? "none");
        color: @(legalBasisDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_LegalBasis_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_LegalBasis_Details"])
                 </p>
             }
 
@@ -192,7 +192,7 @@
                     font-style: @(purposeStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeStyle?.TextDecoration ?? "none");
                     color: @(purposeStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_Purpose"]
+                        @Html.Raw(ViewBag.Entries["GDPR_Purpose"])
                     </b>
                 </p>
             }
@@ -207,7 +207,7 @@
      font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
      text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");
      color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_Purpose_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_Purpose_Details"])
                 </p>
             }
 
@@ -224,7 +224,7 @@
                     font-style: @(purposeStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeStyle?.TextDecoration ?? "none");
                     color: @(purposeStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_Recipients"]
+                        @Html.Raw(ViewBag.Entries["GDPR_Recipients"])
                     </b>
                 </p>
             }
@@ -239,7 +239,7 @@
                 font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
                 text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");
                 color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_Recipients_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_Recipients_Details"])
                 </p>
             }
 
@@ -256,7 +256,7 @@
                     font-style: @(purposeStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeStyle?.TextDecoration ?? "none");
                     color: @(purposeStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_ProcessingTime"]
+                        @Html.Raw(ViewBag.Entries["GDPR_ProcessingTime"])
                     </b>
                 </p>
             }
@@ -272,7 +272,7 @@
                     font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none"); 
                     color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_ProcessingTime_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_ProcessingTime_Details"])
                 </p>
             }
 
@@ -288,7 +288,7 @@
                     font-style: @(purposeStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeStyle?.TextDecoration ?? "none");
                     color: @(purposeStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_AccessRight"]
+                        @Html.Raw(ViewBag.Entries["GDPR_AccessRight"])
                     </b>
                 </p>
             }
@@ -304,7 +304,7 @@
                     font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");
                     color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_AccessRight_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_AccessRight_Details"])
                 </p>
             }
 
@@ -320,7 +320,7 @@
                     font-style: @(purposeStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeStyle?.TextDecoration ?? "none");
                     color: @(purposeStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_DeletionRight_Details"]
+                        @Html.Raw(ViewBag.Entries["GDPR_DeletionRight_Details"])
                     </b>
                 </p>
             }
@@ -336,7 +336,7 @@
                     font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");
                     color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_ProcessingRestriction_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_ProcessingRestriction_Details"])
                 </p>
             }
 
@@ -352,7 +352,7 @@
                     font-style: @(purposeStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeStyle?.TextDecoration ?? "none");
                     color: @(purposeStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_DataPortability"]
+                        @Html.Raw(ViewBag.Entries["GDPR_DataPortability"])
                     </b>
                 </p>
             }
@@ -368,7 +368,7 @@
                     font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");
                     color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_DataPortability_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_DataPortability_Details"])
                 </p>
             }
 
@@ -384,7 +384,7 @@
                     font-style: @(purposeStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeStyle?.TextDecoration ?? "none");
                     color: @(purposeStyle?.TextColor ?? "#e74c3c");">
-                        @ViewBag.Entries["GDPR_ConsentWithdrawal_Details"]
+                        @Html.Raw(ViewBag.Entries["GDPR_ConsentWithdrawal_Details"])
                     </b>
                 </p>
             }
@@ -401,7 +401,7 @@
                     font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");
                     color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_Complaint_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_Complaint_Details"])
                 </p>
             }
 
@@ -416,7 +416,7 @@
                     font-style: @(purposeDetailsStyle?.FontStyle ?? "normal");
                     text-decoration: @(purposeDetailsStyle?.TextDecoration ?? "none");
                     color: @(purposeDetailsStyle?.TextColor ?? "#000000");">
-                    @ViewBag.Entries["GDPR_MoreInfo_Details"]
+                    @Html.Raw(ViewBag.Entries["GDPR_MoreInfo_Details"])
                 </p>
             }
         </div>
