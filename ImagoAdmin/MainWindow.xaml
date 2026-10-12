@@ -162,6 +162,8 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
 
+                            <Button Name="BackToBlockButton" Content="← Zpět k bloku" Click="BackToBlockButton_Click" HorizontalAlignment="Left"
+                                    Visibility="Collapsed" Style="{StaticResource SecondaryButton}" Margin="0,0,0,6"/>
                             <TextBlock Name="EditorFieldName" FontWeight="Bold" Foreground="#1d4f99" Margin="0,0,0,4"/>
                             <!-- Форматирование части текста (без HTML): жирный, курсив, подчёркнутый, ссылка -->
                             <WrapPanel Name="FormatToolbar" Margin="0,0,0,2" IsEnabled="False">
@@ -298,9 +300,16 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Margin="0,0,0,8">
-                                                    <TextBlock Text="{Binding Caption}" FontWeight="SemiBold"/>
-                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="{Binding Multiline}" TextWrapping="Wrap" Padding="4,3"/>
-                                                    <TextBlock Text="{Binding Hint}" FontSize="11" Foreground="#6c757d"/>
+                                                    <DockPanel>
+                                                        <!-- полный редактор поля: форматирование части текста, písmo, velikost, barva -->
+                                                        <Button DockPanel.Dock="Right" Content="🎨 Formát a styl" Tag="{Binding}" Click="BlockFieldStyle_Click"
+                                                                IsEnabled="{Binding CanStyle}" Padding="6,1" Margin="4,0,0,2" FontSize="11" Style="{StaticResource SecondaryButton}"
+                                                                ToolTip="Upravit písmo, velikost, barvu a formátování tohoto pole"/>
+                                                        <TextBlock Text="{Binding Caption}" FontWeight="SemiBold" VerticalAlignment="Bottom"/>
+                                                    </DockPanel>
+                                                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="{Binding Multiline}" TextWrapping="Wrap" Padding="4,3"
+                                                             SpellCheck.IsEnabled="True" Language="cs-CZ"/>
+                                                    <TextBlock Text="{Binding Hint}" FontSize="11" Foreground="#6c757d" TextWrapping="Wrap"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>

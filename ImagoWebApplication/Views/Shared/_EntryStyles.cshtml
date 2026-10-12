@@ -1,8 +1,10 @@
 @model string
 @using System.Text.RegularExpressions
 @{
-    // Стили текстов из ImagoAdmin (шрифт, размер, цвет…) для страниц, где тексты выводятся без inline-стилей:
-    // одно правило [data-key="…"] на текст, только для заданных свойств. Model — префикс ключей страницы («Kontakty_»).
+    // Стили текстов из ImagoAdmin (шрифт, размер, цвет…) — подключается в _Layout для всех страниц:
+    // одно правило [data-key="…"] на текст, только для заданных свойств; !important — стиль из админки сильнее CSS страницы.
+    // Только внутри <main>: у телефона и e-mail в шапке и подвале свои цвета (один ключ в двух местах).
+    // li с тем же ключом пропускаем (строка параметра: стиль у вложенных strong/span). Model — префикс ключей ("" — все).
     var styles = ViewBag.TextStyles as Dictionary<string, ImagoLib.Models.TextStyle>;
     string Css(string? v) => Regex.Replace(v ?? "", @"[^\w\s#,.'-]", "");
     string Px(string? v) => Regex.IsMatch(v ?? "", @"^\d+(\.\d+)?$") ? v + "px" : Css(v);
@@ -17,7 +19,8 @@
             if (!string.IsNullOrWhiteSpace(st.FontStyle)) props.Add($"font-style:{Css(st.FontStyle)}");
             if (!string.IsNullOrWhiteSpace(st.TextDecoration)) props.Add($"text-decoration:{Css(st.TextDecoration)}");
             if (!string.IsNullOrWhiteSpace(st.TextColor)) props.Add($"color:{Css(st.TextColor)}");
-            return props.Count == 0 ? "" : $"[data-key=\"{Css(s.Key)}\"]{{{string.Join(";", props)}}}";
+            var k = Css(s.Key);
+            return props.Count == 0 ? "" : $"main [data-key=\"{k}\"]:not(li),main [data-value=\"{k}\"]:not(li){{{string.Join(" !important;", props)} !important}}";
         })
         .Where(r => r.Length > 0).ToList();
 }

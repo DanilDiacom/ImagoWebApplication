@@ -34,6 +34,15 @@ public abstract class BaseController : Controller {
         ViewBag.GlobalEntries = HtmlLite.ToSafeDictionary(globalEntries);
     }
 
+    /// <summary>Стили текстов из админки для общего &lt;style&gt; в _Layout (_EntryStyles) — на каждой странице, даже если действие их не загрузило.</summary>
+    public override void OnActionExecuted(ActionExecutedContext context) {
+        base.OnActionExecuted(context);
+        if (context.Result is ViewResult && ViewBag.TextStyles == null) {
+            try { ViewBag.TextStyles = TextStyle.GetAllStyles(IsDraft).GroupBy(s => s.EntryKey).ToDictionary(g => g.Key, g => g.First()); }
+            catch { }
+        }
+    }
+
     private static bool IsValidPreview(string? value) {
         if (string.IsNullOrEmpty(value)) return false;
         try {

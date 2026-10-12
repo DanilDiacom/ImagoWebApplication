@@ -55,6 +55,10 @@ namespace ImagoAdmin {
             public string Hint { get; init; } = "";
             public bool Multiline { get; init; }
             public string Value { get; set; } = "";
+            public string? Key { get; init; }            // ключ текста (null — новый блок, ещё не сохранён)
+            public string OriginalHtml { get; init; } = "";
+            public string OriginalPlain { get; init; } = "";
+            public bool CanStyle => Key != null;
         }
 
         // Страницы с особым поведением (номера из таблицы Pages)
@@ -83,6 +87,8 @@ namespace ImagoAdmin {
         private List<BlockItem> _blocks = new();          // блоки текущей страницы
         private BlockTemplate? _formTemplate;             // открытая форма блока
         private BlockItem? _formBlock;                    // null — новый блок
+        private string? _blockFieldKey;                   // поле блока, открытое во вкладке «Texty» (🎨 Formát a styl)
+        private string? _returnBlockKey;                  // блок, к которому вернуться («← Zpět k bloku»)
 
         private double? _restoreScrollY;
         private string? _highlightKey;
@@ -435,7 +441,11 @@ namespace ImagoAdmin {
             var script = $@"(function(k, css) {{
     document.querySelectorAll('[data-key=""' + k + '""],[data-value=""' + k + '""]').forEach(function (el) {{
         if (el.tagName === 'LI' && el.querySelector('[data-key=""' + k + '""],[data-value=""' + k + '""]')) return;
-        Object.keys(css).forEach(function (p) {{ el.style[p] = css[p]; }});
+        // !important — как у стилей на сайте (_EntryStyles), иначе сохранённый раньше стиль перебивает новый
+        Object.keys(css).forEach(function (p) {{
+            var name = p.replace(/[A-Z]/g, function (c) {{ return '-' + c.toLowerCase(); }});
+            if (css[p]) el.style.setProperty(name, css[p], 'important'); else el.style.removeProperty(name);
+        }});
     }});
 }})({JsonSerializer.Serialize(key)}, {JsonSerializer.Serialize(css)});";
             try { await webView.CoreWebView2.ExecuteScriptAsync(script); } catch { }
@@ -685,7 +695,7 @@ namespace ImagoAdmin {
             var blockKeys = _blocks.SelectMany(b => b.FieldKeys.Values).ToHashSet();
             var search = EntrySearch.Text.Trim();
             var list = _entries
-                .Where(e => !blockKeys.Contains(e.EntryKey))
+                .Where(e => !blockKeys.Contains(e.EntryKey) || e.EntryKey == _blockFieldKey)
                 .Where(e => search.Length == 0
                             || e.DisplayName.Contains(search, StringComparison.CurrentCultureIgnoreCase)
                             || (e.ContentText ?? "").Contains(search, StringComparison.CurrentCultureIgnoreCase))
@@ -705,6 +715,11 @@ namespace ImagoAdmin {
             if (EntryList.SelectedItem is not DictionaryEntryForText entry) return;
 
             _currentEntry = entry;
+            if (_blockFieldKey != null && entry.EntryKey != _blockFieldKey) {
+                _blockFieldKey = null;   // выбран обычный текст — поле блока из списка убрать
+                _ = Dispatcher.BeginInvoke(RefreshTextList);
+            }
+            BackToBlockButton.Visibility = _blockFieldKey != null ? Visibility.Visible : Visibility.Collapsed;
             EditorFieldName.Text = entry.DisplayName;
             SetEditorHtml(entry.ContentText);
             TextEditor.IsEnabled = SaveTextButton.IsEnabled = StyleExpander.IsEnabled = true;
@@ -769,6 +784,8 @@ namespace ImagoAdmin {
             _textDirty = false;
             SetEditorHtml("");
             EditorFieldName.Text = "";
+            _blockFieldKey = null;
+            BackToBlockButton.Visibility = Visibility.Collapsed;
             TextEditor.IsEnabled = SaveTextButton.IsEnabled = RevertTextButton.IsEnabled = StyleExpander.IsEnabled = FormatToolbar.IsEnabled = false;
             PlainFieldHint.Visibility = Visibility.Collapsed;
             ApplyStyleToControls(null);
@@ -952,15 +969,24 @@ namespace ImagoAdmin {
             _formTemplate = template;
             _formBlock = block;
             BlockFormTitle.Text = block == null ? $"Nový blok: {template.Title}" : block.TemplateTitle;
-            BlockFormFields.ItemsSource = template.Fields.Select(f => new BlockFieldValue {
-                Name = f.Name,
-                Caption = f.Label + (f.Required ? " *" : ""),
-                Hint = f.Hint,
-                Multiline = f.Multiline,
-                // поля блока — без форматирования (в форме виден текст, а не теги)
-                Value = block != null && block.FieldKeys.TryGetValue(f.Name, out var key)
-                    ? HtmlLite.ToPlainText(_entries.FirstOrDefault(x => x.EntryKey == key)?.ContentText)
-                    : "",
+            BlockFormFields.ItemsSource = template.Fields.Select(f => {
+                // в форме виден простой текст; форматирование и стиль поля — кнопкой «🎨 Formát a styl»
+                string? key = block != null && block.FieldKeys.TryGetValue(f.Name, out var k) ? k : null;
+                var html = key == null ? "" : _entries.FirstOrDefault(x => x.EntryKey == key)?.ContentText ?? "";
+                var plain = HtmlLite.ToPlainText(html);
+                var formatted = html.Length > 0 && html != EncodePlain(plain);
+                return new BlockFieldValue {
+                    Name = f.Name,
+                    Caption = f.Label + (f.Required ? " *" : ""),
+                    Hint = formatted
+                        ? (string.IsNullOrEmpty(f.Hint) ? "" : f.Hint + " ") + "Pole má formátování — text upravujte přes „🎨 Formát a styl“, jinak se formátování zruší."
+                        : f.Hint,
+                    Multiline = f.Multiline,
+                    Key = key,
+                    OriginalHtml = html,
+                    OriginalPlain = plain,
+                    Value = plain,
+                };
             }).ToList();
             BlockFormPanel.Visibility = Visibility.Visible;
             SaveBlockButton.Content = block == null ? "💾 Přidat blok" : "💾 Uložit blok";
@@ -991,7 +1017,8 @@ namespace ImagoAdmin {
 
         private async void SaveBlockButton_Click(object sender, RoutedEventArgs e) {
             if (_currentPage == null || _formTemplate == null) return;
-            var values = (BlockFormFields.ItemsSource as IEnumerable<BlockFieldValue> ?? Enumerable.Empty<BlockFieldValue>()).ToDictionary(f => f.Name, f => f.Value ?? "");
+            var fields = (BlockFormFields.ItemsSource as IEnumerable<BlockFieldValue> ?? Enumerable.Empty<BlockFieldValue>()).ToList();
+            var values = fields.ToDictionary(f => f.Name, f => f.Value ?? "");
             var missing = _formTemplate.Fields.Where(f => f.Required && string.IsNullOrWhiteSpace(values.GetValueOrDefault(f.Name))).Select(f => f.Label).ToList();
             if (missing.Count > 0) {
                 MessageBox.Show("Vyplňte prosím: " + string.Join(", ", missing), "Chybí údaje", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -1000,9 +1027,14 @@ namespace ImagoAdmin {
             try {
                 var template = _formTemplate;
                 var keys = _formBlock?.FieldKeys.ToDictionary(x => x.Key, x => x.Value) ?? NewBlockKeys(template);
-                // текст полей формы — простой; спецсимволы экранируем, чтобы «<» и «&» на сайте остались текстом
-                DictionaryEntryForText.SaveEntriesForEditing(_currentPage.Id,
-                    keys.ToDictionary(k => k.Value, k => EncodePlain(values.GetValueOrDefault(k.Key) ?? "")));
+                // текст полей формы — простой; спецсимволы экранируем, чтобы «<» и «&» на сайте остались текстом.
+                // Поле, которое не меняли, сохраняет своё форматирование (tučné, odkazy…).
+                string FieldHtml(string name) {
+                    var f = fields.FirstOrDefault(x => x.Name == name);
+                    var v = values.GetValueOrDefault(name) ?? "";
+                    return f != null && f.Key != null && v == f.OriginalPlain ? f.OriginalHtml : EncodePlain(v);
+                }
+                DictionaryEntryForText.SaveEntriesForEditing(_currentPage.Id, keys.ToDictionary(k => k.Value, k => FieldHtml(k.Key)));
                 var select = KeyForSelection(template, keys);
                 await ReloadPageDataAsync(select);
                 await ReloadPreviewAsync();
@@ -1012,6 +1044,39 @@ namespace ImagoAdmin {
             catch (Exception ex) {
                 ShowError("Blok se nepodařilo uložit", ex);
             }
+        }
+
+        /// <summary>«🎨 Formát a styl» у поля блока: поле открывается во вкладке «Texty» (formátování, písmo, velikost, barva).</summary>
+        private void BlockFieldStyle_Click(object sender, RoutedEventArgs e) {
+            if ((sender as Button)?.Tag is not BlockFieldValue field || field.Key == null) return;
+            var fields = (BlockFormFields.ItemsSource as IEnumerable<BlockFieldValue>)?.ToList() ?? new();
+            if (fields.Any(f => f.Value != f.OriginalPlain)
+                && MessageBox.Show("V bloku máte neuložené změny. Nejdřív je uložte tlačítkem „💾 Uložit blok“, jinak se ztratí.\n\nPokračovat bez uložení?",
+                                   "Formát a styl", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+            if (!_entries.Any(x => x.EntryKey == field.Key)) return;
+
+            SaveCurrentTextIfDirty();
+            _returnBlockKey = _formBlock?.Key;
+            if (!string.IsNullOrEmpty(EntrySearch.Text)) EntrySearch.Text = "";
+            _blockFieldKey = field.Key;
+            RefreshTextList();
+            EditorTabs.SelectedItem = TextsTab;
+            EntryList.SelectedItem = (EntryList.ItemsSource as IEnumerable<DictionaryEntryForText>)?.FirstOrDefault(x => x.EntryKey == field.Key);
+            EntryList.ScrollIntoView(EntryList.SelectedItem);
+            StyleExpander.IsExpanded = true;
+        }
+
+        private void BackToBlockButton_Click(object sender, RoutedEventArgs e) {
+            SaveCurrentTextIfDirty();
+            var back = _returnBlockKey;
+            ClearEditor();
+            EntryList.SelectedItem = null;
+            RefreshTextList();
+            EditorTabs.SelectedItem = BlocksTab;
+            var block = _blocks.FirstOrDefault(b => b.Key == back);
+            BlockList.SelectedItem = null;   // форма откроется заново — с текстом из редактора
+            BlockList.SelectedItem = block;
+            if (block != null) BlockList.ScrollIntoView(block);
         }
 
         private static string EncodePlain(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
@@ -1028,6 +1093,15 @@ namespace ImagoAdmin {
                 var texts = _entries.GroupBy(x => x.EntryKey).ToDictionary(g => g.Key, g => g.First().ContentText ?? "");
                 DictionaryEntryForText.SaveEntriesForEditing(_currentPage.Id,
                     keys.ToDictionary(k => k.Value, k => block.FieldKeys.TryGetValue(k.Key, out var from) && texts.TryGetValue(from, out var t) ? t : ""));
+                // и стиль полей (písmo, velikost, barva)
+                foreach (var k in keys) {
+                    if (!block.FieldKeys.TryGetValue(k.Key, out var from)) continue;
+                    var style = TextStyle.GetTextStyle(from, draft: true);
+                    if (style == null) continue;
+                    style.Id = 0;
+                    style.EntryKey = k.Value;
+                    TextStyle.SaveTextStyle(style, draft: true);
+                }
                 await ReloadPageDataAsync(KeyForSelection(block.Template, keys));
                 await ReloadPreviewAsync();
                 RefreshChangeCounts();
