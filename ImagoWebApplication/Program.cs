@@ -1,5 +1,8 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
+// Ключи чат-бота (OpenAI, Telegram, SMTP): файл публикуется вместе с сайтом, но не попадает в git (.gitignore)
+builder.Configuration.AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true);
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();

@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /diacom_base_stock
+
+# Ключи чат-бота (публикуются с сайтом, но не в git)
+ImagoWebApplication/appsettings.Secrets.json
